@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap-datepicker3.min.css">
+    <link rel="stylesheet" href="../assets/css/bootstrapValidator.min.css">
     <title>Document</title>
 </head>
 
@@ -31,6 +34,12 @@
             <div class="col-12 row">
                 <h3>Datos del curso</h3>
                 <div class="col-6">
+                    <label for="" class="form-label">Nombre del curso</label>
+                    <select name="cursoNombre" id="cursoNombre" class="form-control">
+                        <option value="">Curso 1</option>
+                    </select>
+                </div>
+                <div class="col-6">
                     <label class="form-label" for="ciclo">Ciclo</label>
                     <select name="ciclo" class="form-control" id="ciclo">
                         <option value="1">1</option>
@@ -42,12 +51,24 @@
                     </select>
                 </div>
                 <div class="col-6">
-                    <label for="" class="form-label">Nombre del curso</label>
-                    <select name="" id="" class="form-control">
-                        <option value="">Curso 1</option>
-                    </select>
+                    <label for="" class="form-label">Fecha</label>
+                    <div class="input-group input-group-lg date datepicker3 container-calendar" id="newTratFechaInii">
+                        <input type="text" class="form-control puntero-i prohibido-no" name="newinputTratFechaIni"
+                            id="newTratFechaIni" value="" placeholder="Selecciona la fecha" required>
+                        <span class="input-group-addon manito-clic ">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </span>
+                    </div>
                 </div>
-
+                <div class="col-6">
+                    <label for="" class="form-label">Horas</label>
+                    <input type="number" class="form-control" name="cursoHoras" id="cursoHoras">
+                </div>
+                <div class="col-6">
+                    <label for="" class="form-label">Acciones</label><br>
+                    <button class="btn btn-info" onClick="ver();">Ver</button><br>
+                    <button class="btn btn-success">Agregar</button>
+                </div>
             </div>
         </div>
     </form>
@@ -73,9 +94,63 @@
         </tbody>
     </table>
 
+
+    <script src="../assets/js/jquery-3.7.0.min.js"></script>
+    <script src="../assets/js/bootstrap.min.js"></script>
+    <script src="../view/js/index.js"></script>
+    <script src="../assets/js/datepicker/bootstrap-datepicker.min.js"></script>
+    <script src="../assets/js/datepicker/bootstrap-datepicker.es.min.js"></script>
+    <script src="../assets/js/datepicker/bootstrapValidator.min.js"></script>
+    <script src="../assets/js/datepicker/es_ES.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('.registerFormFcMv').bootstrapValidator({
+            live: 'enabled',
+            fields: {
+                newinputTratFechaIni: {
+                    validators: {
+                        date: {
+                            format: 'DD/MM/YYYY',
+                            message: 'ESTE VALOR NO COINCIDE CON UNA FECHA'
+                        },
+                        stringLength: {
+                            min: 10,
+                            max: 10,
+                            message: 'LA LONGITUD MÁXIMA ES DE 10 INCLUYENDO /'
+                        },
+                        regexp: {
+                            regexp: /^[0-9-/]+$/,
+                            message: 'LA FECHA SOLO PUEDE TENER NÚMEROS Y /'
+                        }
+                    }
+                }
+            }
+        });
+
+        $('.datepicker3').datepicker({
+            container: '.container-calendar',
+            autoclose: true,
+            todayHighlight: true,
+            calendarWeeks: true,
+            format: 'dd/mm/yyyy',
+            language: 'es',
+            multidate: true
+        });
+    });
+    </script>
+    <script>
+        function ver(){
+            var text = document.getElementById("newTratFechaIni").value;
+            alert(text);
+        }
+    </script>
+    <script>
+        function agregar(){
+            var nombre-curso = document.getElementById("cursoNombre").value;
+            var nombre-curso = document.getElementById("cursoNombre").value;
+            alert(text);
+        }
+    </script>
 </body>
-<script src="../assets/js/jquery-3.7.0.min.js"></script>
-<script src="../assets/js/bootstrap.min.js"></script>
-<script src="../view/js/index.js"></script>
 
 </html>
