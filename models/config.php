@@ -8,14 +8,14 @@
     define('DB_NAME_SQL_SERVER', 'is_posgrado');
 
     // CONFIGURACION MY SQL SERVER
-    // define('USER_NAME_MYSQL', 'upg');
-    // define('PASS_MYSQL', '123@upg');
-    // define('HOST_MYSQL', '127.0.0.1');
-    // define('DB_NAME_MYSQL', 'is_posgrado');
-
     define('USER_NAME_MYSQL', 'root');
     define('PASS_MYSQL', '');
     define('HOST_MYSQL', 'localhost');
     define('DB_NAME_MYSQL', 'is_posgrado');
+
+    // define('USER_NAME_MYSQL', 'root');
+    // define('PASS_MYSQL', '');
+    // define('HOST_MYSQL', 'localhost');
+    // define('DB_NAME_MYSQL', 'is_posgrado');
 
 ?>
