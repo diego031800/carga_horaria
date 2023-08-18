@@ -12,21 +12,18 @@
 </head>
 
 <body>
-    <form action="">
-    </form>
-    <div class="container">
+    <div class="container-fluid px-5 my-5">
         <div class="row">
-
             <div class="col-12 row">
                 <h3>Registro de la carga horaria</h3>
                 <div class="col-6">
                     <label for="" class="form-label">Semestre</label>
-                    <select name="" class="form-control" id="">
+                    <select name="" class="form-control" id="cboSemestre">
                     </select>
                 </div>
                 <div class="col-6">
                     <label for="" class="form-label">Unidad</label>
-                    <select name="" class="form-control" id="">
+                    <select name="" class="form-control" id="cboUnidad">
                     </select>
                 </div>
                 <div class="col-6">

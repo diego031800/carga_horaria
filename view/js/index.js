@@ -1,16 +1,41 @@
 // VARIABLES
-let array_unidades = [];
+let cboSemestre = document.getElementById('cboSemestre');
+let cboUnidad = document.getElementById('cboUnidad');
 
 // FUNCIONES
-function get_unidades() {
-  let opcion = "get_unidades";
+// INICIO OBTENER COMBOS
+function get_cbo_semestres() {
+  let opcion = "get_cbo_semestres";
   $.ajax({
     type: "POST",
     url: "../../../carga_horaria/controllers/main/CargaHorariaController.php",
     data: "opcion=" + opcion,
     success: function (data) {
-      array_unidades = JSON.parse(data);
-      console.log(array_unidades);
+      let opciones = data;
+      $('#cboSemestre').html(opciones);
+    },
+    error: function (data) {
+      alert("Error al mostrar: " + data);
+    },
+  });
+}
+
+function get_cbo_unidades() {
+  let opcion = "get_cbo_unidades";
+  let sem_id = cboSemestre.value;
+  $.ajax({
+    type: "POST",
+    url: "../../../carga_horaria/controllers/main/CargaHorariaController.php",
+    data: "opcion=" + opcion +
+          "&sem_id=" + sem_id,
+    success: function (data) {
+      objeto = JSON.parse(data);
+      let opciones = objeto.unidades;
+      cboUnidad.disabled = false;
+      if (objeto.has_data == 0) {
+        cboUnidad.disabled = true;
+      }
+      $('#cboUnidad').html(opciones);
     },
     error: function (data) {
       alert("Error al mostrar");
@@ -18,9 +43,7 @@ function get_unidades() {
   });
 }
 
-function load_document() {
-  get_unidades();
-}
+// FIN OBTENER COMBOS
 
 $(document).ready(function() {
   $('.registerFormFcMv').bootstrapValidator({
@@ -91,6 +114,12 @@ function guardar() {
   listacursos[index].horas = document.getElementById("cursoHoras").value;
   $("#cursoHoras"). val("");
   document.getElementById("guardar").disabled = true;
+}
+
+function load_document() {
+  get_cbo_unidades();
+  get_cbo_semestres();
+  cboSemestre.addEventListener("change", get_cbo_unidades);
 }
 
 // EVENTOS
