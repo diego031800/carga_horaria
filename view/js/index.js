@@ -68,10 +68,12 @@ var fechascursos =[{ index : 0, id : 0 , fecha: '27/08/2023'}];
 function agregar() {
   var cursonombre = document.getElementById("cursoNombre").value;
   var cursohoras = document.getElementById("cursoHoras").value;
-  if (cursonombre == "" || cursohoras == "") {
+  let fechas = document.getElementById("newTratFechaIni").value;
+  if (cursonombre == "" || cursohoras == "" || fechas=="") {
     alert("No deben haber campos vacíos");
     return;
   }
+  var arrayFechas = fechas.split(",");
   let i = listacursos.length;
   listacursos.push({ index : i,curso: cursonombre, horas: cursohoras });
   fila =

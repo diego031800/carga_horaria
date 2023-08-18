@@ -14,31 +14,22 @@
 </head>
 
 <body>
-    <form action="">
-    </form>
-    <div class="container">
+    <div class="container-fluid px-5 my-5">
         <div class="row">
 
             <div class="col-12 row">
                 <h3>Registro de la carga horaria</h3>
-                <div class="col-6">
+                <div class="col-4">
                     <label for="" class="form-label">Semestre</label>
                     <select name="" class="form-control" id="">
                     </select>
                 </div>
-                <div class="col-6">
+                <div class="col-4">
                     <label for="" class="form-label">Unidad</label>
                     <select name="" class="form-control" id="">
                     </select>
                 </div>
-                <div class="col-6">
-                    <label for="" class="form-label">Modo</label>
-                    <select name="" class="form-control" id="">
-                        <option value="maestria">Maestria</option>
-                        <option value="doctorado">Doctorado</option>
-                    </select>
-                </div>
-                <div class="col-6">
+                <div class="col-4">
                     <label class="form-label" for="ciclo">Mencion</label>
                     <select name="" class="form-control" id="">
                     </select>
@@ -48,7 +39,7 @@
                 <h3>Datos del curso</h3>
                 <div class="col-6">
                     <label class="form-label" for="ciclo">Ciclo</label>
-                    <select name="ciclo" class="form-control cantidad-show" id="ciclo" >
+                    <select name="ciclo" class="form-control" id="ciclo" >
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -94,6 +85,7 @@
                 <tr>
                     <th scope="col">Curso</th>
                     <th scope="col">Horas</th>
+                    <th scope="col">Fechas</th>
                     <th scope="col">Acciones</th>
                     <th scope="col">Docente</th>
                 </tr>
