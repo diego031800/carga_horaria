@@ -22,8 +22,8 @@
                 case 'get_cbo_semestres':
                     echo $this->get_cbo_semestres();
                     break;
-                case 'get_cbo_programa':
-                    echo $this->get_cbo_programa();
+                case 'get_cbo_programas':
+                    echo $this->get_cbo_programas();
                     break;
             }
         }
@@ -34,7 +34,7 @@
                         SEM.sem_id,
                         UPPER(SEM.sem_nombre) as semestre
                     FROM ADMISION.SEMESTRE SEM
-                    WHERE sem_estado = 1
+                    WHERE sem_estado = 1 AND sem_activo = 1
                     ORDER BY SEM.sem_id DESC";
             $datos = $this->con->return_query_sqlsrv($sql);
             $semestres = "<option value=''>Selecciona un semestre ...</option>\n";
@@ -64,34 +64,34 @@
                     $unidades .= "<option value=".$row['sec_id'].">".$row['seccion']."</option>\n";
                 }
             } else {
-                $unidades = "<option value=''>Primero selecciona un semestre ...</option>\n";
+                $unidades = "<option value=''>Antes selecciona un semestre ...</option>\n";
             }
             $resp = array('has_data' => $has_data,'unidades' => $unidades);
             return json_encode($resp);
         }
 
-        private function get_cbo_programa()
+        private function get_cbo_programas()
         {
             $sql = "SELECT
-                        SEC.sec_id,
-                        SEC.sec_descripcion as seccion
-                    FROM PROGRAMACION.SEMESTRE_SECCION SSE
-                    INNER JOIN ADMISION.SECCION SEC ON SSE.sec_id = SEC.sec_id
-                    INNER JOIN SISTEMA.USUARIO_UNIDAD UUN ON UUN.sec_id = SSE.sec_id
-                    WHERE SSE.sem_id = '".$this->parametros['sem_id']."' AND UUN.usu_id = '".$_SESSION['usu_id']."' AND SSE.sse_estado = 1";
+                        PRG.prg_id,
+                        PRG.prg_mencion as programa
+                    FROM PROGRAMACION.SEMESTRE_PROGRAMA SPR
+                    INNER JOIN PROGRAMACION.SEMESTRE_SECCION SSE ON SSE.sse_id = SPR.sse_id
+                    INNER JOIN ADMISION.PROGRAMA PRG ON PRG.prg_id = SPR.prg_id
+                    WHERE SSE.sem_id = '".$this->parametros['sem_id']."' AND PRG.sec_id = '".$this->parametros['sec_id']."' AND PRG.prg_estado = 1";
             $datos = $this->con->return_query_sqlsrv($sql);
-            $unidades = "";
+            $programas = "";
             $has_data = 0;
-            if (!empty($this->parametros['sem_id'])) {
+            if (!empty($this->parametros['sem_id']) && !empty($this->parametros['sec_id'])) {
                 $has_data = 1;
-                $unidades = "<option value=''>Selecciona una unidad ...</option>\n";
+                $programas = "<option value=''>Selecciona un programa ...</option>\n";
                 while ($row = $datos->fetch(PDO::FETCH_ASSOC)) {
-                    $unidades .= "<option value=".$row['sec_id'].">".$row['seccion']."</option>\n";
+                    $programas .= "<option value=".$row['prg_id'].">".$row['programa']."</option>\n";
                 }
             } else {
-                $unidades = "<option value=''>Primero selecciona un semestre ...</option>\n";
+                $programas = "<option value=''>Antes selecciona una unidad ...</option>\n";
             }
-            $resp = array('has_data' => $has_data,'unidades' => $unidades);
+            $resp = array('has_data' => $has_data,'programas' => $programas);
             return json_encode($resp);
         }
     }

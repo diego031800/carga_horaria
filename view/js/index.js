@@ -1,6 +1,7 @@
 // VARIABLES
 let cboSemestre = document.getElementById('cboSemestre');
 let cboUnidad = document.getElementById('cboUnidad');
+let cboPrograma = document.getElementById('cboPrograma');
 
 // FUNCIONES
 // INICIO OBTENER COMBOS
@@ -36,6 +37,31 @@ function get_cbo_unidades() {
         cboUnidad.disabled = true;
       }
       $('#cboUnidad').html(opciones);
+    },
+    error: function (data) {
+      alert("Error al mostrar");
+    },
+  });
+}
+
+function get_cbo_programas() {
+  let opcion = "get_cbo_programas";
+  let sem_id = cboSemestre.value;
+  let sec_id = cboUnidad.value;
+  $.ajax({
+    type: "POST",
+    url: "../../../carga_horaria/controllers/main/CargaHorariaController.php",
+    data: "opcion=" + opcion +
+          "&sem_id=" + sem_id + 
+          "&sec_id=" + sec_id,
+    success: function (data) {
+      objeto = JSON.parse(data);
+      let opciones = objeto.programas;
+      cboPrograma.disabled = false;
+      if (objeto.has_data == 0) {
+        cboPrograma.disabled = true;
+      }
+      $('#cboPrograma').html(opciones);
     },
     error: function (data) {
       alert("Error al mostrar");
@@ -157,7 +183,9 @@ function limpiarTabla(){
 function load_document() {
   get_cbo_unidades();
   get_cbo_semestres();
-  cboSemestre.addEventListener("change", get_cbo_unidades);
+  get_cbo_programas();
+  cboSemestre.addEventListener("change", get_cbo_unidades, get_cbo_programas);
+  cboUnidad.addEventListener("change", get_cbo_programas);
 }
 
 // EVENTOS

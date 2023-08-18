@@ -20,17 +20,17 @@
                 <h3>Registro de la carga horaria</h3>
                 <div class="col-4">
                     <label for="" class="form-label">Semestre</label>
-                    <select name="" class="form-control" id="cboSemestre">
+                    <select class="form-control" id="cboSemestre">
                     </select>
                 </div>
                 <div class="col-4">
                     <label for="" class="form-label">Unidad</label>
-                    <select name="" class="form-control" id="cboUnidad">
+                    <select class="form-control" id="cboUnidad">
                     </select>
                 </div>
                 <div class="col-4">
-                    <label class="form-label" for="ciclo">Mencion</label>
-                    <select name="" class="form-control" id="">
+                    <label class="form-label" for="ciclo">Programa</label>
+                    <select class="form-control" id="cboPrograma">
                     </select>
                 </div>
             </div>
