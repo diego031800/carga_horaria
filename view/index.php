@@ -13,6 +13,8 @@
 
 <body>
     <form action="">
+    </form>
+    <div class="container">
         <div class="row">
             <div class="col-12 row">
                 <h3>Unidad: AQUI VA LA UNIDAD</h3>
@@ -36,7 +38,10 @@
                 <div class="col-6">
                     <label for="" class="form-label">Nombre del curso</label>
                     <select name="cursoNombre" id="cursoNombre" class="form-control">
-                        <option value="">Curso 1</option>
+                        <option value="Curso 1">Curso 1</option>
+                        <option value="Curso 2">Curso 2</option>
+                        <option value="Curso 3">Curso 3</option>
+                        <option value="Curso 4">Curso 4</option>
                     </select>
                 </div>
                 <div class="col-6">
@@ -62,37 +67,41 @@
                 </div>
                 <div class="col-6">
                     <label for="" class="form-label">Horas</label>
-                    <input type="number" class="form-control" name="cursoHoras" id="cursoHoras">
+                    <input type="number" class="form-control" name="cursoHoras" id="cursoHoras" required>
                 </div>
                 <div class="col-6">
                     <label for="" class="form-label">Acciones</label><br>
-                    <button class="btn btn-info" onClick="ver();">Ver</button><br>
-                    <button class="btn btn-success">Agregar</button>
+                    <button class="btn btn-success" onClick="agregar();">Agregar</button>
+                    <input type="text" hidden>
+                    <button id="guardar" class="btn btn-warning" onClick="guardar();" disabled="true">Guardar</button>
                 </div>
             </div>
         </div>
-    </form>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Curso</th>
-                <th scope="col">Acciones</th>
-                <th scope="col">Docente</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th scope="row">Curso 1</th>
-                <td>
-                    <button class="btn btn-info">Editar</button>
-                    <button class="btn btn-danger">Eliminar</button>
-                </td>
-                <td>Nombre del docente</td>
-                <td><button class="btn btn-danger">Ver</button></td>
-            </tr>
-        </tbody>
-    </table>
+        <table class="table" id="cursosTabla">
+            <thead>
+                <tr>
+                    <th scope="col">Curso</th>
+                    <th scope="col">Horas</th>
+                    <th scope="col">Acciones</th>
+                    <th scope="col">Docente</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">Curso 1</th>
+                    <td>64</td>
+                    <td>
+                        <button class="btn btn-info" onClick="editar(0);">Editar</button>
+                        <button class="btn btn-danger">Eliminar</button>
+                    </td>
+                    <td>Nombre del docente</td>
+                    <td><button class="btn btn-danger">Ver</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+        
 
 
     <script src="../assets/js/jquery-3.7.0.min.js"></script>
@@ -145,12 +154,35 @@
         }
     </script>
     <script>
+        var listacursos=[{"curso":"Curso 1", "horas": 64}];
         function agregar(){
-            var nombre-curso = document.getElementById("cursoNombre").value;
-            var nombre-curso = document.getElementById("cursoNombre").value;
-            alert(text);
+            var cursonombre = document.getElementById("cursoNombre").value;
+            var cursohoras = document.getElementById("cursoHoras").value;
+            if (cursonombre == "" || cursohoras==""){
+                alert("No deben haber campos vacíos");
+                return;
+            }
+            listacursos.push({"curso" : cursonombre,"horas" : cursohoras});
+            let index = listacursos.length -1;
+            fila =  '<tr><th scope="row">'+cursonombre+'</th><td>'+cursohoras+'</td>'+
+            '<td><button class="btn btn-info" onClick="editar('+index+');">Editar</button><button class="btn btn-danger">Eliminar</button></td>'+
+            '<td>Nombre del docente</td>'+
+            '<td><button class="btn btn-danger">Ver</button></td></tr>';
+            $("#cursosTabla").append(fila);
         }
+        function editar(index){
+            $('#cursoNombre').val(listacursos[index].curso)
+            $('#cursoHoras').val(listacursos[index].horas)
+            $('#cursoHoras').val(listacursos[index].horas)
+            document.getElementById('guardar').disabled = false;
+        }
+        function guardar(index){
+            $('#cursoNombre').val(listacursos[index].curso)
+            $('#cursoHoras').val(listacursos[index].horas)
+            $('#cursoHoras').val(listacursos[index].horas)
+            document.getElementById('guardar').disabled = false;
+        }
+        
     </script>
 </body>
-
 </html>
