@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../assets/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="../assets/css/bootstrap-datepicker3.min.css">
     <link rel="stylesheet" href="../assets/css/bootstrapValidator.min.css">
-    <title>Document</title>
+    <title>Carga Horaria</title>
 </head>
 
 <body>

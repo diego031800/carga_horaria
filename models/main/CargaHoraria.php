@@ -29,7 +29,7 @@
                         SEC.sec_descripcion
                     FROM PROGRAMACION.SEMESTRE_SECCION SSE
                     INNER JOIN ADMISION.SECCION SEC ON SEC.sec_id = SSE.sec_id
-                    WHERE SSE.sem_id = 69";
+                    WHERE SSE.sem_id = 68";
             $datos = $this->con->return_query_sqlsrv($sql);
             $unidades = array();
             while ($row = $datos->fetch(PDO::FETCH_ASSOC)) {
