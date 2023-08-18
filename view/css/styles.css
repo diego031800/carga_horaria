@@ -1,0 +1,4 @@
+.limitar-opciones .select2-results__options {
+    max-height: 100px;
+    overflow-y: auto;
+}

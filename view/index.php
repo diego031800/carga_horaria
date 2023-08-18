@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="../assets/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="../assets/css/bootstrap-datepicker3.min.css">
     <link rel="stylesheet" href="../assets/css/bootstrapValidator.min.css">
+    <link rel="stylesheet" href="../assets/css/select2/select2.css">
+    <link rel="stylesheet" href="/carga_horaria/view/css/styles.css">
     <title>Carga Horaria</title>
 </head>
 
@@ -46,7 +48,7 @@
                 <h3>Datos del curso</h3>
                 <div class="col-6">
                     <label class="form-label" for="ciclo">Ciclo</label>
-                    <select name="ciclo" class="form-control" id="ciclo">
+                    <select name="ciclo" class="form-control cantidad-show" id="ciclo" >
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -80,7 +82,7 @@
                 </div>
                 <div class="col-6">
                     <label for="" class="form-label">Acciones</label><br>
-                    <button class="btn btn-success" onClick="agregar();">Agregar</button>
+                    <button class="btn btn-success" onClick="agregar();" id="agregar">Agregar</button>
                     <input type="text" hidden id="cursoEditar">
                     <button id="guardar" class="btn btn-warning" onClick="guardar();" disabled="true">Guardar</button>
                 </div>
@@ -119,6 +121,7 @@
     <script src="../assets/js/datepicker/bootstrap-datepicker.es.min.js"></script>
     <script src="../assets/js/datepicker/bootstrapValidator.min.js"></script>
     <script src="../assets/js/datepicker/es_ES.min.js"></script>
+    <script src="../assets/js/select2/select2.js"></script>
     <script src="../view/js/index.js"></script>
 </body>
 

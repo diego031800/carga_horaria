@@ -23,6 +23,12 @@ function load_document() {
 }
 
 $(document).ready(function() {
+  $('#ciclo').select2({
+      dropdownCssClass: 'limitar-opciones'
+  });
+});
+
+$(document).ready(function() {
   $('.registerFormFcMv').bootstrapValidator({
       live: 'enabled',
       fields: {
@@ -57,7 +63,8 @@ $(document).ready(function() {
   });
 });
 
-var listacursos = [{ curso: "Curso 1", horas: 64 }];
+var listacursos = [{ index : 0,curso: "Curso 1", horas: '64' }];
+var fechascursos =[{ index : 0, id : 0 , fecha: '27/08/2023'}];
 function agregar() {
   var cursonombre = document.getElementById("cursoNombre").value;
   var cursohoras = document.getElementById("cursoHoras").value;
@@ -65,8 +72,8 @@ function agregar() {
     alert("No deben haber campos vacíos");
     return;
   }
-  listacursos.push({ curso: cursonombre, horas: cursohoras });
-  let index = listacursos.length - 1;
+  let i = listacursos.length;
+  listacursos.push({ index : i,curso: cursonombre, horas: cursohoras });
   fila =
     '<tr><th scope="row">' +
     cursonombre +
@@ -74,7 +81,7 @@ function agregar() {
     cursohoras +
     "</td>" +
     '<td><button class="btn btn-info" onClick="editar(' +
-    index +
+    i +
     ');">Editar</button><button class="btn btn-danger">Eliminar</button></td>' +
     "<td>Nombre del docente</td>" +
     '<td><button class="btn btn-danger">Ver</button></td></tr>';
@@ -83,14 +90,43 @@ function agregar() {
 function editar(index) {
   $("#cursoNombre").val(listacursos[index].curso);
   $("#cursoHoras").val(listacursos[index].horas);
+  $("#cursoEditar").val(index);
+  document.getElementById("agregar").disabled = true;
   document.getElementById("guardar").disabled = false;
 }
+
 function guardar() {
   let index = document.getElementById("cursoEditar").value;
-  listacursos[index].curso = document.getElementById("cursoNombre").value;
-  listacursos[index].horas = document.getElementById("cursoHoras").value;
+  var cursonombre = document.getElementById("cursoNombre").value;
+  var cursohoras = document.getElementById("cursoHoras").value;
+  listacursos[index].curso = cursonombre;
+  listacursos[index].horas = cursohoras;
   $("#cursoHoras"). val("");
+  limpiarTabla();
+  llenarTabla();
   document.getElementById("guardar").disabled = true;
+  document.getElementById("agregar").disabled = false;
+}
+
+function llenarTabla(){
+  listacursos.forEach(element => {
+    fila =
+    '<tr><th scope="row">' +
+    element.curso +
+    "</th><td>" +
+    element.horas +
+    "</td>" +
+    '<td><button class="btn btn-info" onClick="editar(' +
+    element.index +
+    ');">Editar</button><button class="btn btn-danger">Eliminar</button></td>' +
+    "<td>Nombre del docente</td>" +
+    '<td><button class="btn btn-danger">Ver</button></td></tr>';
+  $("#cursosTabla").append(fila);
+  });
+}
+
+function limpiarTabla(){
+  $("#cursosTabla tbody").empty();
 }
 
 // EVENTOS
