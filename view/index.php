@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="../assets/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="../assets/css/bootstrap-datepicker3.min.css">
     <link rel="stylesheet" href="../assets/css/bootstrapValidator.min.css">
+    <link rel="stylesheet" href="../assets/css/select2/select2.css">
+    <link rel="stylesheet" href="/carga_horaria/view/css/styles.css">
     <title>Carga Horaria</title>
 </head>
 
@@ -16,24 +18,17 @@
         <div class="row">
             <div class="col-12 row">
                 <h3>Registro de la carga horaria</h3>
-                <div class="col-6">
+                <div class="col-4">
                     <label for="" class="form-label">Semestre</label>
                     <select name="" class="form-control" id="cboSemestre">
                     </select>
                 </div>
-                <div class="col-6">
+                <div class="col-4">
                     <label for="" class="form-label">Unidad</label>
                     <select name="" class="form-control" id="cboUnidad">
                     </select>
                 </div>
-                <div class="col-6">
-                    <label for="" class="form-label">Modo</label>
-                    <select name="" class="form-control" id="">
-                        <option value="maestria">Maestria</option>
-                        <option value="doctorado">Doctorado</option>
-                    </select>
-                </div>
-                <div class="col-6">
+                <div class="col-4">
                     <label class="form-label" for="ciclo">Mencion</label>
                     <select name="" class="form-control" id="">
                     </select>
@@ -43,7 +38,7 @@
                 <h3>Datos del curso</h3>
                 <div class="col-6">
                     <label class="form-label" for="ciclo">Ciclo</label>
-                    <select name="ciclo" class="form-control" id="ciclo">
+                    <select name="ciclo" class="form-control" id="ciclo" >
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -77,7 +72,7 @@
                 </div>
                 <div class="col-6">
                     <label for="" class="form-label">Acciones</label><br>
-                    <button class="btn btn-success" onClick="agregar();">Agregar</button>
+                    <button class="btn btn-success" onClick="agregar();" id="agregar">Agregar</button>
                     <input type="text" hidden id="cursoEditar">
                     <button id="guardar" class="btn btn-warning" onClick="guardar();" disabled="true">Guardar</button>
                 </div>
@@ -89,6 +84,7 @@
                 <tr>
                     <th scope="col">Curso</th>
                     <th scope="col">Horas</th>
+                    <th scope="col">Fechas</th>
                     <th scope="col">Acciones</th>
                     <th scope="col">Docente</th>
                 </tr>
@@ -116,6 +112,7 @@
     <script src="../assets/js/datepicker/bootstrap-datepicker.es.min.js"></script>
     <script src="../assets/js/datepicker/bootstrapValidator.min.js"></script>
     <script src="../assets/js/datepicker/es_ES.min.js"></script>
+    <script src="../assets/js/select2/select2.js"></script>
     <script src="../view/js/index.js"></script>
 </body>
 
