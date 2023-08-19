@@ -73,7 +73,7 @@
                 <div class="col-6">
                     <label for="" class="form-label">Acciones</label><br>
                     <button class="btn btn-success" onClick="agregar();" id="agregar">Agregar</button>
-                    <input type="text" hidden id="cursoEditar">
+                    <input type="number" hidden id="cursoEditar">
                     <button id="guardar" class="btn btn-warning" onClick="guardar();" disabled="true">Guardar</button>
                 </div>
             </div>
@@ -93,6 +93,7 @@
                 <tr>
                     <th scope="row">Curso 1</th>
                     <td>64</td>
+                    <td>27/08/2023</td>
                     <td>
                         <button class="btn btn-info" onClick="editar(0);">Editar</button>
                         <button class="btn btn-danger">Eliminar</button>

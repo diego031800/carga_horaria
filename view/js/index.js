@@ -28,7 +28,7 @@ function get_cbo_unidades() {
     type: "POST",
     url: "../../../carga_horaria/controllers/main/CargaHorariaController.php",
     data: "opcion=" + opcion +
-          "&sem_id=" + sem_id,
+      "&sem_id=" + sem_id,
     success: function (data) {
       objeto = JSON.parse(data);
       let opciones = objeto.unidades;
@@ -52,8 +52,8 @@ function get_cbo_programas() {
     type: "POST",
     url: "../../../carga_horaria/controllers/main/CargaHorariaController.php",
     data: "opcion=" + opcion +
-          "&sem_id=" + sem_id + 
-          "&sec_id=" + sec_id,
+      "&sem_id=" + sem_id +
+      "&sec_id=" + sec_id,
     success: function (data) {
       objeto = JSON.parse(data);
       let opciones = objeto.programas;
@@ -71,6 +71,8 @@ function get_cbo_programas() {
 
 // FIN OBTENER COMBOS
 
+
+// Date picker
 $(document).ready(function () {
   $("#ciclo").select2({
     dropdownCssClass: "limitar-opciones",
@@ -112,8 +114,11 @@ $(document).ready(function () {
   });
 });
 
+// Operaciones de cursos
+
 var listacursos = [{ index: 0, curso: "Curso 1", horas: "64" }];
 var fechascursos = [{ index: 0, id: 0, fecha: "27/08/2023" }];
+
 function agregar() {
   var cursonombre = document.getElementById("cursoNombre").value;
   var cursohoras = document.getElementById("cursoHoras").value;
@@ -138,52 +143,79 @@ function agregar() {
     "<td>Nombre del docente</td>" +
     '<td><button class="btn btn-danger">Ver</button></td></tr>';
   $("#cursosTabla").append(fila);
+  limpiarInputs()
 }
 
 function agregarFechas(fechas, index) {
   var arrayFechas = fechas.split(",");
+  var i = listacursos.length-2;
   arrayFechas.forEach((element) => {
-    let i = listacursos.length;
-    fechascursos.push({ index: i, id: index, fecha:element });
+    i +=1;
+    fechascursos.push({ index: i, id: index, fecha: element });
   });
+}
+
+function limpiarInputs(){
+  $(".datepicker3").datepicker('clearDates');
+  $("#newTratFechaIni").val('');
+  $("#cursoHoras").val("");
 }
 
 function editar(index) {
   $("#cursoNombre").val(listacursos[index].curso);
   $("#cursoHoras").val(listacursos[index].horas);
-  let stringFecha="";
-  fechascursos.forEach((element) => {
-    if (element.id == index) {
-      stringFecha = stringFecha+element.fecha+',';
+  var fechasMostrar = fechascursos.map(function (fecha) {
+    if(index==fecha.id){
+      var partes = fecha.fecha.split("/");
+      return new Date(partes[2], partes[1] - 1, partes[0]);
     }
   });
-  $("#newTratFechaIni").val(stringFecha);
   $("#cursoEditar").val(index);
+  $(".datepicker3").datepicker('setDates', fechasMostrar);
   document.getElementById("agregar").disabled = true;
   document.getElementById("guardar").disabled = false;
 }
 
 function guardar() {
-  let index = document.getElementById("cursoEditar").value;
+  var index = document.getElementById("cursoEditar").value;
   var cursonombre = document.getElementById("cursoNombre").value;
   var cursohoras = document.getElementById("cursoHoras").value;
+  console.log(index);
+  fechascursos.forEach(element => {
+    if (index == element.id) {
+      fechascursos.splice(element.index);
+    }
+  });
+  var fechas = document.getElementById("newTratFechaIni").value;
+  agregarFechas(fechas, index);
   listacursos[index].curso = cursonombre;
   listacursos[index].horas = cursohoras;
-  $("#cursoHoras").val("");
-  limpiarTabla();
+  limpiarInputs()
   llenarTabla();
   document.getElementById("guardar").disabled = true;
   document.getElementById("agregar").disabled = false;
 }
 
 function llenarTabla() {
+  $("#cursosTabla tbody").empty();
   listacursos.forEach((element) => {
+    let stringFecha = "";
+    let primero = true;
+    fechascursos.forEach(element => {
+      if (primero) {
+        stringFecha += element.fecha;
+        primero = false;
+      } else {
+        stringFecha += ',' + element.fecha;
+      }
+    });
     fila =
       '<tr><th scope="row">' +
       element.curso +
       "</th><td>" +
       element.horas +
-      "</td>" +
+      "</td><td>" +
+      stringFecha +
       '<td><button class="btn btn-info" onClick="editar(' +
       element.index +
       ');">Editar</button><button class="btn btn-danger">Eliminar</button></td>' +
@@ -191,10 +223,6 @@ function llenarTabla() {
       '<td><button class="btn btn-danger">Ver</button></td></tr>';
     $("#cursosTabla").append(fila);
   });
-}
-
-function limpiarTabla() {
-  $("#cursosTabla tbody").empty();
 }
 
 function load_document() {
