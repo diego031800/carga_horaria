@@ -26,10 +26,12 @@
     {
       $sql = "SELECT 
                 U.usu_id, 
-                U.usu_login 
+                U.usu_login,
+                PER.per_ape_paterno + ' ' + PER.per_ape_materno + ' ' + PER.per_nombres AS nombres
               FROM SISTEMA.USUARIO U 
+              INNER JOIN SISTEMA.PERSONA PER ON PER.per_id = U.per_id
               WHERE U.usu_estado = 1 
-                  AND U.usu_login = '".$this->parametros['usuario']."' 
+                  AND U.usu_login = '".$this->parametros['usuario']."'
                   AND U.usu_password = '".$this->parametros['password']."'";
       $datos = $this->con->return_query_sqlsrv($sql);
       $resp = array();
@@ -39,6 +41,7 @@
         $usu_id = $fila['usu_id'];
         $_SESSION['usu_id'] = $fila['usu_id'];
         $_SESSION['login'] = $fila['usu_login'];
+        $_SESSION['nombres'] = $fila['nombres'];
       }
       if (!empty($usu_id)) {
         $resp = array('respuesta' => 'Acceso permitido');

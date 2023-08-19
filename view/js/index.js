@@ -2,6 +2,7 @@
 let cboSemestre = document.getElementById('cboSemestre');
 let cboUnidad = document.getElementById('cboUnidad');
 let cboPrograma = document.getElementById('cboPrograma');
+let cboCiclo = document.getElementById('cboCiclo');
 
 // FUNCIONES
 // INICIO OBTENER COMBOS
@@ -69,48 +70,26 @@ function get_cbo_programas() {
   });
 }
 
+function change_cbo_ciclo() {
+  let unidad = $("#cboUnidad option[value='" + cboUnidad.value + "']").text();
+  if (unidad == 'DOCTORADO') {
+    $('#cboCiclo').html('<option value="">Selecciona un ciclo ...</option>' +
+                        '<option value="1">1</option>' +
+                        '<option value="2">2</option>' +
+                        '<option value="3">3</option>' +
+                        '<option value="4">4</option>' +
+                        '<option value="5">5</option>' +
+                        '<option value="6">6</option>');
+  } else {
+    $('#cboCiclo').html('<option value="">Selecciona un ciclo ...</option>' +
+                        '<option value="1">1</option>' +
+                        '<option value="2">2</option>' +
+                        '<option value="3">3</option>' +
+                        '<option value="4">4</option>');
+  }
+}
+
 // FIN OBTENER COMBOS
-
-$(document).ready(function () {
-  $("#ciclo").select2({
-    dropdownCssClass: "limitar-opciones",
-  });
-});
-
-$(document).ready(function () {
-  $(".registerFormFcMv").bootstrapValidator({
-    live: "enabled",
-    fields: {
-      newinputTratFechaIni: {
-        validators: {
-          date: {
-            format: "DD/MM/YYYY",
-            message: "ESTE VALOR NO COINCIDE CON UNA FECHA",
-          },
-          stringLength: {
-            min: 10,
-            max: 10,
-            message: "LA LONGITUD MÁXIMA ES DE 10 INCLUYENDO /",
-          },
-          regexp: {
-            regexp: /^[0-9-/]+$/,
-            message: "LA FECHA SOLO PUEDE TENER NÚMEROS Y /",
-          },
-        },
-      },
-    },
-  });
-
-  $(".datepicker3").datepicker({
-    container: ".container-calendar",
-    autoclose: true,
-    todayHighlight: true,
-    calendarWeeks: true,
-    format: "dd/mm/yyyy",
-    language: "es",
-    multidate: true,
-  });
-});
 
 var listacursos = [{ index: 0, curso: "Curso 1", horas: "64" }];
 var fechascursos = [{ index: 0, id: 0, fecha: "27/08/2023" }];
@@ -201,8 +180,11 @@ function load_document() {
   get_cbo_unidades();
   get_cbo_semestres();
   get_cbo_programas();
-  cboSemestre.addEventListener("change", get_cbo_unidades, get_cbo_programas);
+  change_cbo_ciclo();
+  cboSemestre.addEventListener("change", get_cbo_unidades);
+  cboSemestre.addEventListener("change", get_cbo_programas);
   cboUnidad.addEventListener("change", get_cbo_programas);
+  cboUnidad.addEventListener("change", change_cbo_ciclo);
 }
 
 // EVENTOS

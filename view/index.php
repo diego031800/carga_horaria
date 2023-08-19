@@ -1,52 +1,56 @@
+<?php 
+    include_once '../models/config.php';
+    session_start();  
+    if(!isset($_SESSION['login']))
+    {
+        header("Location:../index.php");
+    } else {
+    date_default_timezone_set('America/Lima');
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- BOOTSTRAP -->
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="../assets/css/bootstrap-datepicker3.min.css">
     <link rel="stylesheet" href="../assets/css/bootstrapValidator.min.css">
+    <!-- SELECT 2 -->
     <link rel="stylesheet" href="../assets/css/select2/select2.css">
+    <!-- ESTILOS PROPIOS -->
     <link rel="stylesheet" href="/carga_horaria/view/css/styles.css">
-    <title>Carga Horaria</title>
+    <title>CARGA HORARIA</title>
 </head>
 
 <body>
     <div class="container-fluid px-5 my-5">
         <div class="row">
-            <div class="col-12 row">
-                <h3>Registro de la carga horaria</h3>
-                <div class="col-4">
-                    <label for="" class="form-label">Semestre</label>
-                    <select class="form-control" id="cboSemestre">
-                    </select>
-                </div>
-                <div class="col-4">
-                    <label for="" class="form-label">Unidad</label>
-                    <select class="form-control" id="cboUnidad">
-                    </select>
-                </div>
-                <div class="col-4">
-                    <label class="form-label" for="ciclo">Programa</label>
-                    <select class="form-control" id="cboPrograma">
-                    </select>
-                </div>
+            <h3 class="mb-5">Registro de carga horaria</h3>
+            <div class="col-lg-2 col-6 mb-5">
+                <label for="" class="form-label">Semestre</label>
+                <select class="form-select" id="cboSemestre">
+                </select>
+            </div>
+            <div class="col-lg-4 col-6 mb-5">
+                <label for="" class="form-label">Unidad</label>
+                <select class="form-select" id="cboUnidad">
+                </select>
+            </div>
+            <div class="col-lg-4 col-6 mb-5">
+                <label class="form-label" for="ciclo">Programa</label>
+                <select class="form-select" id="cboPrograma">
+                </select>
+            </div>
+            <div class="col-lg-2 col-6 mb-5">
+                <label class="form-label" for="ciclo">Ciclo</label>
+                <select name="ciclo" class="form-select" id="cboCiclo" >
+                </select>
             </div>
             <div class="col-12 row">
                 <h3>Datos del curso</h3>
-                <div class="col-6">
-                    <label class="form-label" for="ciclo">Ciclo</label>
-                    <select name="ciclo" class="form-control" id="ciclo" >
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                    </select>
-                </div>
                 <div class="col-6">
                     <label for="" class="form-label">Nombre del curso</label>
                     <select name="cursoNombre" id="cursoNombre" class="form-control">
@@ -103,17 +107,59 @@
             </tbody>
         </table>
     </div>
-
-
-
+    <!-- SCRIPTS -->
+    <!-- JQUERY -->
     <script src="../assets/js/jquery-3.7.0.min.js"></script>
+    <!-- BOOTSTRAP -->
     <script src="../assets/js/bootstrap.min.js"></script>
     <script src="../assets/js/datepicker/bootstrap-datepicker.min.js"></script>
     <script src="../assets/js/datepicker/bootstrap-datepicker.es.min.js"></script>
     <script src="../assets/js/datepicker/bootstrapValidator.min.js"></script>
+    <!-- DATE PICKER -->
     <script src="../assets/js/datepicker/es_ES.min.js"></script>
+    <!-- SELECT 2 -->
     <script src="../assets/js/select2/select2.js"></script>
+    <!-- SCRIPT DESPACHO -->
     <script src="../view/js/index.js"></script>
+    <!-- SCRIPT PROPIO INICIO -->
+    <script>
+        $(document).ready(function () {
+            $(".registerFormFcMv").bootstrapValidator({
+                live: "enabled",
+                fields: {
+                newinputTratFechaIni: {
+                    validators: {
+                    date: {
+                        format: "DD/MM/YYYY",
+                        message: "ESTE VALOR NO COINCIDE CON UNA FECHA",
+                    },
+                    stringLength: {
+                        min: 10,
+                        max: 10,
+                        message: "LA LONGITUD MÁXIMA ES DE 10 INCLUYENDO /",
+                    },
+                    regexp: {
+                        regexp: /^[0-9-/]+$/,
+                        message: "LA FECHA SOLO PUEDE TENER NÚMEROS Y /",
+                    },
+                    },
+                },
+                },
+            });
+
+            $(".datepicker3").datepicker({
+                container: ".container-calendar",
+                autoclose: true,
+                todayHighlight: true,
+                calendarWeeks: true,
+                format: "dd/mm/yyyy",
+                language: "es",
+                multidate: true,
+            });
+        });
+    </script>
 </body>
 
 </html>
+
+<?php } ?>
