@@ -5,11 +5,14 @@ let cboPrograma = document.getElementById('cboPrograma');
 let cboCiclo = document.getElementById('cboCiclo');
 let btnBuscar = document.getElementById('btnBuscar');
 let cursoNombre = document.getElementById('cursoNombre');
+let btnGuardar = document.getElementById('btnGuardar');
+let btnCerrar = document.getElementById('btnCerrar');
+let btnCancelar = document.getElementById('btnCancelar');
 
-var listacursos = [{ index: 0, curso: "Curso 1", horas: "64" }];
-var fechascursos = [{ index: 0, id: 0, fecha: "27/08/2023" }];
-var listadocentes= [{ index: 0, id :0, docente: "Docente 1", condicion:"Invitado Nacional",grado:"dr", codigo:"64", dni:"74",correo:"gggg", telefono:"9"}]
-var id_current =1 
+var listacursos = [];
+var fechascursos = [];
+var listadocentes= [];
+var id_current = 0;
 
 // FUNCIONES
 // INICIO OBTENER COMBOS
@@ -102,6 +105,7 @@ function buscar_cursos() {
   let programa = cboPrograma.value;
   let ciclo = cboCiclo.value;
 
+  btnBuscar.disabled = true;
   $.ajax({
     type: "POST",
     url: "../../../carga_horaria/controllers/main/CargaHorariaController.php",
@@ -110,6 +114,7 @@ function buscar_cursos() {
       "&prg_id=" + programa + 
       "&ciclo=" + ciclo,
     success: function (data) {
+      btnBuscar.disabled = false;
       objeto = JSON.parse(data);
       let opciones = objeto.cursos;
       cursoNombre.disabled = false;
@@ -119,15 +124,13 @@ function buscar_cursos() {
       $('#cursoNombre').html(opciones);
     },
     error: function (data) {
+      btnBuscar.disabled = false;
       alert("Error al mostrar");
     },
   });
 }
 
 // FIN OBTENER COMBOS
-
-var listacursos = [{ index: 0, curso: "Curso 1", horas: "64" }];
-var fechascursos = [{ index: 0, id: 0, fecha: "27/08/2023" }];
 
 function agregar() {
   var cursonombre = document.getElementById("cursoNombre").value;
@@ -298,6 +301,26 @@ function abrir_docente_modal(index){
   });
 }
 
+// MODAL JS
+
+document.getElementById('closeModal').addEventListener('click', function() {
+  document.getElementById('myModal').style.display = "none";
+  limpiarInputsModal();
+});
+
+window.onclick = function(event) {
+  if (event.target === document.getElementById('myModal')) {
+      document.getElementById('myModal').style.display = "none";
+      limpiarInputsModal();
+  }
+}
+
+/* GUARDAR CARGA HORARIA */
+function saveCargaHoraria() {
+
+}
+
+/* FUNCION AL CARGAR EL DOCUMENTO */
 function load_document() {
   get_cbo_unidades();
   get_cbo_semestres();
@@ -307,35 +330,8 @@ function load_document() {
   cboSemestre.addEventListener("change", get_cbo_programas);
   cboUnidad.addEventListener("change", get_cbo_programas);
   cboUnidad.addEventListener("change", change_cbo_ciclo);
-  btnBuscar.addEventListener("click", buscar_cursos)
-}
-
-// MODAL JS
-
-document.getElementById('closeModal').addEventListener('click', function() {
-  document.getElementById('myModal').style.display = "none";
-  limpiarInputsModal();
-});
-
-window.onclick = function(event) {
-  if (event.target === document.getElementById('myModal')) {
-      document.getElementById('myModal').style.display = "none";
-      limpiarInputsModal();
-  }
-}
-
-// MODAL JS
-
-document.getElementById('closeModal').addEventListener('click', function() {
-  document.getElementById('myModal').style.display = "none";
-  limpiarInputsModal();
-});
-
-window.onclick = function(event) {
-  if (event.target === document.getElementById('myModal')) {
-      document.getElementById('myModal').style.display = "none";
-      limpiarInputsModal();
-  }
+  btnBuscar.addEventListener("click", buscar_cursos);
+  
 }
 
 // EVENTOS

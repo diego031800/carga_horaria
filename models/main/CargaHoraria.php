@@ -28,6 +28,9 @@
                 case 'get_cursos_by_programa':
                     echo $this->get_cursos_by_programa();
                     break;
+                case 'saveCargaHoraria':
+                    echo $this->saveCargaHoraria();
+                    break;
             }
         }
 
@@ -37,7 +40,7 @@
                         SEM.sem_id,
                         UPPER(SEM.sem_nombre) as semestre
                     FROM ADMISION.SEMESTRE SEM
-                    WHERE sem_estado = 1 /* AND sem_activo = 1 */
+                    WHERE sem_estado = 1 AND sem_activo = 1 
                     ORDER BY SEM.sem_id DESC";
             $datos = $this->con->return_query_sqlsrv($sql);
             $semestres = "<option value=''>Selecciona un semestre ...</option>\n";
@@ -130,6 +133,27 @@
             }
             $resp = array('has_data' => $has_data, 'cursos' => $cursos);
             return json_encode($resp);
+        }
+
+        private function saveCargaHoraria() 
+        {
+            $sql = "CALL sp_saveCargaHoraria(";
+            $sql .= "'".$this->parametros['p_cgh_id']."', "; // p_cgh_id
+            $sql .= "'".$this->parametros['p_cgh_codigo']."', "; // p_cgh_codigo
+            $sql .= "'".$this->parametros['p_sem_id']."', "; // p_sem_id
+            $sql .= "'".$this->parametros['p_sem_codigo']."', "; // p_sem_codigo
+            $sql .= "'".$this->parametros['p_sem_descripcion']."', "; // p_sem_descripcion
+            $sql .= "'".$this->parametros['p_sec_id']."', "; // p_sec_id
+            $sql .= "'".$this->parametros['p_sec_descripcion']."', "; // p_sec_descripcion
+            $sql .= "'".$this->parametros['p_prg_id']."', "; // p_prg_id
+            $sql .= "'".$this->parametros['p_prg_mencion']."', "; // p_prg_mencion
+            $sql .= "'".$this->parametros['p_cgh_ciclo']."', "; // p_cgh_ciclo
+            $sql .= "'".$this->parametros['p_cgh_estado']."', "; // p_cgh_estado
+            $sql .= "'".$this->parametros['p_usuario']."') "; // p_usuario
+
+            $datos = $this->con->return_query_mysql($sql);
+            
+            
         }
     }
 ?>
