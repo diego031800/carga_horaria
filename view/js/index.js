@@ -6,6 +6,11 @@ let cboCiclo = document.getElementById('cboCiclo');
 let btnBuscar = document.getElementById('btnBuscar');
 let cursoNombre = document.getElementById('cursoNombre');
 
+var listacursos = [{ index: 0, curso: "Curso 1", horas: "64" }];
+var fechascursos = [{ index: 0, id: 0, fecha: "27/08/2023" }];
+var listadocentes= [{ index: 0, id :0, docente: "Docente 1", condicion:"Invitado Nacional",grado:"dr", codigo:"64", dni:"74",correo:"gggg", telefono:"9"}]
+var id_current =1 
+
 // FUNCIONES
 // INICIO OBTENER COMBOS
 function get_cbo_semestres() {
@@ -133,22 +138,11 @@ function agregar() {
     return;
   }
   let i = listacursos.length;
-  listacursos.push({ index: i, curso: cursonombre, horas: cursohoras });
-  agregarFechas(fechas, i);
-  fila =
-    '<tr><th scope="row">' +
-    cursonombre +
-    "</th><td>" +
-    cursohoras +
-    "</td><td>" +
-    fechas +
-    '</td><td><button class="btn btn-info" onClick="editar(' +
-    i +
-    ');">Editar</button><button class="btn btn-danger">Eliminar</button></td>' +
-    "<td>Nombre del docente</td>" +
-    '<td><button class="btn btn-danger">Ver</button></td></tr>';
-  $("#cursosTabla").append(fila);
-  limpiarInputs()
+  listacursos.push({ index: id_current, curso: cursonombre, horas: cursohoras });
+  agregarFechas(fechas, id_current);
+  llenarTabla();
+  limpiarInputs();
+  id_current += 1;
 }
 
 function agregarFechas(fechas, index) {
@@ -166,67 +160,141 @@ function limpiarInputs(){
   $("#cursoHoras").val("");
 }
 
-function editar(index) {
-  $("#cursoNombre").val(listacursos[index].curso);
-  $("#cursoHoras").val(listacursos[index].horas);
+function editar(indexb) {
+  var curso = listacursos.find(cursoI => cursoI.index === indexb);
+  $("#cursoNombre").val(curso.curso);
+  $("#cursoHoras").val(curso.horas);
   var fechasMostrar = fechascursos.map(function (fecha) {
-    if(index==fecha.id){
+    if(indexb===fecha.id){
       var partes = fecha.fecha.split("/");
       return new Date(partes[2], partes[1] - 1, partes[0]);
     }
   });
-  $("#cursoEditar").val(index);
+  $("#cursoEditar").val(indexb);
   $(".datepicker3").datepicker('setDates', fechasMostrar);
   document.getElementById("agregar").disabled = true;
   document.getElementById("guardar").disabled = false;
+  document.getElementById("cancelar").disabled = false;
+}
+function eliminar(index){
+  listacursos= listacursos.filter((item) => item.index != index);
+  fechascursos= fechascursos.filter((item) => item.id != index);
+  llenarTabla();
 }
 
 function guardar() {
-  var index = document.getElementById("cursoEditar").value;
+  var index = parseInt(document.getElementById("cursoEditar").value);
   var cursonombre = document.getElementById("cursoNombre").value;
   var cursohoras = document.getElementById("cursoHoras").value;
-  console.log(index);
-  fechascursos.forEach(element => {
-    if (index == element.id) {
-      fechascursos.splice(element.index);
-    }
-  });
+  fechascursos= fechascursos.filter((item) => item.id != index);
   var fechas = document.getElementById("newTratFechaIni").value;
   agregarFechas(fechas, index);
-  listacursos[index].curso = cursonombre;
-  listacursos[index].horas = cursohoras;
-  limpiarInputs()
+  listacursos.find(cursoI => cursoI.index === index).curso = cursonombre;
+  listacursos.find(cursoI => cursoI.index === index).horas = cursohoras;
+  limpiarInputs();
   llenarTabla();
   document.getElementById("guardar").disabled = true;
+  document.getElementById("cancelar").disabled = true;
   document.getElementById("agregar").disabled = false;
 }
 
+function cancelar(){
+  limpiarInputs();
+  document.getElementById("agregar").disabled = false;
+  document.getElementById("guardar").disabled = true;
+  document.getElementById("cancelar").disabled = true;
+  $("#cursoEditar").val("");
+}
+
+
 function llenarTabla() {
   $("#cursosTabla tbody").empty();
-  listacursos.forEach((element) => {
-    let stringFecha = "";
-    let primero = true;
-    fechascursos.forEach(element => {
-      if (primero) {
-        stringFecha += element.fecha;
-        primero = false;
-      } else {
-        stringFecha += ',' + element.fecha;
-      }
-    });
+  if(listacursos.length ==0){
+    return;
+  }
+  listacursos.forEach((elementC) => {
+    let stringFecha = fechascursos
+      .filter(element => elementC.index === element.id)
+      .map(element => element.fecha)
+      .join(',');
+    let nombre;
+    let doc = listadocentes.find(item => item.id === elementC.index);
+    if(doc == null && doc === undefined ){
+      nombre = "Sin asignar docente";
+    }else{
+      nombre = doc.docente
+    }
     fila =
-      '<tr><th scope="row">' +
-      element.curso +
-      "</th><td>" +
-      element.horas +
-      "</td><td>" +
-      stringFecha +
-      '<td><button class="btn btn-info" onClick="editar(' +
-      element.index +
-      ');">Editar</button><button class="btn btn-danger">Eliminar</button></td>' +
-      "<td>Nombre del docente</td>" +
-      '<td><button class="btn btn-danger">Ver</button></td></tr>';
-    $("#cursosTabla").append(fila);
+    '<tr><th scope="row">' +
+    elementC.curso +
+    "</th><td>" +
+    elementC.horas +
+    "</td><td>" +
+    stringFecha +
+    '<td><button class="btn btn-info" onClick="editar(' +
+    elementC.index +
+    ');">Editar</button><button class="btn btn-danger" onClick="eliminar('+
+    elementC.index +
+    ')";>Eliminar</button></td>' +
+    '<td>'+nombre+'</td>' +
+    '<td><button class="btn btn-danger" onClick="abrir_docente_modal('+
+    elementC.index+
+    ');">Ver</button></td></tr>';
+    $("#cursosTabla tbody").append(fila);
+  });
+}
+
+function guardar_docente(){
+  var indx = listadocentes.length;
+  var id_curso_modal = parseInt(document.getElementById("id-curso-docente").value);
+  var doc_modal = document.getElementById("doc-docente").value;
+  var email_modal = document.getElementById("email-docente").value;
+  var telefono_modal = document.getElementById("telefono-docente").value;
+  var condicion_modal = document.getElementById("condicion-docente").value;
+  var nombre_docente_modal = document.getElementById("nombre-docente").value;
+  var codigo_modal = document.getElementById("codigo-docente").value;
+  var grado_modal = document.getElementById("grado-docente").value;
+  if (listadocentes.find(item => item.id === id_curso_modal) != null && listadocentes.find(item => item.id === id_curso_modal) !== undefined ) {
+    listadocentes.find(item => item.id === id_curso_modal).docente = nombre_docente_modal;
+    listadocentes.find(item => item.id === id_curso_modal).condicion = condicion_modal;
+    listadocentes.find(item => item.id === id_curso_modal).grado = grado_modal;
+    listadocentes.find(item => item.id === id_curso_modal).codigo = codigo_modal;
+    listadocentes.find(item => item.id === id_curso_modal).dni = doc_modal;
+    listadocentes.find(item => item.id === id_curso_modal).correo = email_modal;
+    listadocentes.find(item => item.id === id_curso_modal).telefono = telefono_modal;
+  }else{
+    listadocentes.push({index:indx, id:id_curso_modal, docente:nombre_docente_modal, condicion:condicion_modal,
+    grado:grado_modal, codigo:codigo_modal,dni:doc_modal,correo:email_modal,telefono:telefono_modal});
+  }
+  limpiarInputsModal();
+  document.getElementById('myModal').style.display = "none";
+  llenarTabla();
+}
+//[{ index: 0, id :0, docente: "Profesor 1", condicion:"Invitado Nacional",grado:"dr", codigo:"64", dni:"74",correo:"gggg", telefono:"9"}]
+function limpiarInputsModal(){
+  $("#id-curso-docente").val("");
+  $("#doc-docente").val("");
+  $("#email-docente").val("");
+  $("#codigo-docente").val("");
+  $("#telefono-docente").val("");
+}
+
+function abrir_docente_modal(index){
+  var docente = listadocentes.find(item => item.id === index);
+  if (docente != null && docente !== undefined ) {
+    $("#nombre-docente").val(docente.docente);
+    $("#condicion-docente").val(docente.condicion);
+    $("#grado-docente").val(docente.grado);
+    $("#codigo-docente").val(docente.codigo);
+    $("#doc-docente").val(docente.dni);
+    $("#email-docente").val(docente.correo);
+    $("#telefono-docente").val(docente.telefono);
+  }
+  document.getElementById('myModal').style.display = "block";
+  $("#id-curso-docente").val(index);
+  $('#nombre-docente').select2({
+    dropdownCssClass: "limitar-opciones",
+    dropdownParent: $("#myModal")
   });
 }
 
@@ -240,6 +308,34 @@ function load_document() {
   cboUnidad.addEventListener("change", get_cbo_programas);
   cboUnidad.addEventListener("change", change_cbo_ciclo);
   btnBuscar.addEventListener("click", buscar_cursos)
+}
+
+// MODAL JS
+
+document.getElementById('closeModal').addEventListener('click', function() {
+  document.getElementById('myModal').style.display = "none";
+  limpiarInputsModal();
+});
+
+window.onclick = function(event) {
+  if (event.target === document.getElementById('myModal')) {
+      document.getElementById('myModal').style.display = "none";
+      limpiarInputsModal();
+  }
+}
+
+// MODAL JS
+
+document.getElementById('closeModal').addEventListener('click', function() {
+  document.getElementById('myModal').style.display = "none";
+  limpiarInputsModal();
+});
+
+window.onclick = function(event) {
+  if (event.target === document.getElementById('myModal')) {
+      document.getElementById('myModal').style.display = "none";
+      limpiarInputsModal();
+  }
 }
 
 // EVENTOS
