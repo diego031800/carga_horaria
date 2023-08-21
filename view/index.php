@@ -10,10 +10,69 @@
     <link rel="stylesheet" href="../assets/css/bootstrapValidator.min.css">
     <link rel="stylesheet" href="../assets/css/select2/select2.css">
     <link rel="stylesheet" href="/carga_horaria/view/css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
     <title>Carga Horaria</title>
 </head>
 
 <body>
+    <div class="modal" id="myModal"style= "">
+        <div class="modal-content-1">
+            <span class="close-btn" id="closeModal">&times;</span>
+            <h2>Registrar docente:</h2>
+            <input type="text" hidden id="id-curso-docente">
+            <div class="row">
+                <div class="col-12">
+                    <label for="" class="form-label">Nombre:</label><br/>
+                    <select name="nombre-docente" class="form-control" id="nombre-docente" >
+                        <option value="Docente 1">Docente 1</option>
+                        <option value="Docente 2">Docente 2</option>
+                        <option value="Docente 3">Docente 3</option>
+                        <option value="Docente 4">Docente 4</option>
+                        <option value="Docente 5">Docente 5</option>
+                        <option value="Docente 6">Docente 6</option>
+                    </select>
+                </div>
+                <div class="col-6">
+                    <label for="" class="form-label">Condicion:</label><br/>
+                    <select name="condicion-docente" class="form-control" id="condicion-docente" >
+                        <option value="UNT">UNT</option>
+                        <option value="Invitado Nacional">Invitado Nacional</option>
+                        <option value="Invitado Local">Invitado Local</option>
+                        <option value="Invitado Internacional">Invitado Internacional</option>
+                        <option value="Externo">Externo</option>
+                    </select>
+                </div>
+                <div class="col-6">
+                    <label for="" class="form-label">Grado:</label><br/>
+                    <select name="grado-docente" class="form-control" id="grado-docente" >
+                        <option value="dr">Doctor</option>
+                        <option value="dra">Doctora</option>
+                        <option value="ms">Mister</option>
+                    </select>
+                </div>
+                <div class="col-6">
+                    <label for="" class="form-label">Correo:</label><br/>
+                    <input type="email" class="form-control" id="email-docente">
+                </div>
+                <div class="col-6">
+                    <label for="" class="form-label">Documento de identidad:</label><br/>
+                    <input type="text" class="form-control" id="doc-docente">
+                </div>
+                <div class="col-6">
+                    <label for="" class="form-label">Código:</label><br/>
+                    <input type="text" class="form-control" id="codigo-docente">
+                </div>
+                <div class="col-6">
+                    <label for="" class="form-label">Teléfono:</label><br/>
+                    <input type="number" class="form-control" id="telefono-docente">
+                </div>
+                <div class="col-12">
+                    <button class="btn btn-success" onClick="guardar_docente();">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="container-fluid px-5 my-5">
         <div class="row">
             <div class="col-12 row">
@@ -75,11 +134,12 @@
                     <button class="btn btn-success" onClick="agregar();" id="agregar">Agregar</button>
                     <input type="number" hidden id="cursoEditar">
                     <button id="guardar" class="btn btn-warning" onClick="guardar();" disabled="true">Guardar</button>
+                    <button class="btn btn-info" onClick="cancelar();" id="cancelar" disabled="true">Cancelar</button>
                 </div>
             </div>
         </div>
 
-        <table class="table" id="cursosTabla">
+        <table class="table" id="cursosTabla" name="cursosTabla">
             <thead>
                 <tr>
                     <th scope="col">Curso</th>
@@ -96,10 +156,10 @@
                     <td>27/08/2023</td>
                     <td>
                         <button class="btn btn-info" onClick="editar(0);">Editar</button>
-                        <button class="btn btn-danger">Eliminar</button>
+                        <button class="btn btn-danger" onClick="eliminar(0);">Eliminar</button>
                     </td>
-                    <td>Nombre del docente</td>
-                    <td><button class="btn btn-danger">Ver</button></td>
+                    <td>Docente 1</td>
+                    <td><button class="btn btn-danger" onClick="abrir_docente_modal(0)";>Ver</button></td>
                 </tr>
             </tbody>
         </table>

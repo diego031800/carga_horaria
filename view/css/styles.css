@@ -2,3 +2,40 @@
     max-height: 100px;
     overflow-y: auto;
 }
+
+.modal {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 50%; 
+    height: 50%; 
+    overflow: auto;
+    background-color: rgba(0,0,0,0.7); 
+}
+
+.select2-dropdown {
+    z-index: 10060;
+ }
+
+.modal-content-1 {
+    background-color: #fefefe;
+    margin: 15% auto; 
+    padding: 20px;
+    border: 1px solid #888;
+    width: 40%; 
+}
+
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
