@@ -9,6 +9,9 @@ let btnGuardar = document.getElementById('btnGuardar');
 let btnCerrar = document.getElementById('btnCerrar');
 let btnCancelar = document.getElementById('btnCancelar');
 
+let cgh_id = 0;
+let cgh_codigo = '';
+
 var listacursos = [];
 var fechascursos = [];
 var listadocentes= [];
@@ -234,7 +237,7 @@ function llenarTabla() {
     elementC.horas +
     "</td><td>" +
     stringFecha +
-    '<td><button class="btn btn-info" onClick="editar(' +
+    '<td><button class="btn btn-info" style="margin-right: 10px;" onClick="editar(' +
     elementC.index +
     ');">Editar</button><button class="btn btn-danger" onClick="eliminar('+
     elementC.index +

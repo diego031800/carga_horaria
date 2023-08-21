@@ -84,8 +84,14 @@ if (!isset($_SESSION['login'])) {
                         &nbsp; Agregar curso
                     </button>
                     <input type="number" hidden id="cursoEditar">
-                    <button id="guardar" class="btn btn-warning" onClick="guardar();" disabled="true">Guardar</button>
-                    <button class="btn btn-info" onClick="cancelar();" id="cancelar" disabled="true">Cancelar</button>
+                    <button id="guardar" class="btn btn-warning" onClick="guardar();" disabled="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><style>svg{fill:#1d2d49}</style><path d="M0 48V487.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400 345.7 507.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48z"/></svg>
+                        &nbsp; Guardar edición
+                    </button>
+                    <button class="btn btn-info" onClick="cancelar();" id="cancelar" disabled="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><style>svg{fill:#ffffff}</style><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
+                        &nbsp; Cancelar
+                    </button>
                 </div>
             </div>
 
