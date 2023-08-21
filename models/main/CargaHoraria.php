@@ -25,6 +25,9 @@
                 case 'get_cbo_programas':
                     echo $this->get_cbo_programas();
                     break;
+                case 'get_cursos_by_programa':
+                    echo $this->get_cursos_by_programa();
+                    break;
             }
         }
 
@@ -39,7 +42,7 @@
             $datos = $this->con->return_query_sqlsrv($sql);
             $semestres = "<option value=''>Selecciona un semestre ...</option>\n";
             while ($row = $datos->fetch(PDO::FETCH_ASSOC)) {
-                $semestres .= "<option value=".$row['sem_id'].">".$row['semestre']."</option>\n";
+                $semestres .= "<option value='".$row['sem_id']."'>".$row['semestre']."</option>\n";
             }
             $this->con->close_connection_sqlsrv();
             return $semestres;
@@ -61,7 +64,7 @@
                 $has_data = 1;
                 $unidades = "<option value=''>Selecciona una unidad ...</option>\n";
                 while ($row = $datos->fetch(PDO::FETCH_ASSOC)) {
-                    $unidades .= "<option value=".$row['sec_id'].">".$row['seccion']."</option>\n";
+                    $unidades .= "<option value='".$row['sec_id']."'>".$row['seccion']."</option>\n";
                 }
             } else {
                 $unidades = "<option value=''>Antes selecciona un semestre ...</option>\n";
@@ -84,14 +87,48 @@
             $has_data = 0;
             if (!empty($this->parametros['sem_id']) && !empty($this->parametros['sec_id'])) {
                 $has_data = 1;
-                $programas = "<option value=''>Selecciona un programa ...</option>\n";
+                $programas = "<option value=''>Selecciona un curso ...</option>\n";
                 while ($row = $datos->fetch(PDO::FETCH_ASSOC)) {
-                    $programas .= "<option value=".$row['prg_id'].">".$row['programa']."</option>\n";
+                    $programas .= "<option value='".$row['prg_id']."'>".$row['programa']."</option>\n";
                 }
             } else {
                 $programas = "<option value=''>Antes selecciona una unidad ...</option>\n";
             }
             $resp = array('has_data' => $has_data,'programas' => $programas);
+            return json_encode($resp);
+        }
+
+        private function get_cursos_by_programa()
+        {
+            $sql = "SELECT 
+                        SCG.scg_id,
+                        SCG.prg_id,
+                        CUR.cur_id,
+                        CUR.cur_descripcion AS curso,
+                        SCG.scg_grupo AS grupo
+                    FROM PROGRAMACION.SEMESTRE_CURSO_GRUPO SCG
+                    INNER JOIN PROGRAMACION.SEMESTRE_CURSO SCU ON SCU.scu_id = SCG.scu_id
+                    INNER JOIN ADMISION.CURSO CUR ON CUR.cur_id = SCU.cur_id
+                    WHERE SCG.sem_id = '".$this->parametros['sem_id']."' AND SCG.prg_id = '".$this->parametros['prg_id']."' 
+                        AND SCU.scu_ciclo = '".$this->parametros['ciclo']. "' AND SCG.scg_estado = 1 
+                    ORDER BY CUR.cur_descripcion, SCG.scg_grupo ASC";
+            $datos = $this->con->return_query_sqlsrv($sql);
+            $cursos = "";
+            $has_data = 0;
+            if (!empty($this->parametros['sem_id']) && !empty($this->parametros['prg_id']) && !empty($this->parametros['ciclo'])) {
+                $has_data = 1;
+                $cursos = "<option value=''>Selecciona un curso ...</option>\n";
+                while ($row = $datos->fetch(PDO::FETCH_ASSOC)) {
+                    $grupo = "B";
+                    if ($row['grupo']==1) {
+                        $grupo = "A";
+                    }
+                    $cursos .= "<option value='".$row['cur_id']."' data-scg='".$row['scg_id']."'>".$row['curso']." | GRUPO: ".$grupo."</option>\n";
+                }
+            } else {
+                $cursos = "<option value=''>No hay cursos por mostrar ...</option>\n";
+            }
+            $resp = array('has_data' => $has_data, 'cursos' => $cursos);
             return json_encode($resp);
         }
     }

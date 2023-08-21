@@ -7,6 +7,8 @@
   $parametros['opcion'] = '';
   $parametros['sem_id'] = '';
   $parametros['sec_id'] = '';
+  $parametros['prg_id'] = '';
+  $parametros['ciclo'] = '';
   
   if (isset($_POST['opcion'])) 
   {
@@ -19,6 +21,14 @@
   if (isset($_POST['sec_id'])) 
   {
     $parametros['sec_id'] = $_POST['sec_id'];
+  }
+  if (isset($_POST['prg_id'])) 
+  {
+    $parametros['prg_id'] = $_POST['prg_id'];
+  }
+  if (isset($_POST['ciclo'])) 
+  {
+    $parametros['ciclo'] = $_POST['ciclo'];
   }
 
   $CargaHoraria = new CargaHoraria();

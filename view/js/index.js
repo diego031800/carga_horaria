@@ -3,6 +3,8 @@ let cboSemestre = document.getElementById('cboSemestre');
 let cboUnidad = document.getElementById('cboUnidad');
 let cboPrograma = document.getElementById('cboPrograma');
 let cboCiclo = document.getElementById('cboCiclo');
+let btnBuscar = document.getElementById('btnBuscar');
+let cursoNombre = document.getElementById('cursoNombre');
 
 // FUNCIONES
 // INICIO OBTENER COMBOS
@@ -87,6 +89,34 @@ function change_cbo_ciclo() {
                         '<option value="3">3</option>' +
                         '<option value="4">4</option>');
   }
+}
+
+function buscar_cursos() {
+  let opcion = 'get_cursos_by_programa';
+  let semestre = cboSemestre.value;
+  let programa = cboPrograma.value;
+  let ciclo = cboCiclo.value;
+
+  $.ajax({
+    type: "POST",
+    url: "../../../carga_horaria/controllers/main/CargaHorariaController.php",
+    data: "opcion=" + opcion +
+      "&sem_id=" + semestre +
+      "&prg_id=" + programa + 
+      "&ciclo=" + ciclo,
+    success: function (data) {
+      objeto = JSON.parse(data);
+      let opciones = objeto.cursos;
+      cursoNombre.disabled = false;
+      if (objeto.has_data == 0) {
+        cursoNombre.disabled = true;
+      }
+      $('#cursoNombre').html(opciones);
+    },
+    error: function (data) {
+      alert("Error al mostrar");
+    },
+  });
 }
 
 // FIN OBTENER COMBOS
@@ -209,6 +239,7 @@ function load_document() {
   cboSemestre.addEventListener("change", get_cbo_programas);
   cboUnidad.addEventListener("change", get_cbo_programas);
   cboUnidad.addEventListener("change", change_cbo_ciclo);
+  btnBuscar.addEventListener("click", buscar_cursos)
 }
 
 // EVENTOS
