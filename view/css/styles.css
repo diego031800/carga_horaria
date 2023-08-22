@@ -1,7 +1,20 @@
+/* SELECT2 */
 .limitar-opciones .select2-results__options {
     max-height: 100px;
     overflow-y: auto;
 }
+
+.select2-container--default .select2-selection--single {
+    min-height: 38px;
+}
+
+.select2-selection__rendered {
+    display: flex !important;
+    align-items: center;
+    min-height: 38px;
+}
+
+/* FIN SELECT2 */
 
 .modal {
     display: none; 

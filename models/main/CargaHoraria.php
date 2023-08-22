@@ -25,8 +25,11 @@
                 case 'get_cbo_programas':
                     echo $this->get_cbo_programas();
                     break;
-                case 'get_cursos_by_programa':
-                    echo $this->get_cursos_by_programa();
+                case 'get_cursos_by_ciclo':
+                    echo $this->get_cursos_by_ciclo();
+                    break;
+                case 'get_docentes':
+                    echo $this->get_docentes();
                     break;
                 case 'saveCargaHoraria':
                     echo $this->saveCargaHoraria();
@@ -38,6 +41,7 @@
         {
             $sql = "SELECT 
                         SEM.sem_id,
+                        SEM.sem_codigo,
                         UPPER(SEM.sem_nombre) as semestre
                     FROM ADMISION.SEMESTRE SEM
                     WHERE sem_estado = 1 AND sem_activo = 1 
@@ -45,7 +49,7 @@
             $datos = $this->con->return_query_sqlsrv($sql);
             $semestres = "<option value=''>Selecciona un semestre ...</option>\n";
             while ($row = $datos->fetch(PDO::FETCH_ASSOC)) {
-                $semestres .= "<option value='".$row['sem_id']."'>".$row['semestre']."</option>\n";
+                $semestres .= "<option value='".$row['sem_id']."' data-codigo='".$row['sem_codigo']."'>".$row['semestre']."</option>\n";
             }
             $this->con->close_connection_sqlsrv();
             return $semestres;
@@ -56,24 +60,16 @@
             $sql = "SELECT
                         SEC.sec_id,
                         UPPER(SEC.sec_descripcion) as seccion
-                    FROM PROGRAMACION.SEMESTRE_SECCION SSE
-                    INNER JOIN ADMISION.SECCION SEC ON SSE.sec_id = SEC.sec_id
-                    INNER JOIN SISTEMA.USUARIO_UNIDAD UUN ON UUN.sec_id = SSE.sec_id
-                    WHERE SSE.sem_id = '".$this->parametros['sem_id']."' AND UUN.usu_id = '".$_SESSION['usu_id']."' AND SSE.sse_estado = 1";
+                    FROM ADMISION.SECCION SEC
+                    INNER JOIN SISTEMA.USUARIO_UNIDAD UUN ON UUN.sec_id = SEC.sec_id
+                    WHERE UUN.usu_id = '".$_SESSION['usu_id']."' AND SEC.sec_estado = 1";
             $datos = $this->con->return_query_sqlsrv($sql);
             $unidades = "";
-            $has_data = 0;
-            if (!empty($this->parametros['sem_id'])) {
-                $has_data = 1;
-                $unidades = "<option value=''>Selecciona una unidad ...</option>\n";
-                while ($row = $datos->fetch(PDO::FETCH_ASSOC)) {
-                    $unidades .= "<option value='".$row['sec_id']."'>".$row['seccion']."</option>\n";
-                }
-            } else {
-                $unidades = "<option value=''>Antes selecciona un semestre ...</option>\n";
+            $unidades = "<option value=''>Selecciona una unidad ...</option>\n";
+            while ($row = $datos->fetch(PDO::FETCH_ASSOC)) {
+                $unidades .= "<option value='".$row['sec_id']."'>".$row['seccion']."</option>\n";
             }
-            $resp = array('has_data' => $has_data,'unidades' => $unidades);
-            return json_encode($resp);
+            return $unidades;
         }
 
         private function get_cbo_programas()
@@ -81,79 +77,106 @@
             $sql = "SELECT
                         PRG.prg_id,
                         PRG.prg_mencion as programa
-                    FROM PROGRAMACION.SEMESTRE_PROGRAMA SPR
-                    INNER JOIN PROGRAMACION.SEMESTRE_SECCION SSE ON SSE.sse_id = SPR.sse_id
-                    INNER JOIN ADMISION.PROGRAMA PRG ON PRG.prg_id = SPR.prg_id
-                    WHERE SSE.sem_id = '".$this->parametros['sem_id']."' AND PRG.sec_id = '".$this->parametros['sec_id']."' AND PRG.prg_estado = 1";
+                    FROM ADMISION.PROGRAMA PRG
+                    INNER JOIN ADMISION.SECCION SEC ON SEC.sec_id = PRG.sec_id
+                    WHERE PRG.sec_id = '".$this->parametros['sec_id']."' AND PRG.prg_estado = 1";
             $datos = $this->con->return_query_sqlsrv($sql);
             $programas = "";
             $has_data = 0;
-            if (!empty($this->parametros['sem_id']) && !empty($this->parametros['sec_id'])) {
+            if (!empty($this->parametros['sec_id'])) {
                 $has_data = 1;
-                $programas = "<option value=''>Selecciona un curso ...</option>\n";
+                $programas = "<option value=''>Selecciona un programa ...</option>\n";
                 while ($row = $datos->fetch(PDO::FETCH_ASSOC)) {
                     $programas .= "<option value='".$row['prg_id']."'>".$row['programa']."</option>\n";
                 }
             } else {
-                $programas = "<option value=''>Antes selecciona una unidad ...</option>\n";
+                $programas = "<option value='SD'>Antes selecciona una unidad ...</option>\n";
             }
             $resp = array('has_data' => $has_data,'programas' => $programas);
             return json_encode($resp);
         }
 
-        private function get_cursos_by_programa()
+        private function get_cursos_by_ciclo()
         {
             $sql = "SELECT 
-                        SCG.scg_id,
-                        SCG.prg_id,
                         CUR.cur_id,
-                        CUR.cur_descripcion AS curso,
-                        SCG.scg_grupo AS grupo
-                    FROM PROGRAMACION.SEMESTRE_CURSO_GRUPO SCG
-                    INNER JOIN PROGRAMACION.SEMESTRE_CURSO SCU ON SCU.scu_id = SCG.scu_id
-                    INNER JOIN ADMISION.CURSO CUR ON CUR.cur_id = SCU.cur_id
-                    WHERE SCG.sem_id = '".$this->parametros['sem_id']."' AND SCG.prg_id = '".$this->parametros['prg_id']."' 
-                        AND SCU.scu_ciclo = '".$this->parametros['ciclo']. "' AND SCG.scg_estado = 1 
-                    ORDER BY CUR.cur_descripcion, SCG.scg_grupo ASC";
+                        CUR.cur_creditos,
+                        CUR.cur_codigo,
+                        UPPER(CUR.cur_descripcion) AS curso
+                    FROM ADMISION.CURSO CUR
+                    WHERE CUR.cur_ciclo = '".$this->parametros['ciclo']. "' AND CUR.cur_estado = 1
+                    ORDER BY CUR.cur_descripcion ASC";
             $datos = $this->con->return_query_sqlsrv($sql);
             $cursos = "";
             $has_data = 0;
-            if (!empty($this->parametros['sem_id']) && !empty($this->parametros['prg_id']) && !empty($this->parametros['ciclo'])) {
+            if (!empty($this->parametros['ciclo'])) {
                 $has_data = 1;
                 $cursos = "<option value=''>Selecciona un curso ...</option>\n";
                 while ($row = $datos->fetch(PDO::FETCH_ASSOC)) {
-                    $grupo = "B";
-                    if ($row['grupo']==1) {
-                        $grupo = "A";
-                    }
-                    $cursos .= "<option value='".$row['cur_id']."' data-scg='".$row['scg_id']."'>".$row['curso']." | GRUPO: ".$grupo."</option>\n";
+                    $cursos .= "<option value='".$row['cur_id']."'>CÓDIGO: ".$row['cur_codigo']." | CRÉDITOS: ".$row['cur_creditos']." | ".$row['curso']."</option>\n";
                 }
             } else {
-                $cursos = "<option value=''>No hay cursos por mostrar ...</option>\n";
+                $cursos = "<option value='SD'>Antes selecciona un ciclo ...</option>\n";
             }
             $resp = array('has_data' => $has_data, 'cursos' => $cursos);
             return json_encode($resp);
         }
 
+        private function get_docentes()
+        {
+            $sql = "SELECT
+                        PRG.prg_id,
+                        PRG.prg_mencion as programa
+                    FROM ADMISION.PROGRAMA PRG
+                    INNER JOIN ADMISION.SECCION SEC ON SEC.sec_id = PRG.sec_id
+                    WHERE PRG.sec_id = '".$this->parametros['sec_id']."' AND PRG.prg_estado = 1";
+            $datos = $this->con->return_query_sqlsrv($sql);
+            $docentes = "";
+            $has_data = 0;
+            if (!empty($this->parametros['sec_id'])) {
+                $has_data = 1;
+                $programas = "<option value=''>Selecciona un programa ...</option>\n";
+                while ($row = $datos->fetch(PDO::FETCH_ASSOC)) {
+                    $programas .= "<option value='".$row['prg_id']."'>".$row['programa']."</option>\n";
+                }
+            } else {
+                $programas = "<option value='SD'>Antes selecciona una unidad ...</option>\n";
+            }
+            $resp = array('has_data' => $has_data,'programas' => $programas);
+            return json_encode($resp);
+        }
+
         private function saveCargaHoraria() 
         {
-            $sql = "CALL sp_saveCargaHoraria(";
-            $sql .= "'".$this->parametros['p_cgh_id']."', "; // p_cgh_id
-            $sql .= "'".$this->parametros['p_cgh_codigo']."', "; // p_cgh_codigo
-            $sql .= "'".$this->parametros['p_sem_id']."', "; // p_sem_id
-            $sql .= "'".$this->parametros['p_sem_codigo']."', "; // p_sem_codigo
-            $sql .= "'".$this->parametros['p_sem_descripcion']."', "; // p_sem_descripcion
-            $sql .= "'".$this->parametros['p_sec_id']."', "; // p_sec_id
-            $sql .= "'".$this->parametros['p_sec_descripcion']."', "; // p_sec_descripcion
-            $sql .= "'".$this->parametros['p_prg_id']."', "; // p_prg_id
-            $sql .= "'".$this->parametros['p_prg_mencion']."', "; // p_prg_mencion
-            $sql .= "'".$this->parametros['p_cgh_ciclo']."', "; // p_cgh_ciclo
-            $sql .= "'".$this->parametros['p_cgh_estado']."', "; // p_cgh_estado
-            $sql .= "'".$this->parametros['p_usuario']."') "; // p_usuario
-
-            $datos = $this->con->return_query_mysql($sql);
-            
-            
+            try {
+                $sql = "CALL sp_saveCargaHoraria(";
+                $sql .= "'".$this->parametros['p_cgh_id']."', "; // p_cgh_id
+                $sql .= "'".$this->parametros['p_cgh_codigo']."', "; // p_cgh_codigo
+                $sql .= "'".$this->parametros['p_sem_id']."', "; // p_sem_id
+                $sql .= "'".$this->parametros['p_sem_codigo']."', "; // p_sem_codigo
+                $sql .= "'".$this->parametros['p_sem_descripcion']."', "; // p_sem_descripcion
+                $sql .= "'".$this->parametros['p_sec_id']."', "; // p_sec_id
+                $sql .= "'".$this->parametros['p_sec_descripcion']."', "; // p_sec_descripcion
+                $sql .= "'".$this->parametros['p_prg_id']."', "; // p_prg_id
+                $sql .= "'".$this->parametros['p_prg_mencion']."', "; // p_prg_mencion
+                $sql .= "'".$this->parametros['p_cgh_ciclo']."', "; // p_cgh_ciclo
+                $sql .= "'".$this->parametros['p_cgh_estado']."', "; // p_cgh_estado
+                $sql .= "'".$_SESSION['usu_id']."');"; // p_usuario
+                // return $sql;
+                $datos = $this->con->return_query_mysql($sql);
+                $resp = "";
+                $cgh_id = "";
+                $error = $this->con->error_mysql();
+                if (empty($error)) {
+                    while ($row = mysqli_fetch_array($datos)) {
+                        $resp = $row['respuesta'];
+                        $cgh_id = $row['cgh_id'];
+                    }
+                }
+                return json_encode(array('respuesta' => $resp, 'cgh_id' => $cgh_id));
+            } catch (Exception $ex) {
+                die("Error: " . $ex);
+            }
         }
     }
 ?>

@@ -3,8 +3,7 @@ let cboSemestre = document.getElementById('cboSemestre');
 let cboUnidad = document.getElementById('cboUnidad');
 let cboPrograma = document.getElementById('cboPrograma');
 let cboCiclo = document.getElementById('cboCiclo');
-let btnBuscar = document.getElementById('btnBuscar');
-let cursoNombre = document.getElementById('cursoNombre');
+let cboCurso = document.getElementById('cboCurso');
 let btnGuardar = document.getElementById('btnGuardar');
 let btnCerrar = document.getElementById('btnCerrar');
 let btnCancelar = document.getElementById('btnCancelar');
@@ -37,19 +36,12 @@ function get_cbo_semestres() {
 
 function get_cbo_unidades() {
   let opcion = "get_cbo_unidades";
-  let sem_id = cboSemestre.value;
   $.ajax({
     type: "POST",
     url: "../../../carga_horaria/controllers/main/CargaHorariaController.php",
-    data: "opcion=" + opcion +
-      "&sem_id=" + sem_id,
+    data: "opcion=" + opcion,
     success: function (data) {
-      objeto = JSON.parse(data);
-      let opciones = objeto.unidades;
-      cboUnidad.disabled = false;
-      if (objeto.has_data == 0) {
-        cboUnidad.disabled = true;
-      }
+      let opciones = data;
       $('#cboUnidad').html(opciones);
     },
     error: function (data) {
@@ -60,13 +52,11 @@ function get_cbo_unidades() {
 
 function get_cbo_programas() {
   let opcion = "get_cbo_programas";
-  let sem_id = cboSemestre.value;
   let sec_id = cboUnidad.value;
   $.ajax({
     type: "POST",
     url: "../../../carga_horaria/controllers/main/CargaHorariaController.php",
     data: "opcion=" + opcion +
-      "&sem_id=" + sem_id +
       "&sec_id=" + sec_id,
     success: function (data) {
       objeto = JSON.parse(data);
@@ -103,48 +93,45 @@ function change_cbo_ciclo() {
 }
 
 function buscar_cursos() {
-  let opcion = 'get_cursos_by_programa';
-  let semestre = cboSemestre.value;
-  let programa = cboPrograma.value;
+  let opcion = 'get_cursos_by_ciclo';
   let ciclo = cboCiclo.value;
 
-  btnBuscar.disabled = true;
   $.ajax({
     type: "POST",
     url: "../../../carga_horaria/controllers/main/CargaHorariaController.php",
     data: "opcion=" + opcion +
-      "&sem_id=" + semestre +
-      "&prg_id=" + programa + 
       "&ciclo=" + ciclo,
     success: function (data) {
-      btnBuscar.disabled = false;
       objeto = JSON.parse(data);
       let opciones = objeto.cursos;
-      cursoNombre.disabled = false;
+      cboCurso.disabled = false;
       if (objeto.has_data == 0) {
-        cursoNombre.disabled = true;
+        cboCurso.disabled = true;
       }
-      $('#cursoNombre').html(opciones);
+      $('#cboCurso').html(opciones);
     },
     error: function (data) {
-      btnBuscar.disabled = false;
       alert("Error al mostrar");
     },
   });
 }
 
+function get_docentes() {
+  
+}
+
 // FIN OBTENER COMBOS
 
 function agregar() {
-  var cursonombre = document.getElementById("cursoNombre").value;
+  var cboCurso = document.getElementById("cboCurso").value;
   var cursohoras = document.getElementById("cursoHoras").value;
   let fechas = document.getElementById("newTratFechaIni").value;
-  if (cursonombre == "" || cursohoras == "" || fechas == "") {
+  if (cboCurso == "" || cursohoras == "" || fechas == "") {
     alert("No deben haber campos vacíos");
     return;
   }
   let i = listacursos.length;
-  listacursos.push({ index: id_current, curso: cursonombre, horas: cursohoras });
+  listacursos.push({ index: id_current, curso: cboCurso, horas: cursohoras });
   agregarFechas(fechas, id_current);
   llenarTabla();
   limpiarInputs();
@@ -168,7 +155,7 @@ function limpiarInputs(){
 
 function editar(indexb) {
   var curso = listacursos.find(cursoI => cursoI.index === indexb);
-  $("#cursoNombre").val(curso.curso);
+  $("#cboCurso").val(curso.curso);
   $("#cursoHoras").val(curso.horas);
   var fechasMostrar = fechascursos.map(function (fecha) {
     if(indexb===fecha.id){
@@ -190,12 +177,12 @@ function eliminar(index){
 
 function guardar() {
   var index = parseInt(document.getElementById("cursoEditar").value);
-  var cursonombre = document.getElementById("cursoNombre").value;
+  var cboCurso = document.getElementById("cboCurso").value;
   var cursohoras = document.getElementById("cursoHoras").value;
   fechascursos= fechascursos.filter((item) => item.id != index);
   var fechas = document.getElementById("newTratFechaIni").value;
   agregarFechas(fechas, index);
-  listacursos.find(cursoI => cursoI.index === index).curso = cursonombre;
+  listacursos.find(cursoI => cursoI.index === index).curso = cboCurso;
   listacursos.find(cursoI => cursoI.index === index).horas = cursohoras;
   limpiarInputs();
   llenarTabla();
@@ -320,21 +307,82 @@ window.onclick = function(event) {
 
 /* GUARDAR CARGA HORARIA */
 function saveCargaHoraria() {
+  if ($('#cboSemestre').val()==="" || $('#cboUnidad').val()==="" || $('#cboPrograma').val()==="" || $('#cboCiclo').val()==="") {
+    alert('Llenar todos los campos');
+    return
+  }
+  if (listacursos.length == 0) {
+    alert('Agregar cursos a la carga horaria');
+  } else if (listadocentes.length == 0) {
+    alert('Agregar docentes a la carga horaria');
+  }
 
+  let opcion = "saveCargaHoraria";
+  let p_cgh_id = cgh_id;
+  let p_cgh_codigo = cgh_codigo;
+  let sem_option = $('#cboSemestre option:selected');
+  let p_sem_id = cboSemestre.value;
+  let p_sem_codigo = sem_option.data("codigo");
+  let p_sem_descripcion = sem_option.text();
+  let sec_option = $('#cboUnidad option:selected'); 
+  let p_sec_id = cboUnidad.value;
+  let p_sec_descripcion = sec_option.text();
+  let prg_option = $('#cboPrograma option:selected');
+  let p_prg_id = cboPrograma.value;
+  let p_prg_mencion = prg_option.text();
+  let p_cgh_ciclo = cboCiclo.value;
+  let p_cgh_estado = '0001';
+
+  btnGuardar.disabled = true;
+  btnCerrar.disabled = true;
+  btnCancelar.disabled = true;
+
+  $.ajax({
+    type: "POST",
+    url: "../../../carga_horaria/controllers/main/CargaHorariaController.php",
+    data: "opcion=" + opcion +
+      "&p_cgh_id=" + p_cgh_id +
+      "&p_cgh_codigo=" + p_cgh_codigo +
+      "&p_sem_id=" + p_sem_id +
+      "&p_sem_codigo=" + p_sem_codigo +
+      "&p_sem_descripcion=" + p_sem_descripcion +
+      "&p_sec_id=" + p_sec_id +
+      "&p_sec_descripcion=" + p_sec_descripcion +
+      "&p_prg_id=" + p_prg_id +
+      "&p_prg_mencion=" + p_prg_mencion +
+      "&p_cgh_ciclo=" + p_cgh_ciclo +
+      "&p_cgh_estado=" + p_cgh_estado,
+    success: function (data) {
+      btnGuardar.disabled = false;
+      btnCerrar.disabled = false;
+      btnCancelar.disabled = false;
+      objeto = JSON.parse(data);
+      let opciones = objeto.cursos;
+      cboCurso.disabled = false;
+      if (objeto.has_data == 0) {
+        cboCurso.disabled = true;
+      }
+      $('#cboCurso').html(opciones);
+    },
+    error: function (data) {
+      btnBuscar.disabled = false;
+      alert("Error al mostrar");
+    },
+  });
 }
 
 /* FUNCION AL CARGAR EL DOCUMENTO */
 function load_document() {
   get_cbo_unidades();
   get_cbo_semestres();
-  get_cbo_programas();
   change_cbo_ciclo();
+
   cboSemestre.addEventListener("change", get_cbo_unidades);
   cboSemestre.addEventListener("change", get_cbo_programas);
   cboUnidad.addEventListener("change", get_cbo_programas);
   cboUnidad.addEventListener("change", change_cbo_ciclo);
-  btnBuscar.addEventListener("click", buscar_cursos);
-  
+  cboCiclo.addEventListener("change", buscar_cursos);
+  btnGuardar.addEventListener("click", saveCargaHoraria);
 }
 
 // EVENTOS

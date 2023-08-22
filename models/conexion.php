@@ -33,6 +33,11 @@
             return $datos;
         }
 
+        public function error_mysql()
+        {
+            return mysqli_error($this->con_mysql);
+        }
+
         public function close_connection_mysql()
         {
           mysqli_close($this->con_mysql);

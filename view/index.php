@@ -38,9 +38,10 @@ if (!isset($_SESSION['login'])) {
                     <select class="form-select" id="cboUnidad">
                     </select>
                 </div>
-                <div class="col-lg-4 col-6 mb-3">
+                <div class="col-lg-5 col-6 mb-3">
                     <label class="form-label" for="cboPrograma">Programa</label>
-                    <select class="form-select" id="cboPrograma">
+                    <select class="form-select" id="cboPrograma" disabled>
+                        <option value="SD">Antes selecciona una unidad ...</option>
                     </select>
                 </div>
                 <div class="col-lg-2 col-6 mb-3">
@@ -48,21 +49,13 @@ if (!isset($_SESSION['login'])) {
                     <select name="ciclo" class="form-select" id="cboCiclo">
                     </select>
                 </div>
-                <div class="col-lg-1 col-6 mb-3">
-                    <label class="form-label"></label><br>
-                    <button id="btnBuscar" type="button" class="btn btn-info">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-                        </svg> Buscar
-                    </button>
-                </div>
             </div>
             <div class="row">
                 <h3>Datos del curso</h3>
                 <div class="col-lg-5 col-6 mb-3">
                     <label for="" class="form-label">Curso</label>
-                    <select name="cursoNombre" id="cursoNombre" class="form-select" disabled>
-                        <option value="">Sin cursos por mostrar ...</option>
+                    <select name="cboCurso" id="cboCurso" class="form-select" disabled>
+                        <option value="SD">Antes selecciona un ciclo ...</option>
                     </select>
                 </div>
                 <div class="col-lg-5 col-6 mb-3">
@@ -205,6 +198,16 @@ if (!isset($_SESSION['login'])) {
             <!-- SCRIPT PROPIO INICIO -->
             <script>
                 $(document).ready(function() {
+                    $('#cboCurso').select2({
+                        dropdownCssClass: "limitar-opciones",
+                        placeholder: 'Selecciona un curso ...'
+                    });
+
+                    $('#cboPrograma').select2({
+                        dropdownCssClass: "limitar-opciones",
+                        placeholder: 'Selecciona un programa ...'
+                    });
+
                     $(".registerFormFcMv").bootstrapValidator({
                         live: "enabled",
                         fields: {
