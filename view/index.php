@@ -45,13 +45,16 @@ if (!isset($_SESSION['login'])) {
                     </select>
                 </div>
                 <div class="col-lg-2 col-6 mb-3">
-                    <label class="form-label" for="cboCiclo">Ciclo</label>
-                    <select name="ciclo" class="form-select" id="cboCiclo">
-                    </select>
+                    <button class="btn btn-outline-secondary" disabled>Editar</button>
                 </div>
             </div>
             <div class="row">
                 <h3>Datos del curso</h3>
+                <div class="col-lg-2 col-6 mb-3">
+                    <label class="form-label" for="cboCiclo">Ciclo</label>
+                    <select name="ciclo" class="form-select" id="cboCiclo">
+                    </select>
+                </div>
                 <div class="col-lg-5 col-6 mb-3">
                     <label for="" class="form-label">Curso</label>
                     <select name="cboCurso" id="cboCurso" class="form-select" disabled>
@@ -69,19 +72,19 @@ if (!isset($_SESSION['login'])) {
                 </div>
                 <div class="col-lg-2 col-6 mb-3">
                     <label for="" class="form-label">Horas</label>
-                    <input type="number" class="form-control" name="cursoHoras" id="cursoHoras" required>
+                    <input type="number" class="form-control" name="txtHoras" id="txtHoras" required>
                 </div>
                 <div class="col-lg-12 col-6 mb-3">
-                    <button class="btn btn-success" onClick="agregar();" id="agregar">
+                    <button class="btn btn-success" onClick="agregar();" id="btnAgregarCurso">
                         <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><style>svg{fill:#ffffff}</style><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
                         &nbsp; Agregar curso
                     </button>
                     <input type="number" hidden id="cursoEditar">
-                    <button id="guardar" class="btn btn-warning" onClick="guardar();" disabled="true">
+                    <button id="guardar" class="btn btn-warning" onClick="guardar();" disabled="true" id="btnGuardarCurso">
                         <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><style>svg{fill:#1d2d49}</style><path d="M0 48V487.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400 345.7 507.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48z"/></svg>
                         &nbsp; Guardar edición
                     </button>
-                    <button class="btn btn-info" onClick="cancelar();" id="cancelar" disabled="true">
+                    <button class="btn btn-info" onClick="cancelar();" id="cancelar" disabled="true" id="btnCancelarEditar">
                         <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><style>svg{fill:#ffffff}</style><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
                         &nbsp; Cancelar
                     </button>
@@ -130,12 +133,12 @@ if (!isset($_SESSION['login'])) {
                     <div class="row">
                         <div class="col-12 mb-3">
                             <label for="" class="form-label">Nombre:</label><br />
-                            <select class="form-select" id="nombre-docente">
+                            <select class="form-select" id="txtnombre-docente">
                             </select>
                         </div>
                         <div class="col-6 mb-3">
                             <label for="" class="form-label">Condicion:</label><br />
-                            <select name="condicion-docente" class="form-select" id="condicion-docente">
+                            <select name="cbocondicion-docente" class="form-select" id="cbocondicion-docente">
                                 <option value="UNT">UNT</option>
                                 <option value="Invitado Nacional">Invitado Nacional</option>
                                 <option value="Invitado Local">Invitado Local</option>
@@ -145,7 +148,7 @@ if (!isset($_SESSION['login'])) {
                         </div>
                         <div class="col-6 mb-3">
                             <label for="" class="form-label">Grado:</label><br />
-                            <select name="grado-docente" class="form-select" id="grado-docente">
+                            <select name="cbogrado-docente" class="form-select" id="cbogrado-docente">
                                 <option value="dr">Doctor</option>
                                 <option value="dra">Doctora</option>
                                 <option value="ms">Mister</option>
@@ -153,22 +156,22 @@ if (!isset($_SESSION['login'])) {
                         </div>
                         <div class="col-6 mb-3">
                             <label for="" class="form-label">Correo:</label><br />
-                            <input type="email" class="form-control" id="email-docente">
+                            <input type="email" class="form-control" id="txtemail-docente">
                         </div>
                         <div class="col-6 mb-3">
                             <label for="" class="form-label">Documento de identidad:</label><br />
-                            <input type="text" class="form-control" id="doc-docente">
+                            <input type="text" class="form-control" id="txtdoc-docente">
                         </div>
                         <div class="col-6 mb-3">
                             <label for="" class="form-label">Código:</label><br />
-                            <input type="text" class="form-control" id="codigo-docente">
+                            <input type="text" class="form-control" id="txtcodigo-docente">
                         </div>
                         <div class="col-6 mb-3">
                             <label for="" class="form-label">Teléfono:</label><br />
-                            <input type="number" class="form-control" id="telefono-docente">
+                            <input type="number" class="form-control" id="txttelefono-docente">
                         </div>
                         <div class="col-12">
-                            <button class="btn btn-success" onClick="guardar_docente();">Guardar</button>
+                            <button class="btn btn-success" id="btnGuardarDocente" onClick="guardar_docente();">Guardar</button>
                         </div>
                     </div>
                 </div>

@@ -1,12 +1,34 @@
-// VARIABLES
+// Elementos HTML
+//   Unidades
 let cboSemestre = document.getElementById('cboSemestre');
 let cboUnidad = document.getElementById('cboUnidad');
 let cboPrograma = document.getElementById('cboPrograma');
+//   Curso
 let cboCiclo = document.getElementById('cboCiclo');
 let cboCurso = document.getElementById('cboCurso');
+let txtHoras = document.getElementById('txtHoras');
+let txtFechas= document.getElementById('newTratFechaIni');
+let btnAgregarCurso = document.getElementById('btnAgregarCurso');
+let btnGuardarCurso = document.getElementById('btnGuardarCurso');
+let btnCancelarEditar = document.getElementById('btnCancelarEditar');
+let txtIdCursoEditar = document.getElementById('cursoEditar');
+
+// Docente modal
+
+let txtIdModal = parseInt(document.getElementById("id-curso-docente").value);
+let txtDocDocumento = document.getElementById("doc-docente");
+let txtDocEmail = document.getElementById("email-docente");
+let txtDocTelefono = document.getElementById("telefono-docente");
+let cboDocCondicion = document.getElementById("condicion-docente");
+let cboDocNombre = document.getElementById("nombre-docente");
+let txtDocCodigo = document.getElementById("codigo-docente");
+let cboDocGrado = document.getElementById("grado-docente");
+
 let btnGuardar = document.getElementById('btnGuardar');
 let btnCerrar = document.getElementById('btnCerrar');
 let btnCancelar = document.getElementById('btnCancelar');
+
+// VARIABLES
 
 let cgh_id = 0;
 let cgh_codigo = '';
@@ -132,11 +154,19 @@ function get_docentes() {
 
 // FIN OBTENER COMBOS
 
+// FUNCIONALIDADES
+
+function empezarEditar(){
+  
+}
+
+// OPERACIONES
+
 function agregar() {
-  var id = parseInt(cursoNombre.value);
-  var cursonombre = cursoNombre.options[cursoNombre.selectedIndex].text;
-  var cursohoras = document.getElementById("cursoHoras").value;
-  let fechas = document.getElementById("newTratFechaIni").value;
+  let id = parseInt(cboCurso.value);
+  let cursonombre = cboCurso.options[cboCurso.selectedIndex].text;
+  let cursohoras = txtHoras.value;
+  let fechas = txtFechas.value;
   if(cursoAgregado(id)){
     alert("Ya has agregado el curso");
     return;
@@ -145,8 +175,7 @@ function agregar() {
     alert("No deben haber campos vacíos");
     return;
   }
-  let i = listacursos.length;
-  var fechasagregar=  agregarFechas(fechas);
+  let fechasagregar=  agregarFechas(fechas);
   listacursos.push({ index: id, curso: cursonombre, horas: cursohoras, fechas:fechasagregar, docente_principal:null });
   llenarTabla();
   limpiarInputs();
@@ -161,9 +190,9 @@ function cursoAgregado(index){
 }
 
 function agregarFechas(fechas) {
-  var arrayFechas = fechas.split(",");
-  var i = 0;
-  var fechasdevolver = [];
+  let arrayFechas = fechas.split(",");
+  let i = 0;
+  let fechasdevolver = [];
   arrayFechas.forEach((element) => {
     i +=1;
     fechasdevolver.push({ index: i, fecha: element });
@@ -178,18 +207,18 @@ function limpiarInputs(){
 }
 
 function editar(indexb) {
-  var curso = listacursos.find(cursoI => cursoI.index === indexb);
-  $("#cursoNombre").val(curso.index);
-  $("#cursoHoras").val(curso.horas);
-  var fechasMostrar = curso.fechas.map(function (fecha) {
+  let curso = listacursos.find(cursoI => cursoI.index === indexb);
+  $("#cboCurso").val(curso.index);
+  $("#txtHoras").val(curso.horas);
+  let fechasMostrar = curso.fechas.map(function (fecha) {
       var partes = fecha.fecha.split("/");
       return new Date(partes[2], partes[1] - 1, partes[0]);
   });
   $("#cursoEditar").val(indexb);
   $(".datepicker3").datepicker('setDates', fechasMostrar);
-  document.getElementById("agregar").disabled = true;
-  document.getElementById("guardar").disabled = false;
-  document.getElementById("cancelar").disabled = false;
+  btnAgregarCurso.disabled = true;
+  btnGuardarCurso.disabled = false;
+  btnCancelarEditar.disabled = false;
 }
 
 function eliminar(index){
@@ -198,28 +227,28 @@ function eliminar(index){
 }
 
 function guardar() {
-  var index = parseInt(document.getElementById("cursoEditar").value);
-  var idNuevo = parseInt(cursoNombre.value);
-  var cursonombreN = cursoNombre.options[cursoNombre.selectedIndex].text;
-  var cursohoras = document.getElementById("cursoHoras").value;
-  var fechas = document.getElementById("newTratFechaIni").value;
-  var fechasNuevas = agregarFechas(fechas);
+  let index = parseInt(txtIdCursoEditar.value);
+  let idNuevo = parseInt(cboCurso.value);
+  let cursonombreN = cboCurso.options[cboCurso.selectedIndex].text;
+  let cursohoras = txtHoras.value;
+  let fechas = txtFechas.value;
+  let fechasNuevas = agregarFechas(fechas);
   listacursos.find(cursoI => cursoI.index === index).curso = cursonombreN;
   listacursos.find(cursoI => cursoI.index === index).horas = cursohoras;
   listacursos.find(cursoI => cursoI.index === index).fechas = fechasNuevas;
   listacursos.find(cursoI => cursoI.index === index).index = idNuevo;
   limpiarInputs();
   llenarTabla();
-  document.getElementById("guardar").disabled = true;
-  document.getElementById("cancelar").disabled = true;
-  document.getElementById("agregar").disabled = false;
+  btnAgregarCurso.disabled = false;
+  btnGuardarCurso.disabled = true;
+  btnCancelarEditar.disabled = true;
 }
 
 function cancelar(){
   limpiarInputs();
-  document.getElementById("agregar").disabled = false;
-  document.getElementById("guardar").disabled = true;
-  document.getElementById("cancelar").disabled = true;
+  btnAgregarCurso.disabled = false;
+  btnGuardarCurso.disabled = true;
+  btnCancelarEditar.disabled = true;
   $("#cursoEditar").val("");
 }
 
@@ -261,14 +290,14 @@ function llenarTabla() {
 }
 
 function guardar_docente(){
-  var id_curso_modal = parseInt(document.getElementById("id-curso-docente").value);
-  var doc_modal = document.getElementById("doc-docente").value;
-  var email_modal = document.getElementById("email-docente").value;
-  var telefono_modal = document.getElementById("telefono-docente").value;
-  var condicion_modal = document.getElementById("condicion-docente").value;
-  var nombre_docente_modal = document.getElementById("nombre-docente").value;
-  var codigo_modal = document.getElementById("codigo-docente").value;
-  var grado_modal = document.getElementById("grado-docente").value;
+  let id_curso_modal = txtIdModal;
+  let doc_modal = txtDocDocumento.value;
+  let email_modal = txtDocEmail.value;
+  let telefono_modal = txtDocTelefono.value;
+  let condicion_modal = cboDocCondicion.value;
+  let nombre_docente_modal = cboDocNombre.value;
+  let codigo_modal = txtDocCodigo.value;
+  let grado_modal = cboDocGrado.value;
   if (listacursos.find(item => item.index === id_curso_modal).docente_principal != null) {
     listacursos.find(item => item.index === id_curso_modal).docente_principal.docente = nombre_docente_modal;
     listacursos.find(item => item.index === id_curso_modal).docente_principal.condicion = condicion_modal;
@@ -295,7 +324,7 @@ function limpiarInputsModal(){
 }
 
 function abrir_docente_modal(index){
-  var docente = listacursos.find(item => item.index === index).docente_principal;
+  let docente = listacursos.find(item => item.index === index).docente_principal;
   if (docente != null && docente !== undefined ) {
     $("#nombre-docente").val(docente.docente);
     $("#condicion-docente").val(docente.condicion);
