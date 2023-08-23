@@ -134,7 +134,11 @@ function get_docentes() {
 
 function agregar() {
   var id = parseInt(cboCurso.value);
-  var txtCurso = cboCurso.options[cboCurso.selectedIndex].text;
+  let cur_option = $('#cboCurso option:selected');
+  let txtCurso = cur_option.data("nombre");
+  let txtCursoCodigo = cur_option.data("codigo");
+  let txtCursoCiclo = cur_option.data("ciclo");
+  let txtCursoCreditos = cur_option.data("creditos");
   var cursohoras = document.getElementById("cursoHoras").value;
   let fechas = document.getElementById("newTratFechaIni").value;
   if(cursoAgregado(id)){
@@ -147,7 +151,19 @@ function agregar() {
   }
   let i = listacursos.length;
   var fechasagregar=  agregarFechas(fechas);
-  listacursos.push({ index: id, curso: txtCurso, horas: cursohoras, fechas:fechasagregar, docente_principal:null });
+  listacursos.push(
+    { 
+      chc_id: 0,
+      index: id, 
+      curso: txtCurso, 
+      cur_codigo: txtCursoCodigo,
+      cur_ciclo: txtCursoCiclo, 
+      cur_creditos: txtCursoCreditos,
+      horas: cursohoras, 
+      fechas: fechasagregar, 
+      docentes: [],
+    }
+  );
   llenarTabla();
   limpiarInputs();
 }
@@ -166,7 +182,13 @@ function agregarFechas(fechas) {
   var fechasdevolver = [];
   arrayFechas.forEach((element) => {
     i +=1;
-    fechasdevolver.push({ index: i, fecha: element });
+    fechasdevolver.push(
+      { 
+        p_chf_id: 0,
+        index: i, 
+        fecha: element 
+      }
+    );
   });
   return fechasdevolver;
 }
@@ -234,7 +256,7 @@ function llenarTabla() {
       .map(element => element.fecha)
       .join(',');
     let nombre;
-    let doc = elementC.docente_principal;
+    let doc = elementC.docentes[0];
     if(doc == null){
       nombre = "Sin asignar docente";
     }else{
@@ -269,17 +291,26 @@ function guardar_docente(){
   var nombre_docente_modal = document.getElementById("nombre-docente").value;
   var codigo_modal = document.getElementById("codigo-docente").value;
   var grado_modal = document.getElementById("grado-docente").value;
-  if (listacursos.find(item => item.index === id_curso_modal).docente_principal != null) {
-    listacursos.find(item => item.index === id_curso_modal).docente_principal.docente = nombre_docente_modal;
-    listacursos.find(item => item.index === id_curso_modal).docente_principal.condicion = condicion_modal;
-    listacursos.find(item => item.index === id_curso_modal).docente_principal.grado = grado_modal;
-    listacursos.find(item => item.index === id_curso_modal).docente_principal.codigo = codigo_modal;
-    listacursos.find(item => item.index === id_curso_modal).docente_principal.dni = doc_modal;
-    listacursos.find(item => item.index === id_curso_modal).docente_principal.correo = email_modal;
-    listacursos.find(item => item.index === id_curso_modal).docente_principal.telefono = telefono_modal;
+  if (listacursos.find(item => item.index === id_curso_modal).docentes.length != 0) {
+    listacursos.find(item => item.index === id_curso_modal).docentes[0].docente = nombre_docente_modal;
+    listacursos.find(item => item.index === id_curso_modal).docentes[0].condicion = condicion_modal;
+    listacursos.find(item => item.index === id_curso_modal).docentes[0].grado = grado_modal;
+    listacursos.find(item => item.index === id_curso_modal).docentes[0].codigo = codigo_modal;
+    listacursos.find(item => item.index === id_curso_modal).docentes[0].dni = doc_modal;
+    listacursos.find(item => item.index === id_curso_modal).docentes[0].correo = email_modal;
+    listacursos.find(item => item.index === id_curso_modal).docentes[0].telefono = telefono_modal;
   }else{
-    listacursos.find(item => item.index === id_curso_modal).docente_principal={docente:nombre_docente_modal, condicion:condicion_modal,
-    grado:grado_modal, codigo:codigo_modal,dni:doc_modal,correo:email_modal,telefono:telefono_modal};
+    listacursos.find(item => item.index === id_curso_modal).docentes.push(
+      {
+        docente: nombre_docente_modal,
+        condicion: condicion_modal,
+        grado: grado_modal,
+        codigo: codigo_modal,
+        dni: doc_modal,
+        correo: email_modal,
+        telefono: telefono_modal
+      }
+    );
   }
   limpiarInputsModal();
   document.getElementById('myModal').style.display = "none";
@@ -330,14 +361,13 @@ window.onclick = function(event) {
 
 /* GUARDAR CARGA HORARIA */
 function saveCargaHoraria() {
+  console.log(listacursos);
   if ($('#cboSemestre').val()==="" || $('#cboUnidad').val()==="" || $('#cboPrograma').val()==="" || $('#cboCiclo').val()==="") {
     alert('Llenar todos los campos');
     return
   }
   if (listacursos.length == 0) {
     alert('Agregar cursos a la carga horaria');
-  } else if (listadocentes.length == 0) {
-    alert('Agregar docentes a la carga horaria');
   }
 
   let opcion = "saveCargaHoraria";
@@ -355,6 +385,9 @@ function saveCargaHoraria() {
   let p_prg_mencion = prg_option.text();
   let p_cgh_ciclo = cboCiclo.value;
   let p_cgh_estado = '0001';
+  
+  /* CURSOS */
+  let p_cursos = JSON.stringify(listacursos);
 
   btnGuardar.disabled = true;
   btnCerrar.disabled = true;
@@ -374,7 +407,8 @@ function saveCargaHoraria() {
       "&p_prg_id=" + p_prg_id +
       "&p_prg_mencion=" + p_prg_mencion +
       "&p_cgh_ciclo=" + p_cgh_ciclo +
-      "&p_cgh_estado=" + p_cgh_estado,
+      "&p_cgh_estado=" + p_cgh_estado + 
+      "&p_cursos=" + p_cursos,
     success: function (data) {
       btnGuardar.disabled = false;
       btnCerrar.disabled = false;

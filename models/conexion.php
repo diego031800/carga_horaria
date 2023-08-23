@@ -43,6 +43,12 @@
           mysqli_close($this->con_mysql);
         }
 
+        public function close_open_connection_mysql()
+        {
+            mysqli_close($this->con_mysql);
+            $this->con_mysql = new mysqli("".HOST_MYSQL."","".USER_NAME_MYSQL."","".PASS_MYSQL."","".DB_NAME_MYSQL."");
+        }
+
         public function commit_mysql()
         {
             $this->con_mysql->commit();

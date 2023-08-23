@@ -102,6 +102,7 @@
                         CUR.cur_id,
                         CUR.cur_creditos,
                         CUR.cur_codigo,
+                        CUR.cur_ciclo,
                         UPPER(CUR.cur_descripcion) AS curso
                     FROM ADMISION.CURSO CUR
                     WHERE CUR.cur_ciclo = '".$this->parametros['ciclo']. "' AND CUR.cur_estado = 1
@@ -113,7 +114,9 @@
                 $has_data = 1;
                 $cursos = "<option value=''>Selecciona un curso ...</option>\n";
                 while ($row = $datos->fetch(PDO::FETCH_ASSOC)) {
-                    $cursos .= "<option value='".$row['cur_id']."'>CÓDIGO: ".$row['cur_codigo']." | CRÉDITOS: ".$row['cur_creditos']." | ".$row['curso']."</option>\n";
+                    $cursos .= "<option value='".$row['cur_id']."' data-nombre='".$row['curso']."' data-codigo='".$row['cur_codigo'];
+                    $cursos .= "' data-ciclo='".$row['cur_ciclo']."' data-creditos='".$row['cur_creditos']."'>CÓDIGO: ".$row['cur_codigo'];
+                    $cursos .= " | CRÉDITOS: ".$row['cur_creditos']." | ".$row['curso']."</option>\n";
                 }
             } else {
                 $cursos = "<option value='SD'>Antes selecciona un ciclo ...</option>\n";
@@ -163,17 +166,135 @@
                 // return $sql;
                 $datos = $this->con->return_query_mysql($sql);
                 $resp = "";
-                $cgh_id = "";
                 $error = $this->con->error_mysql();
                 if (empty($error)) {
                     while ($row = mysqli_fetch_array($datos)) {
                         $resp = $row['respuesta'];
-                        $cgh_id = $row['cgh_id'];
+                        if ($resp == 1 && !empty($row['cgh_id'])) {
+                            return $this->saveCargaHorariaCursos($row['cgh_id']);
+                        } else {
+                            return json_encode(array('respuesta' => 0, 'mensaje' => 'La carga horaria no se guardo'));
+                        }
                     }
+                } else {
+                    return json_encode(array('respuesta' => 0, 'mensaje' => 'Ocurrio un error en la consulta '.$error));
                 }
-                return json_encode(array('respuesta' => $resp, 'cgh_id' => $cgh_id));
             } catch (Exception $ex) {
                 die("Error: " . $ex);
+            }
+        }
+
+        private function saveCargaHorariaCursos($cgh_id)
+        {
+            try {
+                $cursos = json_decode($this->parametros['p_cursos']);
+                $resp = array();
+                foreach ($cursos as $curso) {
+                    $this->con->close_open_connection_mysql();
+                    $sql = "CALL sp_saveCargaHorariaCursos(";
+                    $sql .= "'".$curso->chc_id."', "; // p_chc_id
+                    $sql .= "'".$cgh_id."', "; // p_cgh_id
+                    $sql .= "'".$curso->index."', "; // p_cur_id
+                    $sql .= "'".$curso->cur_codigo."', "; // p_cur_codigo
+                    $sql .= "'".$curso->curso."', "; // p_cur_descripcion
+                    $sql .= "'".$curso->cur_ciclo."', "; // p_cur_ciclo
+                    $sql .= "'".$curso->cur_creditos."', "; // p_cur_creditos
+                    $sql .= "'".$curso->horas."', "; // p_chc_horas
+                    $sql .= "'0001', "; // p_chc_estado
+                    $sql .= "'".$_SESSION['usu_id']."');"; // p_usuario
+                    // return $sql;
+                    $datos = $this->con->return_query_mysql($sql);
+                    $error = $this->con->error_mysql();
+                    if (empty($error)) {
+                        while ($row = mysqli_fetch_array($datos)) {
+                            if ($row['respuesta'] == 1 && !empty($row['chc_id'])) {
+                                array_push($resp, $this->saveCargaHorariaCursosFechas($row['chc_id'], $curso));
+                                array_push($resp, $this->saveCargaHorariaCursosDocentes($row['chc_id'], $curso));
+                            } else {
+                                return json_encode(array('respuesta' => 0, 'mensaje' => 'No se pudo guardar el curso id:'.$curso->index.' curso: '.$curso->curso));
+                            }
+                        }
+                    } else {
+                        return json_encode(array('respuesta' => 0, 'mensaje' => 'Ocurrio un error en la consulta '.$error));
+                    }
+                }
+                return json_encode($resp);
+            } catch (Exception $ex) {
+                die("Error: " . $this->con->error_mysql(). $ex);
+            }
+        }
+
+        private function saveCargaHorariaCursosFechas($chc_id, $curso)
+        {
+            try {
+                $fechas = $curso->fechas;
+                $resp = array();
+                foreach ($fechas as $fecha) {
+                    $this->con->close_open_connection_mysql();
+                    $sql = "CALL sp_saveCargaHorariaFechas(";
+                    $sql .= "'".$fecha->p_chf_id."', "; // p_chf_id
+                    $sql .= "'".$chc_id."', "; // p_chc_id
+                    $sql .= "'".date('Y-m-d', strtotime(str_replace('/', '-', $fecha->fecha)))."', "; // p_chf_fecha
+                    $sql .= "NULL, "; // p_chf_hora_inicio
+                    $sql .= "NULL, "; // p_chf_hora_fin
+                    $sql .= "NULL, "; // p_chf_horas
+                    $sql .= "'0001', "; // p_chf_estado
+                    $sql .= "'".$_SESSION['usu_id']."');"; // p_usuario
+                    // return $sql;
+                    $datos = $this->con->return_query_mysql($sql);
+                    $error = $this->con->error_mysql();
+                    if (empty($error)) {
+                        while ($row = mysqli_fetch_array($datos)) {
+                            if ($row['respuesta'] == 1 && !empty($row['chf_id'])) {
+                                array_push($resp, array('respuesta' => $row['respuesta'], 'chf_id' => $row['chf_id']));
+                            } else {
+                                return json_encode(array('respuesta' => 0, 'mensaje' => 'No se pudo guardar la fecha id:'.$fecha->id.' fecha: '.date('Y-m-d', strtotime(str_replace('/', '-', $fecha->fecha)))));
+                            }
+                        }
+                    } else {
+                        return json_encode(array('respuesta' => 0, 'mensaje' => 'Ocurrio un error en la consulta '.$error));
+                    }
+                }
+                return json_encode($resp);
+            } catch (Exception $ex) {
+                die("Error: " . $this->con->error_mysql(). $ex);
+            }
+        }
+
+        private function saveCargaHorariaCursosDocentes($chc_id, $curso)
+        {
+            try {
+                $fechas = $curso->fechas;
+                $resp = array();
+                foreach ($fechas as $fecha) {
+                    $this->con->close_open_connection_mysql();
+                    $sql = "CALL sp_saveCargaHorariaFechas(";
+                    $sql .= "'".$fecha->p_chf_id."', "; // p_chf_id
+                    $sql .= "'".$chc_id."', "; // p_chc_id
+                    $sql .= "'".date('Y-m-d', strtotime(str_replace('/', '-', $fecha->fecha)))."', "; // p_chf_fecha
+                    $sql .= "NULL, "; // p_chf_hora_inicio
+                    $sql .= "NULL, "; // p_chf_hora_fin
+                    $sql .= "NULL, "; // p_chf_horas
+                    $sql .= "'0001', "; // p_chf_estado
+                    $sql .= "'".$_SESSION['usu_id']."');"; // p_usuario
+                    // return $sql;
+                    $datos = $this->con->return_query_mysql($sql);
+                    $error = $this->con->error_mysql();
+                    if (empty($error)) {
+                        while ($row = mysqli_fetch_array($datos)) {
+                            if ($row['respuesta'] == 1 && !empty($row['chf_id'])) {
+                                array_push($resp, array('respuesta' => $row['respuesta'], 'chf_id' => $row['chf_id']));
+                            } else {
+                                return json_encode(array('respuesta' => 0, 'mensaje' => 'No se pudo guardar la fecha id:'.$fecha->id.' fecha: '.date('Y-m-d', strtotime(str_replace('/', '-', $fecha->fecha)))));
+                            }
+                        }
+                    } else {
+                        return json_encode(array('respuesta' => 0, 'mensaje' => 'Ocurrio un error en la consulta '.$error));
+                    }
+                }
+                return json_encode($resp);
+            } catch (Exception $ex) {
+                die("Error: " . $this->con->error_mysql(). $ex);
             }
         }
     }
