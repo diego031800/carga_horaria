@@ -117,7 +117,20 @@ function buscar_cursos() {
 }
 
 function get_docentes() {
+  let opcion = 'get_docentes';
   
+  $.ajax({
+    type: "POST",
+    url: "../../../carga_horaria/controllers/main/CargaHorariaController.php",
+    data: "opcion=" + opcion,
+    success: function (data) {
+      let opciones = data;
+      $('#nombre-docente').html(opciones);
+    },
+    error: function (data) {
+      alert("Error al mostrar");
+    },
+  });
 }
 
 // FIN OBTENER COMBOS
@@ -287,7 +300,8 @@ function abrir_docente_modal(index){
   $("#id-curso-docente").val(index);
   $('#nombre-docente').select2({
     dropdownCssClass: "limitar-opciones",
-    dropdownParent: $("#myModal")
+    dropdownParent: $("#myModal"),
+    placeholder: 'Selecciona un docente ...'
   });
 }
 
@@ -376,6 +390,7 @@ function load_document() {
   get_cbo_unidades();
   get_cbo_semestres();
   change_cbo_ciclo();
+  get_docentes();
 
   cboSemestre.addEventListener("change", get_cbo_unidades);
   cboSemestre.addEventListener("change", get_cbo_programas);

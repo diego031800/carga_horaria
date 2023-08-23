@@ -128,18 +128,12 @@ if (!isset($_SESSION['login'])) {
                     <h2>Registrar docente:</h2>
                     <input type="text" hidden id="id-curso-docente">
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col-12 mb-3">
                             <label for="" class="form-label">Nombre:</label><br />
-                            <select name="nombre-docente" class="form-control" id="nombre-docente">
-                                <option value="Docente 1">Docente 1</option>
-                                <option value="Docente 2">Docente 2</option>
-                                <option value="Docente 3">Docente 3</option>
-                                <option value="Docente 4">Docente 4</option>
-                                <option value="Docente 5">Docente 5</option>
-                                <option value="Docente 6">Docente 6</option>
+                            <select class="form-select" id="nombre-docente">
                             </select>
                         </div>
-                        <div class="col-6">
+                        <div class="col-6 mb-3">
                             <label for="" class="form-label">Condicion:</label><br />
                             <select name="condicion-docente" class="form-select" id="condicion-docente">
                                 <option value="UNT">UNT</option>
@@ -149,7 +143,7 @@ if (!isset($_SESSION['login'])) {
                                 <option value="Externo">Externo</option>
                             </select>
                         </div>
-                        <div class="col-6">
+                        <div class="col-6 mb-3">
                             <label for="" class="form-label">Grado:</label><br />
                             <select name="grado-docente" class="form-select" id="grado-docente">
                                 <option value="dr">Doctor</option>
@@ -157,19 +151,19 @@ if (!isset($_SESSION['login'])) {
                                 <option value="ms">Mister</option>
                             </select>
                         </div>
-                        <div class="col-6">
+                        <div class="col-6 mb-3">
                             <label for="" class="form-label">Correo:</label><br />
                             <input type="email" class="form-control" id="email-docente">
                         </div>
-                        <div class="col-6">
+                        <div class="col-6 mb-3">
                             <label for="" class="form-label">Documento de identidad:</label><br />
                             <input type="text" class="form-control" id="doc-docente">
                         </div>
-                        <div class="col-6">
+                        <div class="col-6 mb-3">
                             <label for="" class="form-label">Código:</label><br />
                             <input type="text" class="form-control" id="codigo-docente">
                         </div>
-                        <div class="col-6">
+                        <div class="col-6 mb-3">
                             <label for="" class="form-label">Teléfono:</label><br />
                             <input type="number" class="form-control" id="telefono-docente">
                         </div>

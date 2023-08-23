@@ -125,25 +125,23 @@
         private function get_docentes()
         {
             $sql = "SELECT
-                        PRG.prg_id,
-                        PRG.prg_mencion as programa
-                    FROM ADMISION.PROGRAMA PRG
-                    INNER JOIN ADMISION.SECCION SEC ON SEC.sec_id = PRG.sec_id
-                    WHERE PRG.sec_id = '".$this->parametros['sec_id']."' AND PRG.prg_estado = 1";
+                        DOC.doc_id,
+                        UPPER(DOC.doc_ape_paterno) + ' ' + UPPER(DOC.doc_ape_materno) + ' ' + UPPER(DOC.doc_nombres) AS docente,
+                        DOC.doc_grado,
+                        DOC.doc_email,
+                        DOC.doc_codigo,
+                        DOC.doc_documento,
+                        DOC.doc_celular
+                    FROM ADMISION.DOCENTE DOC
+                    WHERE DOC.doc_estado = 1
+                    ORDER BY DOC.doc_ape_paterno, DOC.doc_ape_materno, DOC.doc_nombres ASC";
             $datos = $this->con->return_query_sqlsrv($sql);
-            $docentes = "";
-            $has_data = 0;
-            if (!empty($this->parametros['sec_id'])) {
-                $has_data = 1;
-                $programas = "<option value=''>Selecciona un programa ...</option>\n";
-                while ($row = $datos->fetch(PDO::FETCH_ASSOC)) {
-                    $programas .= "<option value='".$row['prg_id']."'>".$row['programa']."</option>\n";
-                }
-            } else {
-                $programas = "<option value='SD'>Antes selecciona una unidad ...</option>\n";
+            $docentes = "<option value=''>Selecciona un docente ...</option>\n";
+            while ($row = $datos->fetch(PDO::FETCH_ASSOC)) {
+                $docentes .= "<option value='".$row['doc_id']."' data-email='".$row['doc_email']."' data-codigo='".$row['doc_codigo'];
+                $docentes .= "' data-documento='".$row['doc_documento']."' data-celular='".$row['doc_celular']."'>".$row['docente']."</option>\n";;
             }
-            $resp = array('has_data' => $has_data,'programas' => $programas);
-            return json_encode($resp);
+            return $docentes;
         }
 
         private function saveCargaHoraria() 
