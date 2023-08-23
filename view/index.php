@@ -96,11 +96,12 @@ if (!isset($_SESSION['login'])) {
                             <th scope="col">Fechas</th>
                             <th scope="col">Acciones</th>
                             <th scope="col">Docente</th>
+                            <th scope="col">Asignar</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="text-center" colspan="5">Sin registros.</td>
+                            <td class="text-center" colspan="6">Sin registros.</td>
                         </tr>
                     </tbody>
                 </table>

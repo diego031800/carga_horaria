@@ -133,21 +133,21 @@ function get_docentes() {
 // FIN OBTENER COMBOS
 
 function agregar() {
-  var id = parseInt(cursoNombre.value);
-  var cursonombre = cursoNombre.options[cursoNombre.selectedIndex].text;
+  var id = parseInt(cboCurso.value);
+  var txtCurso = cboCurso.options[cboCurso.selectedIndex].text;
   var cursohoras = document.getElementById("cursoHoras").value;
   let fechas = document.getElementById("newTratFechaIni").value;
   if(cursoAgregado(id)){
     alert("Ya has agregado el curso");
     return;
   }
-  if (cursonombre == "" || cursohoras == "" || fechas == "") {
+  if (txtCurso == "" || cursohoras == "" || fechas == "") {
     alert("No deben haber campos vacíos");
     return;
   }
   let i = listacursos.length;
   var fechasagregar=  agregarFechas(fechas);
-  listacursos.push({ index: id, curso: cursonombre, horas: cursohoras, fechas:fechasagregar, docente_principal:null });
+  listacursos.push({ index: id, curso: txtCurso, horas: cursohoras, fechas:fechasagregar, docente_principal:null });
   llenarTabla();
   limpiarInputs();
 }
@@ -179,7 +179,7 @@ function limpiarInputs(){
 
 function editar(indexb) {
   var curso = listacursos.find(cursoI => cursoI.index === indexb);
-  $("#cursoNombre").val(curso.index);
+  $("#cboCurso").val(curso.index);
   $("#cursoHoras").val(curso.horas);
   var fechasMostrar = curso.fechas.map(function (fecha) {
       var partes = fecha.fecha.split("/");
@@ -199,12 +199,12 @@ function eliminar(index){
 
 function guardar() {
   var index = parseInt(document.getElementById("cursoEditar").value);
-  var idNuevo = parseInt(cursoNombre.value);
-  var cursonombreN = cursoNombre.options[cursoNombre.selectedIndex].text;
+  var idNuevo = parseInt(cboCurso.value);
+  var cboCursoN = cboCurso.options[cboCurso.selectedIndex].text;
   var cursohoras = document.getElementById("cursoHoras").value;
   var fechas = document.getElementById("newTratFechaIni").value;
   var fechasNuevas = agregarFechas(fechas);
-  listacursos.find(cursoI => cursoI.index === index).curso = cursonombreN;
+  listacursos.find(cursoI => cursoI.index === index).curso = cboCursoN;
   listacursos.find(cursoI => cursoI.index === index).horas = cursohoras;
   listacursos.find(cursoI => cursoI.index === index).fechas = fechasNuevas;
   listacursos.find(cursoI => cursoI.index === index).index = idNuevo;
