@@ -12,9 +12,6 @@ let cgh_id = 0;
 let cgh_codigo = '';
 
 var listacursos = [];
-var fechascursos = [];
-var listadocentes= [];
-var id_current = 0;
 
 // FUNCIONES
 // INICIO OBTENER COMBOS
@@ -136,28 +133,42 @@ function get_docentes() {
 // FIN OBTENER COMBOS
 
 function agregar() {
-  var cboCurso = document.getElementById("cboCurso").value;
+  var id = parseInt(cursoNombre.value);
+  var cursonombre = cursoNombre.options[cursoNombre.selectedIndex].text;
   var cursohoras = document.getElementById("cursoHoras").value;
   let fechas = document.getElementById("newTratFechaIni").value;
-  if (cboCurso == "" || cursohoras == "" || fechas == "") {
+  if(cursoAgregado(id)){
+    alert("Ya has agregado el curso");
+    return;
+  }
+  if (cursonombre == "" || cursohoras == "" || fechas == "") {
     alert("No deben haber campos vacíos");
     return;
   }
   let i = listacursos.length;
-  listacursos.push({ index: id_current, curso: cboCurso, horas: cursohoras });
-  agregarFechas(fechas, id_current);
+  var fechasagregar=  agregarFechas(fechas);
+  listacursos.push({ index: id, curso: cursonombre, horas: cursohoras, fechas:fechasagregar, docente_principal:null });
   llenarTabla();
   limpiarInputs();
-  id_current += 1;
 }
 
-function agregarFechas(fechas, index) {
+function cursoAgregado(index){
+  if(listacursos.find(cursoI => cursoI.index === index) != null && listacursos.find(cursoI => cursoI.index === index) != undefined){
+    return true;
+  }else{
+    return false;
+  }
+}
+
+function agregarFechas(fechas) {
   var arrayFechas = fechas.split(",");
-  var i = listacursos.length-2;
+  var i = 0;
+  var fechasdevolver = [];
   arrayFechas.forEach((element) => {
     i +=1;
-    fechascursos.push({ index: i, id: index, fecha: element });
+    fechasdevolver.push({ index: i, fecha: element });
   });
+  return fechasdevolver;
 }
 
 function limpiarInputs(){
@@ -168,13 +179,11 @@ function limpiarInputs(){
 
 function editar(indexb) {
   var curso = listacursos.find(cursoI => cursoI.index === indexb);
-  $("#cboCurso").val(curso.curso);
+  $("#cursoNombre").val(curso.index);
   $("#cursoHoras").val(curso.horas);
-  var fechasMostrar = fechascursos.map(function (fecha) {
-    if(indexb===fecha.id){
+  var fechasMostrar = curso.fechas.map(function (fecha) {
       var partes = fecha.fecha.split("/");
       return new Date(partes[2], partes[1] - 1, partes[0]);
-    }
   });
   $("#cursoEditar").val(indexb);
   $(".datepicker3").datepicker('setDates', fechasMostrar);
@@ -182,21 +191,23 @@ function editar(indexb) {
   document.getElementById("guardar").disabled = false;
   document.getElementById("cancelar").disabled = false;
 }
+
 function eliminar(index){
   listacursos= listacursos.filter((item) => item.index != index);
-  fechascursos= fechascursos.filter((item) => item.id != index);
   llenarTabla();
 }
 
 function guardar() {
   var index = parseInt(document.getElementById("cursoEditar").value);
-  var cboCurso = document.getElementById("cboCurso").value;
+  var idNuevo = parseInt(cursoNombre.value);
+  var cursonombreN = cursoNombre.options[cursoNombre.selectedIndex].text;
   var cursohoras = document.getElementById("cursoHoras").value;
-  fechascursos= fechascursos.filter((item) => item.id != index);
   var fechas = document.getElementById("newTratFechaIni").value;
-  agregarFechas(fechas, index);
-  listacursos.find(cursoI => cursoI.index === index).curso = cboCurso;
+  var fechasNuevas = agregarFechas(fechas);
+  listacursos.find(cursoI => cursoI.index === index).curso = cursonombreN;
   listacursos.find(cursoI => cursoI.index === index).horas = cursohoras;
+  listacursos.find(cursoI => cursoI.index === index).fechas = fechasNuevas;
+  listacursos.find(cursoI => cursoI.index === index).index = idNuevo;
   limpiarInputs();
   llenarTabla();
   document.getElementById("guardar").disabled = true;
@@ -219,16 +230,15 @@ function llenarTabla() {
     return;
   }
   listacursos.forEach((elementC) => {
-    let stringFecha = fechascursos
-      .filter(element => elementC.index === element.id)
+    let stringFecha = elementC.fechas
       .map(element => element.fecha)
       .join(',');
     let nombre;
-    let doc = listadocentes.find(item => item.id === elementC.index);
-    if(doc == null && doc === undefined ){
+    let doc = elementC.docente_principal;
+    if(doc == null){
       nombre = "Sin asignar docente";
     }else{
-      nombre = doc.docente
+      nombre = doc.docente;
     }
     fila =
     '<tr><th scope="row">' +
@@ -251,7 +261,6 @@ function llenarTabla() {
 }
 
 function guardar_docente(){
-  var indx = listadocentes.length;
   var id_curso_modal = parseInt(document.getElementById("id-curso-docente").value);
   var doc_modal = document.getElementById("doc-docente").value;
   var email_modal = document.getElementById("email-docente").value;
@@ -260,17 +269,17 @@ function guardar_docente(){
   var nombre_docente_modal = document.getElementById("nombre-docente").value;
   var codigo_modal = document.getElementById("codigo-docente").value;
   var grado_modal = document.getElementById("grado-docente").value;
-  if (listadocentes.find(item => item.id === id_curso_modal) != null && listadocentes.find(item => item.id === id_curso_modal) !== undefined ) {
-    listadocentes.find(item => item.id === id_curso_modal).docente = nombre_docente_modal;
-    listadocentes.find(item => item.id === id_curso_modal).condicion = condicion_modal;
-    listadocentes.find(item => item.id === id_curso_modal).grado = grado_modal;
-    listadocentes.find(item => item.id === id_curso_modal).codigo = codigo_modal;
-    listadocentes.find(item => item.id === id_curso_modal).dni = doc_modal;
-    listadocentes.find(item => item.id === id_curso_modal).correo = email_modal;
-    listadocentes.find(item => item.id === id_curso_modal).telefono = telefono_modal;
+  if (listacursos.find(item => item.index === id_curso_modal).docente_principal != null) {
+    listacursos.find(item => item.index === id_curso_modal).docente_principal.docente = nombre_docente_modal;
+    listacursos.find(item => item.index === id_curso_modal).docente_principal.condicion = condicion_modal;
+    listacursos.find(item => item.index === id_curso_modal).docente_principal.grado = grado_modal;
+    listacursos.find(item => item.index === id_curso_modal).docente_principal.codigo = codigo_modal;
+    listacursos.find(item => item.index === id_curso_modal).docente_principal.dni = doc_modal;
+    listacursos.find(item => item.index === id_curso_modal).docente_principal.correo = email_modal;
+    listacursos.find(item => item.index === id_curso_modal).docente_principal.telefono = telefono_modal;
   }else{
-    listadocentes.push({index:indx, id:id_curso_modal, docente:nombre_docente_modal, condicion:condicion_modal,
-    grado:grado_modal, codigo:codigo_modal,dni:doc_modal,correo:email_modal,telefono:telefono_modal});
+    listacursos.find(item => item.index === id_curso_modal).docente_principal={docente:nombre_docente_modal, condicion:condicion_modal,
+    grado:grado_modal, codigo:codigo_modal,dni:doc_modal,correo:email_modal,telefono:telefono_modal};
   }
   limpiarInputsModal();
   document.getElementById('myModal').style.display = "none";
@@ -286,7 +295,7 @@ function limpiarInputsModal(){
 }
 
 function abrir_docente_modal(index){
-  var docente = listadocentes.find(item => item.id === index);
+  var docente = listacursos.find(item => item.index === index).docente_principal;
   if (docente != null && docente !== undefined ) {
     $("#nombre-docente").val(docente.docente);
     $("#condicion-docente").val(docente.condicion);
