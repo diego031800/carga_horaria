@@ -16,6 +16,26 @@
 
 /* FIN SELECT2 */
 
+/* DATE PICKER */
+
+/* Estilos personalizados para el input datepicker */
+.input-group-lg input[type="text"] {
+    height: auto;
+    /* Ajusta el alto según el contenido */
+    font-size: 12px;
+    /* Tamaño de fuente deseado */
+    padding: 12px 12px;
+    /* Ajusta el relleno según tus necesidades */
+}
+
+/* Estilos para reducir el tamaño del ícono de calendario */
+.input-group-addon i.glyphicon-calendar {
+    font-size: 18px;
+    /* Tamaño de fuente deseado para el ícono */
+}
+
+/* FIN DATE PICKER */
+
 .modal {
     display: none; 
     position: fixed;
