@@ -27,7 +27,7 @@
       $sql = "SELECT 
                 U.usu_id, 
                 U.usu_login,
-                PER.per_ape_paterno + ' ' + PER.per_ape_materno + ' ' + PER.per_nombres AS nombres
+                PER.per_nombres + ' ' + PER.per_ape_paterno + ' ' + PER.per_ape_materno AS nombres
               FROM SISTEMA.USUARIO U 
               INNER JOIN SISTEMA.PERSONA PER ON PER.per_id = U.per_id
               WHERE U.usu_estado = 1 

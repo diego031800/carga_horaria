@@ -19,7 +19,7 @@ function get_cbo_semestres() {
   let opcion = "get_cbo_semestres";
   $.ajax({
     type: "POST",
-    url: "../../../carga_horaria/controllers/main/CargaHorariaController.php",
+    url: "../../controllers/main/CargaHorariaController.php",
     data: "opcion=" + opcion,
     success: function (data) {
       let opciones = data;
@@ -35,7 +35,7 @@ function get_cbo_unidades() {
   let opcion = "get_cbo_unidades";
   $.ajax({
     type: "POST",
-    url: "../../../carga_horaria/controllers/main/CargaHorariaController.php",
+    url: "../../controllers/main/CargaHorariaController.php",
     data: "opcion=" + opcion,
     success: function (data) {
       let opciones = data;
@@ -52,7 +52,7 @@ function get_cbo_programas() {
   let sec_id = cboUnidad.value;
   $.ajax({
     type: "POST",
-    url: "../../../carga_horaria/controllers/main/CargaHorariaController.php",
+    url: "../../controllers/main/CargaHorariaController.php",
     data: "opcion=" + opcion +
       "&sec_id=" + sec_id,
     success: function (data) {
@@ -95,7 +95,7 @@ function buscar_cursos() {
 
   $.ajax({
     type: "POST",
-    url: "../../../carga_horaria/controllers/main/CargaHorariaController.php",
+    url: "../../controllers/main/CargaHorariaController.php",
     data: "opcion=" + opcion +
       "&ciclo=" + ciclo,
     success: function (data) {
@@ -118,7 +118,7 @@ function get_docentes() {
   
   $.ajax({
     type: "POST",
-    url: "../../../carga_horaria/controllers/main/CargaHorariaController.php",
+    url: "../../controllers/main/CargaHorariaController.php",
     data: "opcion=" + opcion,
     success: function (data) {
       let opciones = data;
@@ -263,9 +263,9 @@ function llenarTabla() {
       nombre = doc.docente;
     }
     fila =
-    '<tr><th scope="row">' +
+    '<tr><td scope="row">' +
     elementC.curso +
-    "</th><td>" +
+    "</td><td>" +
     elementC.horas +
     "</td><td>" +
     stringFecha +
@@ -395,7 +395,7 @@ function saveCargaHoraria() {
 
   $.ajax({
     type: "POST",
-    url: "../../../carga_horaria/controllers/main/CargaHorariaController.php",
+    url: "../../controllers/main/CargaHorariaController.php",
     data: "opcion=" + opcion +
       "&p_cgh_id=" + p_cgh_id +
       "&p_cgh_codigo=" + p_cgh_codigo +

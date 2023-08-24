@@ -19,7 +19,7 @@ function login()
     success: function (data) {
       let objeto = JSON.parse(data);
       if (objeto.respuesta=='Acceso permitido') {
-        location.href = "view/";
+        location.href = "view/process/registrarCargaHoraria.php";
       } else {
         alert(objeto.respuesta);
       }
