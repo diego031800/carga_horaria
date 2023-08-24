@@ -22,6 +22,7 @@
   $parametros['p_prg_mencion'] = '';
   $parametros['p_cgh_ciclo'] = '';
   $parametros['p_cgh_estado'] = '';
+  $parametros['p_cursos'] = '';
   
   
   if (isset($_POST['opcion'])) 
@@ -88,6 +89,10 @@
   if (isset($_POST['p_cgh_estado'])) 
   {
     $parametros['p_cgh_estado'] = $_POST['p_cgh_estado'];
+  }
+  if (isset($_POST['p_cursos'])) 
+  {
+    $parametros['p_cursos'] = $_POST['p_cursos'];
   }
 
   $CargaHoraria = new CargaHoraria();
