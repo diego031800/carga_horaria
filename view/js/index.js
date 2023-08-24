@@ -289,10 +289,13 @@ function guardar_docente(){
   var telefono_modal = document.getElementById("telefono-docente").value;
   var condicion_modal = document.getElementById("condicion-docente").value;
   var nombre_docente_modal = document.getElementById("nombre-docente").value;
+  let doc_opcion = $('#nombre-docente option:selected');
+  let txtDocente = doc_opcion.text();
   var codigo_modal = document.getElementById("codigo-docente").value;
   var grado_modal = document.getElementById("grado-docente").value;
   if (listacursos.find(item => item.index === id_curso_modal).docentes.length != 0) {
-    listacursos.find(item => item.index === id_curso_modal).docentes[0].docente = nombre_docente_modal;
+    listacursos.find(item => item.index === id_curso_modal).docentes[0].doc_id = nombre_docente_modal;
+    listacursos.find(item => item.index === id_curso_modal).docentes[0].docente = txtDocente;
     listacursos.find(item => item.index === id_curso_modal).docentes[0].condicion = condicion_modal;
     listacursos.find(item => item.index === id_curso_modal).docentes[0].grado = grado_modal;
     listacursos.find(item => item.index === id_curso_modal).docentes[0].codigo = codigo_modal;
@@ -302,7 +305,10 @@ function guardar_docente(){
   }else{
     listacursos.find(item => item.index === id_curso_modal).docentes.push(
       {
-        docente: nombre_docente_modal,
+        chd_id: 0,
+        titular: 1,
+        doc_id: nombre_docente_modal,
+        docente: txtDocente,
         condicion: condicion_modal,
         grado: grado_modal,
         codigo: codigo_modal,
@@ -318,6 +324,7 @@ function guardar_docente(){
 }
 //[{ index: 0, id :0, docente: "Profesor 1", condicion:"Invitado Nacional",grado:"dr", codigo:"64", dni:"74",correo:"gggg", telefono:"9"}]
 function limpiarInputsModal(){
+  $("#nombre-docente").val(null).trigger("change");
   $("#id-curso-docente").val("");
   $("#doc-docente").val("");
   $("#email-docente").val("");
@@ -326,9 +333,9 @@ function limpiarInputsModal(){
 }
 
 function abrir_docente_modal(index){
-  var docente = listacursos.find(item => item.index === index).docente_principal;
+  var docente = listacursos.find(item => item.index === index).docentes[0];
   if (docente != null && docente !== undefined ) {
-    $("#nombre-docente").val(docente.docente);
+    $("#nombre-docente").val(docente.doc_id);
     $("#condicion-docente").val(docente.condicion);
     $("#grado-docente").val(docente.grado);
     $("#codigo-docente").val(docente.codigo);
@@ -361,7 +368,6 @@ window.onclick = function(event) {
 
 /* GUARDAR CARGA HORARIA */
 function saveCargaHoraria() {
-  console.log(listacursos);
   if ($('#cboSemestre').val()==="" || $('#cboUnidad').val()==="" || $('#cboPrograma').val()==="" || $('#cboCiclo').val()==="") {
     alert('Llenar todos los campos');
     return
@@ -389,10 +395,6 @@ function saveCargaHoraria() {
   /* CURSOS */
   let p_cursos = JSON.stringify(listacursos);
 
-  btnGuardar.disabled = true;
-  btnCerrar.disabled = true;
-  btnCancelar.disabled = true;
-
   $.ajax({
     type: "POST",
     url: "../../controllers/main/CargaHorariaController.php",
@@ -409,17 +411,23 @@ function saveCargaHoraria() {
       "&p_cgh_ciclo=" + p_cgh_ciclo +
       "&p_cgh_estado=" + p_cgh_estado + 
       "&p_cursos=" + p_cursos,
+    beforeSend: function() {
+      btnGuardar.disabled = true;
+      btnCerrar.disabled = true;
+      btnCancelar.disabled = true;
+    },
     success: function (data) {
       btnGuardar.disabled = false;
       btnCerrar.disabled = false;
       btnCancelar.disabled = false;
       objeto = JSON.parse(data);
-      let opciones = objeto.cursos;
-      cboCurso.disabled = false;
-      if (objeto.has_data == 0) {
-        cboCurso.disabled = true;
+      let respuesta = objeto[1];
+      if (respuesta.respuesta == 1) {
+        alert(respuesta.mensaje);
+        location.href = 'verCargaHoraria.php';
+      } else {
+        alert(respuesta.mensaje);
       }
-      $('#cboCurso').html(opciones);
     },
     error: function (data) {
       btnBuscar.disabled = false;
