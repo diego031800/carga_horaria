@@ -12,6 +12,8 @@ let btnAgregarCurso = document.getElementById('btnAgregarCurso');
 let btnGuardarCurso = document.getElementById('btnGuardarCurso');
 let btnCancelarEditar = document.getElementById('btnCancelarEditar');
 let txtIdCursoEditar = document.getElementById('cursoEditar');
+let btnEditarCarga = document.getElementById('btneditarCargaHoraria');
+
 
 // Docente modal
 
@@ -123,9 +125,11 @@ function buscar_cursos() {
     success: function (data) {
       objeto = JSON.parse(data);
       let opciones = objeto.cursos;
-      cboCurso.disabled = false;
+      //cboCurso.disabled = false;
+      btnEditarCarga.disabled = false;
       if (objeto.has_data == 0) {
         cboCurso.disabled = true;
+        btnEditarCarga.disabled = true;
       }
       $('#cboCurso').html(opciones);
     },
@@ -154,23 +158,17 @@ function get_docentes() {
 
 // FIN OBTENER COMBOS
 
-// FUNCIONALIDADES
-
-function empezarEditar(){
-  
-}
-
 // OPERACIONES
 
 function agregar() {
-  var id = parseInt(cboCurso.value);
+  let id = parseInt(cboCurso.value);
   let cur_option = $('#cboCurso option:selected');
   let txtCurso = cur_option.data("nombre");
   let txtCursoCodigo = cur_option.data("codigo");
   let txtCursoCiclo = cur_option.data("ciclo");
   let txtCursoCreditos = cur_option.data("creditos");
-  var cursohoras = document.getElementById("cursoHoras").value;
-  let fechas = document.getElementById("newTratFechaIni").value;
+  let cursohoras = txtHoras.value;
+  let fechas = txtFechas.value;
   if(cursoAgregado(id)){
     alert("Ya has agregado el curso");
     return;
@@ -180,7 +178,7 @@ function agregar() {
     return;
   }
   let i = listacursos.length;
-  var fechasagregar=  agregarFechas(fechas);
+  let fechasagregar=  agregarFechas(fechas);
   listacursos.push(
     { 
       chc_id: 0,
@@ -225,19 +223,22 @@ function agregarFechas(fechas) {
 
 function limpiarInputs(){
   $(".datepicker3").datepicker('clearDates');
-  $("#newTratFechaIni").val('');
-  $("#cursoHoras").val("");
+  txtFechas.value ='';
+  txtHoras.value ='';
 }
 
 function editar(indexb) {
-  var curso = listacursos.find(cursoI => cursoI.index === indexb);
-  $("#cboCurso").val(curso.index);
-  $("#cursoHoras").val(curso.horas);
+  let curso = listacursos.find(cursoI => cursoI.index === indexb);
+  cboCurso.value = curso.index;
+  txtHoras.value = curso.horas;
+  //$("#cboCurso").val(curso.index);
+  //$("#cursoHoras").val(curso.horas);
   var fechasMostrar = curso.fechas.map(function (fecha) {
       var partes = fecha.fecha.split("/");
       return new Date(partes[2], partes[1] - 1, partes[0]);
   });
-  $("#cursoEditar").val(indexb);
+  txtIdCursoEditar.value = indexb;
+  //$("#cursoEditar").val(indexb);
   $(".datepicker3").datepicker('setDates', fechasMostrar);
   btnAgregarCurso.disabled = true;
   btnGuardarCurso.disabled = false;
@@ -250,12 +251,12 @@ function eliminar(index){
 }
 
 function guardar() {
-  var index = parseInt(document.getElementById("cursoEditar").value);
-  var idNuevo = parseInt(cboCurso.value);
-  var cboCursoN = cboCurso.options[cboCurso.selectedIndex].text;
-  var cursohoras = document.getElementById("cursoHoras").value;
-  var fechas = document.getElementById("newTratFechaIni").value;
-  var fechasNuevas = agregarFechas(fechas);
+  let index = parseInt(txtIdCursoEditar.value);
+  let idNuevo = parseInt(cboCurso.value);
+  let cboCursoN = cboCurso.options[cboCurso.selectedIndex].text;
+  let cursohoras = txtHoras.value;
+  let fechas = txtFechas.value;
+  let fechasNuevas = agregarFechas(fechas);
   listacursos.find(cursoI => cursoI.index === index).curso = cboCursoN;
   listacursos.find(cursoI => cursoI.index === index).horas = cursohoras;
   listacursos.find(cursoI => cursoI.index === index).fechas = fechasNuevas;
@@ -267,18 +268,10 @@ function guardar() {
   btnCancelarEditar.disabled = true;
 }
 
-function cancelar(){
-  limpiarInputs();
-  btnAgregarCurso.disabled = false;
-  btnGuardarCurso.disabled = true;
-  btnCancelarEditar.disabled = true;
-  $("#cursoEditar").val("");
-}
-
-
 function llenarTabla() {
   $("#cursosTabla tbody").empty();
   if(listacursos.length ==0){
+    $("#cursosTabla tbody").append('<tr><td class="text-center" colspan="6">Sin registros.</td></tr>');
     return;
   }
   listacursos.forEach((elementC) => {
@@ -313,14 +306,14 @@ function llenarTabla() {
 }
 
 function guardar_docente(){
-  var id_curso_modal = parseInt(document.getElementById("id-curso-docente").value);
-  var doc_modal = document.getElementById("doc-docente").value;
-  var email_modal = document.getElementById("email-docente").value;
-  var telefono_modal = document.getElementById("telefono-docente").value;
-  var condicion_modal = document.getElementById("condicion-docente").value;
-  var nombre_docente_modal = document.getElementById("nombre-docente").value;
-  var codigo_modal = document.getElementById("codigo-docente").value;
-  var grado_modal = document.getElementById("grado-docente").value;
+  let id_curso_modal = txtIdModal;
+  let doc_modal = txtDocDocumento.value;
+  let email_modal = txtDocEmail.value;
+  let telefono_modal = txtDocTelefono.value;
+  let condicion_modal = cboDocCondicion.value;
+  let nombre_docente_modal = cboDocNombre.value;
+  let codigo_modal = txtDocCodigo.value;
+  let grado_modal = cboDocGrado.value;
   if (listacursos.find(item => item.index === id_curso_modal).docentes.length != 0) {
     listacursos.find(item => item.index === id_curso_modal).docentes[0].docente = nombre_docente_modal;
     listacursos.find(item => item.index === id_curso_modal).docentes[0].condicion = condicion_modal;
@@ -375,7 +368,62 @@ function abrir_docente_modal(index){
   });
 }
 
+// Funcionalidades
+
+function cancelarEditarCurso(){
+  limpiarInputs();
+  btnAgregarCurso.disabled = false;
+  btnGuardarCurso.disabled = true;
+  btnCancelarEditar.disabled = true;
+  $("#cursoEditar").val("");
+}
+
+function camposUnidad(bol){
+  cboSemestre.disabled = bol;
+  cboUnidad.disabled =bol;
+  cboPrograma.disabled = bol;
+  cboCiclo.disabled = bol;
+}
+
+function camposCursos(bol, opt){
+  cboCurso.disabled = bol;
+  txtHoras.disabled = bol;
+  txtFechas.disabled = bol;
+  btnAgregarCurso.disabled = bol;
+  if(opt === 1){
+    btnGuardarCurso.disabled = bol;
+    btnCancelarEditar.disabled = bol;
+  }else{
+    btnGuardarCurso.disabled = !bol;
+    btnCancelarEditar.disabled = !bol;
+  }
+}
+
+function editarCarga(){
+  let sem =cboSemestre.value;
+  let unidad = cboUnidad.value;
+  let programa = cboPrograma.value;
+  let ciclo = cboCiclo.value;
+  camposCursos(false,2);
+  camposUnidad(true);
+  console.log(sem + " _ "+ unidad + " _ "+ programa + " _ "+ciclo);
+  if( sem != "" && unidad != "" && programa != "" && ciclo != "" ){
+    console.log("Editar" + unidad);
+  }else{
+    console.log("No pueden haber campos vacios");
+  }
+}
+
+function cancelarEditarCarga(){
+  listacursos =[]
+  camposCursos(true,1);
+  camposUnidad(false);
+  llenarTabla();
+}
+
 // MODAL JS
+
+
 
 document.getElementById('closeModal').addEventListener('click', function() {
   document.getElementById('myModal').style.display = "none";
@@ -464,7 +512,10 @@ function load_document() {
   get_cbo_semestres();
   change_cbo_ciclo();
   get_docentes();
-
+  camposCursos(true,1);
+  btnGuardar.disabled = true;
+  btnCerrar.disabled = true;
+  btnCancelar.disabled = true;
   cboSemestre.addEventListener("change", get_cbo_unidades);
   cboSemestre.addEventListener("change", get_cbo_programas);
   cboUnidad.addEventListener("change", get_cbo_programas);

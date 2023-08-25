@@ -75,6 +75,9 @@ if (!isset($_SESSION['login'])) {
                                 <select name="ciclo" class="form-select" id="cboCiclo">
                                 </select>
                             </div>
+                            <div class="col-lg-2 col-6 mb-3">
+                                <button class="btn btn-outline-success" id="btneditarCargaHoraria" onClick="editarCarga();" disabled>Editar</button>
+                            </div>
                         </div>
                         <div class="row">
                             <h3>Datos del curso</h3>
@@ -95,10 +98,10 @@ if (!isset($_SESSION['login'])) {
                             </div>
                             <div class="col-lg-2 col-6 mb-3">
                                 <label for="" class="form-label">Horas</label>
-                                <input type="number" class="form-control" name="cursoHoras" id="cursoHoras" required>
+                                <input type="number" class="form-control" name="txtHoras" id="txtHoras" required>
                             </div>
                             <div class="col-lg-12 col-6 mb-3">
-                                <button class="btn btn-success" onClick="agregar();" id="agregar">
+                                <button class="btn btn-success" onClick="agregar();" id="btnAgregarCurso">
                                     <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                                         <style>
                                             svg {
@@ -110,7 +113,7 @@ if (!isset($_SESSION['login'])) {
                                     &nbsp; Agregar curso
                                 </button>
                                 <input type="number" hidden id="cursoEditar">
-                                <button id="guardar" class="btn btn-warning" onClick="guardar();" disabled="true">
+                                <button id="btnGuardarCurso" class="btn btn-warning" onClick="guardar();" disabled="true">
                                     <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                                         <style>
                                             svg {
@@ -121,7 +124,7 @@ if (!isset($_SESSION['login'])) {
                                     </svg>
                                     &nbsp; Guardar edición
                                 </button>
-                                <button class="btn btn-info" onClick="cancelar();" id="cancelar" disabled="true">
+                                <button class="btn btn-info" onClick="cancelarEditarCurso();" id="btnCancelarEditar" disabled="true">
                                     <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                                         <style>
                                             svg {
@@ -176,7 +179,7 @@ if (!isset($_SESSION['login'])) {
                                     </svg>
                                     &nbsp; Cerrar
                                 </button>
-                                <button class="btn btn-danger" type="button" id="btnCancelar">
+                                <button class="btn btn-danger" type="button" id="btnCancelar" onClick="cancelarEditarCarga();">
                                     <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                                         <style>
                                             svg {
@@ -314,7 +317,7 @@ if (!isset($_SESSION['login'])) {
 
                 $(".datepicker3").datepicker({
                     container: ".container-calendar",
-                    autoclose: true,
+                    autoclose: false,
                     todayHighlight: true,
                     calendarWeeks: true,
                     format: "dd/mm/yyyy",
