@@ -51,7 +51,7 @@ if (!isset($_SESSION['login'])) {
                 <?php require_once('../navbar.php') ?>
                 <!-- END NAV BAR -->
                 <div class="main-content-inner">
-
+                    <h3>AQUÍ SE VERA LA CARGA HORARIA</h3>
                 </div>
 
             </div>
