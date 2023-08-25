@@ -343,7 +343,7 @@ function abrir_docente_modal(index){
     $("#email-docente").val(docente.correo);
     $("#telefono-docente").val(docente.telefono);
   }
-  document.getElementById('myModal').style.display = "block";
+  $('#myModal').fadeIn();
   $("#id-curso-docente").val(index);
   $('#nombre-docente').select2({
     dropdownCssClass: "limitar-opciones",
@@ -355,14 +355,14 @@ function abrir_docente_modal(index){
 // MODAL JS
 
 document.getElementById('closeModal').addEventListener('click', function() {
-  document.getElementById('myModal').style.display = "none";
+  $('#myModal').fadeOut();
   limpiarInputsModal();
 });
 
 window.onclick = function(event) {
   if (event.target === document.getElementById('myModal')) {
-      document.getElementById('myModal').style.display = "none";
-      limpiarInputsModal();
+    $('#myModal').fadeOut();
+    limpiarInputsModal();
   }
 }
 
@@ -421,12 +421,11 @@ function saveCargaHoraria() {
       btnCerrar.disabled = false;
       btnCancelar.disabled = false;
       objeto = JSON.parse(data);
-      let respuesta = objeto[1];
-      if (respuesta.respuesta == 1) {
-        alert(respuesta.mensaje);
+      if (objeto.respuesta == 1) {
+        alert(objeto.mensaje);
         location.href = 'verCargaHoraria.php';
       } else {
-        alert(respuesta.mensaje);
+        alert(objeto.mensaje);
       }
     },
     error: function (data) {

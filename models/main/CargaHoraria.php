@@ -165,14 +165,24 @@
                 $sql .= "'".$_SESSION['usu_id']."');"; // p_usuario
                 // return $sql;
                 $datos = $this->con->return_query_mysql($sql);
-                $resp = array();
+                $respDetalle = array();
                 $error = $this->con->error_mysql();
                 if (empty($error)) {
                     while ($row = mysqli_fetch_array($datos)) {
                         if ($row['respuesta'] == 1 && !empty($row['cgh_id'])) {
-                            $resp[] = $this->saveCargaHorariaCursos($row['cgh_id']);
-                            array_push($resp,['respuesta' => $row['respuesta'], 'mensaje' => 'La carga horaria se guardo exitosamente.']);
-                            return json_encode($resp);
+                            $respDetalle = $this->saveCargaHorariaCursos($row['cgh_id']);
+                            return json_encode($respDetalle);
+                            foreach ($respDetalle[0] as $value) {
+                                if ($value['respuesta'] == 0) {
+                                    return json_encode(['respuesta' => $value['respuesta'], 'mensaje' => $value['mensaje']]);
+                                }
+                            }
+                            foreach ($respDetalle[1] as $value) {
+                                if ($value['respuesta'] == 0) {
+                                    return json_encode(['respuesta' => $value['respuesta'], 'mensaje' => $value['mensaje']]);
+                                }
+                            }
+                            return json_encode(['respuesta' => $row['respuesta'], 'mensaje' => 'La carga horaria se guardo exitosamente.']);
                         } else {
                             return json_encode(array('respuesta' => 0, 'mensaje' => 'La carga horaria no se guardo'));
                         }
@@ -212,11 +222,11 @@
                                 array_push($resp, $this->saveCargaHorariaCursosFechas($row['chc_id'], $curso));
                                 array_push($resp, $this->saveCargaHorariaCursosDocentes($row['chc_id'], $curso));
                             } else {
-                                return json_encode(array('respuesta' => 0, 'mensaje' => 'No se pudo guardar el curso id:'.$curso->index.' curso: '.$curso->curso));
+                                return [array('respuesta' => 0, 'mensaje' => 'No se pudo guardar el curso id:'.$curso->index.' curso: '.$curso->curso)];
                             }
                         }
                     } else {
-                        return json_encode(array('respuesta' => 0, 'mensaje' => 'Ocurrio un error en la consulta '.$error));
+                        return [array('respuesta' => 0, 'mensaje' => 'Ocurrio un error en la consulta '.$error)];
                     }
                 }
                 return $resp;
@@ -249,11 +259,11 @@
                             if ($row['respuesta'] == 1 && !empty($row['chf_id'])) {
                                 array_push($resp, array('respuesta' => $row['respuesta'], 'chf_id' => $row['chf_id']));
                             } else {
-                                return json_encode(array('respuesta' => 0, 'mensaje' => 'No se pudo guardar la fecha id:'.$fecha->id.' fecha: '.date('Y-m-d', strtotime(str_replace('/', '-', $fecha->fecha)))));
+                                return [array('respuesta' => 0, 'mensaje' => 'No se pudo guardar la fecha id:'.$fecha->id.' fecha: '.date('Y-m-d', strtotime(str_replace('/', '-', $fecha->fecha))))];
                             }
                         }
                     } else {
-                        return json_encode(array('respuesta' => 0, 'mensaje' => 'Ocurrio un error en la consulta '.$error));
+                        return [array('respuesta' => 0, 'mensaje' => 'Ocurrio un error en la consulta '.$error)];
                     }
                 }
                 return $resp;
@@ -288,11 +298,11 @@
                             if ($row['respuesta'] == 1 && !empty($row['chd_id'])) {
                                 array_push($resp, array('respuesta' => $row['respuesta'], 'chd_id' => $row['chd_id']));
                             } else {
-                                return json_encode(array('respuesta' => 0, 'mensaje' => 'No se pudo guardar al docente id:'.$docente->doc_id.' docente: '.$docente->docente));
+                                return [array('respuesta' => 0, 'mensaje' => 'No se pudo guardar al docente id:'.$docente->doc_id.' docente: '.$docente->docente)];
                             }
                         }
                     } else {
-                        return json_encode(array('respuesta' => 0, 'mensaje' => 'Ocurrio un error en la consulta '.$error));
+                        return [array('respuesta' => 0, 'mensaje' => 'Ocurrio un error en la consulta '.$error)];
                     }
                 }
                 return $resp;
