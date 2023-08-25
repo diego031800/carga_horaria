@@ -31,7 +31,7 @@ if (!isset($_SESSION['login'])) {
         <link rel="stylesheet" href="../../assets/css/styles.css">
         <link rel="stylesheet" href="../../assets/css/responsive.css">
         <!-- modernizr css -->
-        <script src="../assets/js/vendor/modernizr-2.8.3.min.js"></script>
+        <script src="../../assets/js/vendor/modernizr-2.8.3.min.js"></script>
         <!-- SELECT 2 -->
         <link rel="stylesheet" href="../../assets/css/select2/select2.css">
         <!-- ESTILOS PROPIOS -->
@@ -46,19 +46,69 @@ if (!isset($_SESSION['login'])) {
             <!-- END SIDE BAR -->
 
             <!-- main content area start -->
-            <div class="main-content">
+            <div class="main-content" style="height: 100%;">
                 <!-- START NAV BAR -->
                 <?php require_once('../navbar.php') ?>
                 <!-- END NAV BAR -->
                 <div class="main-content-inner">
-                    <h3>AQUÍ SE VERA LA CARGA HORARIA</h3>
+                    <div class="card mt-5" style="min-height: 620px;">
+                        <div class="card-header bg-transparent">
+                            <h3 class="card-title m-3">Carga horaria</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-2">
+                                <div class="col-lg-2 col-6 mb-3">
+                                    <label for="" class="form-label">Semestre</label>
+                                    <select class="form-select" id="cboSemestre">
+                                    </select>
+                                </div>
+                                <div class="col-lg-3 col-6 mb-3">
+                                    <label for="cboUnidad" class="form-label">Unidad</label>
+                                    <select class="form-select" id="cboUnidad">
+                                    </select>
+                                </div>
+                                <div class="col-lg-5 col-6 mb-3">
+                                    <label class="form-label" for="cboPrograma">Programa</label>
+                                    <select class="form-select" id="cboPrograma" disabled>
+                                        <option value="SD">Antes selecciona una unidad ...</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-1 col-6 mb-3">
+                                    <label class="form-label" for="cboCiclo">Ciclo</label>
+                                    <select name="ciclo" class="form-select" id="cboCiclo">
+                                    </select>
+                                </div>
+                                <div class="col-lg-1 col-6 mb-3">
+                                    <label class="form-label"></label><br>
+                                    <button class="btn btn-info" type="button" id="btnBuscar">
+                                        <i class="fa fa-search"></i>
+                                        &nbsp; Buscar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end m-3">
+                                <button class="btn btn-danger" type="button" id="btnCancelar">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                                        <style>
+                                            svg {
+                                                fill: #ffffff
+                                            }
+                                        </style>
+                                        <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+                                    </svg>
+                                    &nbsp; Cancelar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
             </div>
             <!-- main content area end -->
 
             <!-- START FOOTER -->
-            <?php /* require_once('./footer.php') */ ?>
+            <?php require_once('../footer.php') ?>
             <!-- END FOOTER -->
 
         </div>
@@ -85,8 +135,16 @@ if (!isset($_SESSION['login'])) {
         <script src="../../assets/js/plugins.js"></script>
         <script src="../../assets/js/scripts.js"></script>
         <!-- SCRIPT DESPACHO -->
-        <script src="../../view/js/index.js"></script>
+        <script src="../../view/js/process/verCargaHoraria.js"></script>
         <!-- SCRIPT PROPIO INICIO -->
+        <script>
+            $(document).ready(function() {
+                $('#cboPrograma').select2({
+                    dropdownCssClass: "limitar-opciones",
+                    placeholder: 'Selecciona un programa ...'
+                });
+            });
+        </script>
     </body>
 
     </html>

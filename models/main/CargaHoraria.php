@@ -184,11 +184,11 @@
                             }
                             return json_encode(['respuesta' => $row['respuesta'], 'mensaje' => 'La carga horaria se guardo exitosamente.']);
                         } else {
-                            return json_encode(array('respuesta' => 0, 'mensaje' => 'La carga horaria no se guardo'));
+                            return json_encode(array('respuesta' => $row['respuesta'], 'mensaje' => $row['mensaje'], 'cgh_id' => $row['cgh_id']));
                         }
                     }
                 } else {
-                    return json_encode(array('respuesta' => 0, 'mensaje' => 'Ocurrio un error en la consulta '.$error));
+                    return json_encode(array('respuesta' => 0, 'mensaje' => 'Ocurrio un error al guardar la carga horaria '.$error));
                 }
             } catch (Exception $ex) {
                 die("Error: " . $ex);
@@ -226,7 +226,7 @@
                             }
                         }
                     } else {
-                        return [array('respuesta' => 0, 'mensaje' => 'Ocurrio un error en la consulta '.$error)];
+                        return [array('respuesta' => 0, 'mensaje' => 'Ocurrio un error al guardar un curso '.$error)];
                     }
                 }
                 return $resp;
@@ -263,7 +263,7 @@
                             }
                         }
                     } else {
-                        return [array('respuesta' => 0, 'mensaje' => 'Ocurrio un error en la consulta '.$error)];
+                        return [array('respuesta' => 0, 'mensaje' => 'Ocurrio un error al guardar una fecha '.$error)];
                     }
                 }
                 return $resp;
@@ -302,7 +302,7 @@
                             }
                         }
                     } else {
-                        return [array('respuesta' => 0, 'mensaje' => 'Ocurrio un error en la consulta '.$error)];
+                        return [array('respuesta' => 0, 'mensaje' => 'Ocurrio un error al guardar un docente '.$error)];
                     }
                 }
                 return $resp;
