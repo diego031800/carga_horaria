@@ -318,18 +318,49 @@
         {
             try {
                 $sql = "CALL sp_saveCargaHorariaDocentes(";
-                $sql .= "'".$docente->chd_id."', "; // p_chd_id
-                $sql .= "'".$chc_id."', "; // p_chc_id
-                $sql .= "'".$docente->titular."', "; // p_chd_titular
-                $sql .= "'".$docente->doc_id."', "; // p_doc_id
-                $sql .= "'".$docente->codigo."', "; // p_doc_codigo
-                $sql .= "'".$docente->docente."', "; // p_doc_nombres
-                $sql .= "'".$docente->telefono."', "; // p_doc_celular
-                $sql .= "'".$docente->correo."', "; // p_doc_email
-                $sql .= "'0001', "; // p_chd_estado
-                $sql .= "'".$_SESSION['usu_id']."');"; // p_usuario
-            } catch (\Throwable $th) {
-                //throw $th;
+                $sql .= "'".$this->parametros['p_sem_id']."', "; // p_sem_id
+                $sql .= "'".$this->parametros['p_sec_id']."', "; // p_sec_id
+                $sql .= "'".$this->parametros['p_prg_id']."', "; // p_prg_id
+                $sql .= "'".$this->parametros['p_ciclo']."');"; // p_ciclo
+                // return $sql;
+                $datos = $this->con->return_query_mysql($sql);
+                $resp = array();
+                $error = $this->con->error_mysql();
+                if (empty($error)) {
+                    while ($row = mysqli_fetch_array($datos)) {
+                        $resp[] = $row;
+                    }
+                    return json_encode(array('respuesta' => 0, 'mensaje' => 'Datos obtenidos.', 'data' => $resp));
+                } else {
+                    return json_encode(array('respuesta' => 0, 'mensaje' => 'Error en la consulta.', 'data' => []));
+                }
+            } catch (Exception $ex) {
+                die("Error: " . $this->con->error_mysql(). $ex);
+            }
+        }
+
+        private function buscar_cursos_by_carga_horaria()
+        {
+            try {
+                $sql = "CALL sp_saveCargaHorariaDocentes(";
+                $sql .= "'".$this->parametros['p_sem_id']."', "; // p_sem_id
+                $sql .= "'".$this->parametros['p_sec_id']."', "; // p_sec_id
+                $sql .= "'".$this->parametros['p_prg_id']."', "; // p_prg_id
+                $sql .= "'".$this->parametros['p_ciclo']."');"; // p_ciclo
+                // return $sql;
+                $datos = $this->con->return_query_mysql($sql);
+                $resp = array();
+                $error = $this->con->error_mysql();
+                if (empty($error)) {
+                    while ($row = mysqli_fetch_array($datos)) {
+                        $resp[] = $row;
+                    }
+                    return json_encode(array('respuesta' => 0, 'mensaje' => 'Datos obtenidos.', 'data' => $resp));
+                } else {
+                    return json_encode(array('respuesta' => 0, 'mensaje' => 'Error en la consulta.', 'data' => []));
+                }
+            } catch (Exception $ex) {
+                die("Error: " . $this->con->error_mysql(). $ex);
             }
         }
     }

@@ -78,9 +78,28 @@ function change_cbo_ciclo() {
 }
 
 /* FUNCION PARA OBTENER LA CARGA HORARIA */
-function search_carga_horaria()
-{
-  
+function search_carga_horaria() {
+  let opcion = "buscar_carga_horaria";
+  let p_sem_id = cboSemestre.value;
+  let p_sec_id = cboUnidad.value;
+  let p_prg_id = cboPrograma.value;
+  let p_ciclo = cboCiclo.value;
+  $.ajax({
+    type: "POST",
+    url: "../../controllers/main/CargaHorariaController.php",
+    data: "opcion=" + opcion +
+      "&p_sem_id=" + p_sem_id +
+      "&p_sec_id=" + p_sec_id +
+      "&p_prg_id=" + p_prg_id +
+      "&p_ciclo=" + p_ciclo,
+    success: function (data) {
+      objeto = JSON.parse(data);
+      let carga_horaria = objeto;
+    },
+    error: function (data) {
+      alert("Error al mostrar");
+    },
+  });
 }
 
 /* FUNCION AL CARGAR EL DOCUMENTO */
