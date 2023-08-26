@@ -34,6 +34,9 @@
                 case 'saveCargaHoraria':
                     echo $this->saveCargaHoraria();
                     break;
+                case 'buscar_carga_horaria':
+                    echo $this->buscar_carga_horaria();
+                    break;
             }
         }
 
@@ -44,7 +47,7 @@
                         SEM.sem_codigo,
                         UPPER(SEM.sem_nombre) as semestre
                     FROM ADMISION.SEMESTRE SEM
-                    WHERE sem_estado = 1 AND sem_activo = 1 
+                    WHERE sem_estado = 1/*  AND sem_activo = 1  */
                     ORDER BY SEM.sem_id DESC";
             $datos = $this->con->return_query_sqlsrv($sql);
             $semestres = "<option value=''>Selecciona un semestre ...</option>\n";
@@ -308,6 +311,25 @@
                 return $resp;
             } catch (Exception $ex) {
                 die("Error: " . $this->con->error_mysql(). $ex);
+            }
+        }
+
+        private function buscar_carga_horaria()
+        {
+            try {
+                $sql = "CALL sp_saveCargaHorariaDocentes(";
+                $sql .= "'".$docente->chd_id."', "; // p_chd_id
+                $sql .= "'".$chc_id."', "; // p_chc_id
+                $sql .= "'".$docente->titular."', "; // p_chd_titular
+                $sql .= "'".$docente->doc_id."', "; // p_doc_id
+                $sql .= "'".$docente->codigo."', "; // p_doc_codigo
+                $sql .= "'".$docente->docente."', "; // p_doc_nombres
+                $sql .= "'".$docente->telefono."', "; // p_doc_celular
+                $sql .= "'".$docente->correo."', "; // p_doc_email
+                $sql .= "'0001', "; // p_chd_estado
+                $sql .= "'".$_SESSION['usu_id']."');"; // p_usuario
+            } catch (\Throwable $th) {
+                //throw $th;
             }
         }
     }
