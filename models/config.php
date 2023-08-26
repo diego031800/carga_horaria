@@ -7,18 +7,25 @@
     define('HOST_SQL_SERVER', 'YURIFOX\MSSQLSERVER_2017');
     define('DB_NAME_SQL_SERVER', 'is_posgrado');
 
+    // CONFIGURACION SQL SERVER -----  JOSE  ------
     // define('USER_NAME_SQL_SERVER', 'sa');
     // define('PASS_SQL_SERVER', '16650039');
     // define('HOST_SQL_SERVER', 'localhost');
     // define('DB_NAME_SQL_SERVER', 'is_posgrado');
 
-    // CONFIGURACION MY SQL SERVER
+    // CONFIGURACION SQL SERVER -----  GERALD  ------
+    // define('USER_NAME_SQL_SERVER', 'sa');
+    // define('PASS_SQL_SERVER', '16650039');
+    // define('HOST_SQL_SERVER', 'localhost');
+    // define('DB_NAME_SQL_SERVER', 'is_posgrado');
+
+    // CONFIGURACION MYSQL SERVER
     // define('USER_NAME_MYSQL', 'root');
     // define('PASS_MYSQL', '');
     // define('HOST_MYSQL', 'localhost');
     // define('DB_NAME_MYSQL', 'is_posgrado');
     
-    // CONFIGURACION GERALD
+    // CONFIGURACION MYSQL SERVER -----  GERALD  ------
     define('USER_NAME_MYSQL', 'gerald');
     define('PASS_MYSQL', '');
     define('HOST_MYSQL', '10.0.100.56:3306');
