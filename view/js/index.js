@@ -162,7 +162,7 @@ function get_docentes() {
 
 function abrirAgregarCurso(){
   $('#myModal-curso').fadeIn();
-  btnGuardarCurso.hidden = true;
+  btnGuardarCurso.style.display = "none";
 }
 
 function agregar() {
