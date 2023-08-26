@@ -13,9 +13,15 @@
     // define('DB_NAME_SQL_SERVER', 'is_posgrado');
 
     // CONFIGURACION MY SQL SERVER
-    define('USER_NAME_MYSQL', 'root');
+    // define('USER_NAME_MYSQL', 'root');
+    // define('PASS_MYSQL', '');
+    // define('HOST_MYSQL', 'localhost');
+    // define('DB_NAME_MYSQL', 'is_posgrado');
+    
+    // CONFIGURACION GERALD
+    define('USER_NAME_MYSQL', 'gerald');
     define('PASS_MYSQL', '');
-    define('HOST_MYSQL', 'localhost');
+    define('HOST_MYSQL', '10.0.100.56:3306');
     define('DB_NAME_MYSQL', 'is_posgrado');
 
 ?>
