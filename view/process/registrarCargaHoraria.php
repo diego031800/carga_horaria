@@ -108,8 +108,6 @@ if (!isset($_SESSION['login'])) {
                             <thead>
                                 <tr>
                                     <th scope="col">Curso</th>
-                                    <th scope="col">Horas</th>
-                                    <th scope="col">Fechas</th>
                                     <th scope="col">Acciones</th>
                                     <th scope="col">Docente</th>
                                     <th scope="col">Asignar</th>
@@ -236,18 +234,18 @@ if (!isset($_SESSION['login'])) {
                     <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Registrar docente</h5>
+                                <h5 class="modal-title">Registrar curso</h5>
                             </div>
                             <div class="modal-body">
                                 <input type="text" hidden id="id-curso-docente">
                                 <div class="row">
-                                    <div class="col-lg-12 col-12 mb-3">
-                                        <label for="" class="form-label">Curso</label>
+                                    <div class="col-lg-12 col-12">
+                                        <label for="" class="form-label">Curso</label><br>
                                         <select name="cboCurso" id="cboCurso" class="form-select" disabled>
                                             <option value="SD">Antes selecciona un ciclo ...</option>
                                         </select>
                                     </div>
-                                    <div class="col-lg-10    col-6 mb-3">
+                                    <div class="col-lg-10 col-6 mb-3">
                                         <label for="" class="form-label">Fecha</label>
                                         <div class="input-group input-group-lg date datepicker3 container-calendar"
                                             id="newTratFechaInii">
@@ -267,7 +265,10 @@ if (!isset($_SESSION['login'])) {
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-success" onClick="agregar();">
+                                <button class="btn btn-success" id="btnAgregarCursoModal" onClick="agregar();">
+                                    Agregar
+                                </button>
+                                <button class="btn btn-success" id="btnguardarCurso" onClick="editar();">
                                     Guardar
                                 </button>
                                 <button class="btn btn-danger" onClick="$('#myModal-curso').fadeOut();">

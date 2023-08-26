@@ -10,7 +10,7 @@ let txtHoras = document.getElementById('txtHoras');
 let txtFechas= document.getElementById('newTratFechaIni');
 let btnAgregarCurso = document.getElementById('btnAgregarCurso');
 let btnGuardarCurso = document.getElementById('btnGuardarCurso');
-let btnCancelarEditar = document.getElementById('btnCancelarEditar');
+let btnAgregarCursoModal = document.getElementById('btnAgregarCursoModal');
 let txtIdCursoEditar = document.getElementById('cursoEditar');
 let btnEditarCarga = document.getElementById('btneditarCargaHoraria');
 
@@ -128,7 +128,7 @@ function buscar_cursos() {
       //cboCurso.disabled = false;
       btnEditarCarga.disabled = false;
       if (objeto.has_data == 0) {
-        cboCurso.disabled = true;
+        //cboCurso.disabled = true;
         btnEditarCarga.disabled = true;
       }
       $('#cboCurso').html(opciones);
@@ -162,6 +162,7 @@ function get_docentes() {
 
 function abrirAgregarCurso(){
   $('#myModal-curso').fadeIn();
+  btnGuardarCurso.hidden = true;
 }
 
 function agregar() {
@@ -294,11 +295,7 @@ function llenarTabla() {
     fila =
     '<tr><td scope="row">' +
     elementC.curso +
-    "</td><td>" +
-    elementC.horas +
-    "</td><td>" +
-    stringFecha +
-    '<td><button class="btn btn-info" style="margin-right: 10px;" onClick="editar(' +
+    '</td><td><button class="btn btn-info" style="margin-right: 10px;" onClick="editar(' +
     elementC.index +
     ');">Editar</button><button class="btn btn-danger" onClick="eliminar('+
     elementC.index +
