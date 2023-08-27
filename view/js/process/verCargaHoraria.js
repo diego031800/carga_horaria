@@ -1,5 +1,9 @@
 // VARIABLES
-
+let cboSemestre = document.getElementById('cboSemestre');
+let cboUnidad = document.getElementById('cboUnidad');
+let cboPrograma = document.getElementById('cboPrograma');
+let cboCiclo = document.getElementById('cboCiclo');
+let btnBuscar = document.getElementById('btnBuscar');
 
 // FUNCIONES
 // INICIO OBTENER COMBOS
@@ -83,7 +87,7 @@ function search_carga_horaria() {
   let p_sem_id = cboSemestre.value;
   let p_sec_id = cboUnidad.value;
   let p_prg_id = cboPrograma.value;
-  let p_ciclo = cboCiclo.value;
+  let p_cgh_ciclo = cboCiclo.value;
   $.ajax({
     type: "POST",
     url: "../../controllers/main/CargaHorariaController.php",
@@ -91,10 +95,10 @@ function search_carga_horaria() {
       "&p_sem_id=" + p_sem_id +
       "&p_sec_id=" + p_sec_id +
       "&p_prg_id=" + p_prg_id +
-      "&p_ciclo=" + p_ciclo,
+      "&p_cgh_ciclo=" + p_cgh_ciclo,
     success: function (data) {
-      objeto = JSON.parse(data);
-      let carga_horaria = objeto;
+      tabla = data;
+      $('#tabla_carga_horaria').html(tabla);
     },
     error: function (data) {
       alert("Error al mostrar");
@@ -111,6 +115,7 @@ function load_document() {
     cboSemestre.addEventListener("change", get_cbo_programas);
     cboUnidad.addEventListener("change", get_cbo_programas);
     cboUnidad.addEventListener("change", change_cbo_ciclo);
+    btnBuscar.addEventListener("click", search_carga_horaria);
 }
 
 // EVENTOS
