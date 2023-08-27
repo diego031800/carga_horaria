@@ -22,7 +22,7 @@
     // CONFIGURACION MYSQL SERVER
     define('USER_NAME_MYSQL', 'root');
     define('PASS_MYSQL', '');
-    define('HOST_MYSQL', 'localhost');
+    define('HOST_MYSQL', '10.0.100.56:3306');
     define('DB_NAME_MYSQL', 'is_posgrado');
     
     // CONFIGURACION MYSQL SERVER -----  GERALD  ------
