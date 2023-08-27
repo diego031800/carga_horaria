@@ -316,6 +316,7 @@
                 $sql .= "'".$docente->titular."', "; // p_chd_titular
                 $sql .= "'".$docente->condicion."', "; // p_chd_titular
                 $sql .= "'".$docente->doc_id."', "; // p_doc_id
+                $sql .= "'".$docente->dni."', "; // p_doc_codigo
                 $sql .= "'".$docente->codigo."', "; // p_doc_codigo
                 $sql .= "'".$docente->docente."', "; // p_doc_nombres
                 $sql .= "'".$docente->telefono."', "; // p_doc_celular
@@ -350,7 +351,18 @@
                     $tabla_carga .= "<table class='table table-bordered rounded'>
                                         <tbody>
                                             <tr>
-                                                <td class='table-primary text-center' colspan='7'><b>SEMESTRE: &nbsp;&nbsp;".$carga_horaria['semestre']."</b></td>
+                                                <td class='table-primary text-center' colspan='9'><b>SEMESTRE: &nbsp;&nbsp;".$carga_horaria['semestre']. "</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td class='table-primary text-center'><b>UNIDAD</b></td>
+                                                <td class='table-primary text-center'><b>MENCIÓN</b></td>
+                                                <td class='table-primary text-center'><b>CICLO</b></td>
+                                                <td class='table-primary text-center'><b>CURSO</b></td>
+                                                <td class='table-primary text-center'><b>CRED.</b></td>
+                                                <td class='table-primary text-center'><b>DOCENTE</b></td>
+                                                <td class='table-primary text-center'><b>COND.</b></td>
+                                                <td class='table-primary text-center'><b>HORAS</b></td>
+                                                <td class='table-primary text-center'><b>FECHAS</b></td>
                                             </tr>";
                     /* OBTENER CURSOS */
                     $this->con->close_open_connection_mysql();
@@ -385,7 +397,10 @@
                         }
                         $this->con->close_open_connection_mysql();
                         $fechas = $this->buscar_fechas_by_curso($curso['chc_id']);
-                        $tabla_carga .= "<td class='align-middle text-center'>";
+                        $tabla_carga .= "<td class='align-middle text-center'>
+                                            " . $curso['chc_horas'] . "
+                                        </td>
+                                        <td class='align-middle text-center'>";
                         
                         foreach ($fechas as $index => $fecha) {
                             $tabla_carga .= "<small class='d-inline-flex mb-3 px-2 py-1 fw-semibold text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-2 mr-5'>" . $fecha['chf_fecha'] . "</small>";

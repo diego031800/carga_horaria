@@ -210,7 +210,7 @@ if (!isset($_SESSION['login'])) {
                                     </div>
                                     <div class="col-6 mb-3">
                                         <label for="" class="form-label">Código:</label><br />
-                                        <input type="text" class="form-control" id="codigo-docente">
+                                        <input type="text" class="form-control" id="codigo-docente" disabled>
                                     </div>
                                     <div class="col-6 mb-3">
                                         <label for="" class="form-label">Teléfono:</label><br />
@@ -237,7 +237,7 @@ if (!isset($_SESSION['login'])) {
                                 <h5 class="modal-title">Registrar curso</h5>
                             </div>
                             <div class="modal-body">
-                                <input type="text" hidden id="id-curso-docente">
+                                <!-- <input type="text" hidden id="id-curso-docente"> -->
                                 <div class="row">
                                     <div class="col-lg-12 col-12">
                                         <label for="" class="form-label">Curso</label><br>
