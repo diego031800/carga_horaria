@@ -14,7 +14,7 @@ if (!isset($_SESSION['login'])) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- BOOTSTRAP -->
         <link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
-        <link rel="stylesheet" href="../../assets/css/bootstrap-theme.min.css">
+        <!-- <link rel="stylesheet" href="../../assets/css/bootstrap-theme.min.css"> -->
         <link rel="stylesheet" href="../../assets/css/bootstrap-datepicker3.min.css">
         <link rel="stylesheet" href="../../assets/css/bootstrapValidator.min.css">
         <!-- TEMPLATE -->

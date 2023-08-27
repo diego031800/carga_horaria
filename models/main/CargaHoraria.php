@@ -314,6 +314,7 @@
                 $sql .= "'".$docente->chd_id."', "; // p_chd_id
                 $sql .= "'".$chc_id."', "; // p_chc_id
                 $sql .= "'".$docente->titular."', "; // p_chd_titular
+                $sql .= "'".$docente->condicion."', "; // p_chd_titular
                 $sql .= "'".$docente->doc_id."', "; // p_doc_id
                 $sql .= "'".$docente->codigo."', "; // p_doc_codigo
                 $sql .= "'".$docente->docente."', "; // p_doc_nombres
@@ -349,7 +350,7 @@
                     $tabla_carga .= "<table class='table table-bordered rounded'>
                                         <tbody>
                                             <tr>
-                                                <td class='table-primary text-center' colspan='6'><b>SEMESTRE: &nbsp;&nbsp;".$carga_horaria['semestre']."</b></td>
+                                                <td class='table-primary text-center' colspan='7'><b>SEMESTRE: &nbsp;&nbsp;".$carga_horaria['semestre']."</b></td>
                                             </tr>";
                     /* OBTENER CURSOS */
                     $this->con->close_open_connection_mysql();
@@ -378,7 +379,18 @@
                             $tabla_carga .= "<td class='align-middle text-center'>
                                             " . $docente['doc_nombres'] . "
                                             </td>";
+                            $tabla_carga .= "<td class='align-middle text-center'>
+                                            " . $docente['doc_condicion'] . "
+                                            </td>";
                         }
+                        $this->con->close_open_connection_mysql();
+                        $fechas = $this->buscar_fechas_by_curso($curso['chc_id']);
+                        $tabla_carga .= "<td class='align-middle text-center'>";
+                        
+                        foreach ($fechas as $index => $fecha) {
+                            $tabla_carga .= "<small class='d-inline-flex mb-3 px-2 py-1 fw-semibold text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-2 mr-5'>" . $fecha['chf_fecha'] . "</small>";
+                        }
+                        $tabla_carga .= "</td>";
                         $tabla_carga .= "</tr>";
                         $key < count($cursos) - 1?$tabla_carga .= "<tr>":$tabla_carga .= "";
                     }

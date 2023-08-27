@@ -14,7 +14,7 @@ if (!isset($_SESSION['login'])) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- BOOTSTRAP -->
         <link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
-        <link rel="stylesheet" href="../../assets/css/bootstrap-theme.min.css">
+        <!-- <link rel="stylesheet" href="../../assets/css/bootstrap-theme.min.css"> -->
         <link rel="stylesheet" href="../../assets/css/bootstrap-datepicker3.min.css">
         <link rel="stylesheet" href="../../assets/css/bootstrapValidator.min.css">
         <!-- TEMPLATE -->
@@ -68,7 +68,7 @@ if (!isset($_SESSION['login'])) {
                                     </select>
                                 </div>
                                 <div class="col-lg-5 col-6 mb-3">
-                                    <label class="form-label" for="cboPrograma">Programa</label>
+                                    <label class="form-label" for="cboPrograma">Programa</label><br>
                                     <select class="form-select" id="cboPrograma" disabled>
                                         <option value="SD">Antes selecciona una unidad ...</option>
                                     </select>
