@@ -99,7 +99,6 @@ if (!isset($_SESSION['login'])) {
                                     </svg>
                                     &nbsp; Agregar curso
                                 </button>
-                                <input type="number" hidden id="cursoEditar">
                                 
                             </div>
                         </div>
@@ -177,6 +176,15 @@ if (!isset($_SESSION['login'])) {
                             <div class="modal-body">
                                 <input type="text" hidden id="id-curso-docente">
                                 <div class="row">
+                                    <div class="col-9 mb-3">
+                                        <label for="" class="form-label">Grupo:</label><br />
+                                        <select class="form-select" id="cbo-grupodocente">
+                                        </select>
+                                    </div>
+                                    <div class="col-3 mb-3">
+                                        <button class="btn btn-outline-warning" onClick="agregarGrupo();" id="btn-addGrupo">Agregar grupo</button>
+                                        <button class="btn btn-outline-danger" onClick="eliminarGrupo();" id="btn-deleteGrupo" >Eliminar grupo</button>
+                                    </div>
                                     <div class="col-12 mb-3">
                                         <label for="" class="form-label">Nombre:</label><br />
                                         <select class="form-select" id="nombre-docente">
@@ -237,7 +245,7 @@ if (!isset($_SESSION['login'])) {
                                 <h5 class="modal-title">Registrar curso</h5>
                             </div>
                             <div class="modal-body">
-                                <!-- <input type="text" hidden id="id-curso-docente"> -->
+                                <input type="number" id="cursoEditar" hidden>
                                 <div class="row">
                                     <div class="col-lg-12 col-12">
                                         <label for="" class="form-label">Curso</label><br>
@@ -265,10 +273,7 @@ if (!isset($_SESSION['login'])) {
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-success" id="btnAgregarCursoModal" onClick="agregar();">
-                                    Agregar
-                                </button>
-                                <button class="btn btn-success" id="btnguardarCurso" onClick="editar();">
+                                <button class="btn btn-success" id="btnAgregarCursoModal" onClick="accionBtnGuardarCurso();">
                                     Guardar
                                 </button>
                                 <button class="btn btn-danger" onClick="$('#myModal-curso').fadeOut();">
