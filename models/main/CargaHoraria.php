@@ -47,7 +47,7 @@
                         SEM.sem_codigo,
                         UPPER(SEM.sem_nombre) as semestre
                     FROM ADMISION.SEMESTRE SEM
-                    WHERE sem_estado = 1/*  AND sem_activo = 1  */
+                    WHERE sem_estado = 1 AND sem_activo = 1 
                     ORDER BY SEM.sem_id DESC";
             $datos = $this->con->return_query_sqlsrv($sql);
             $semestres = "<option value=''>Selecciona un semestre ...</option>\n";
@@ -172,7 +172,7 @@
                                 $respCargaHorariaCursosFechas = $this->saveCargaHorariaCursosFecha($chc_id, $fecha);
                                 if ($respCargaHorariaCursosFechas['respuesta'] != 1) {
                                     $this->con->rollback_mysql();
-                                    return json_encode(['respuesta' => 'error', 'mensaje' => 'Error en saveCargaHorariaFechas']);
+                                    return json_encode(['respuesta' => 'error', 'mensaje' => $respCargaHorariaCursosFechas['mensaje']]);
                                 }
                             }
 
@@ -182,12 +182,12 @@
                                 $respCargaHorariaCursosDocentes = $this->saveCargaHorariaCursosDocente($chc_id, $docente);
                                 if ($respCargaHorariaCursosDocentes['respuesta'] != 1) {
                                     $this->con->rollback_mysql();
-                                    return json_encode(['respuesta' => 'error', 'mensaje' => 'Error en saveCargaHorariaDocentes']);
+                                    return json_encode(['respuesta' => 'error', 'mensaje' => $respCargaHorariaCursosDocentes['mensaje']]);
                                 }
                             }
                         } else {
                             $this->con->rollback_mysql();
-                            return json_encode(['respuesta' => 0, 'mensaje' => 'Error en saveCargaHorariaCursos']);
+                            return json_encode(['respuesta' => 0, 'mensaje' => $respCargaHorariaCursos['mensaje']]);
                         }
                     }
                     
@@ -196,7 +196,7 @@
                     return json_encode(['respuesta' => 1, 'mensaje' => 'Registros guardados correctamente.', 'cgh_id' => $cgh_id]);
                 } else {
                     $this->con->rollback_mysql();
-                    return json_encode(['respuesta' => 0, 'mensaje' => 'Error en saveCargaHoraria']);
+                    return json_encode(['respuesta' => 0, 'mensaje' => $respCargaHoraria['mensaje']]);
                 }
             } catch (Exception $e) {
                 $this->con->rollback_mysql();
@@ -313,7 +313,7 @@
                 $sql = "CALL sp_saveCargaHorariaDocentes(";
                 $sql .= "'".$docente->chd_id."', "; // p_chd_id
                 $sql .= "'".$chc_id."', "; // p_chc_id
-                $sql .= "'".$docente->titular."', "; // p_chd_titular
+                $sql .= "".$docente->titular.", "; // p_chd_titular
                 $sql .= "'".$docente->condicion."', "; // p_chd_titular
                 $sql .= "'".$docente->doc_id."', "; // p_doc_id
                 $sql .= "'".$docente->dni."', "; // p_doc_codigo
@@ -348,7 +348,7 @@
                 $tabla_carga = "";
                 $carga_horaria = $this->buscar_carga_horaria();
                 $total_filas = 0;
-                if (count($carga_horaria) > 1) {
+                if (count($carga_horaria) > 0) {
                     $tabla_carga .= "<table class='table table-bordered rounded'>
                                         <tbody>
                                             <tr>
@@ -370,6 +370,7 @@
                         /* OBTENER CURSOS */
                         $this->con->close_open_connection_mysql();
                         $cursos = $this->buscar_cursos_by_carga_horaria($carga['cgh_id']);
+                        $total_filas += count($cursos);
                         $tabla_carga .= "<tr>
                                             <td class='align-middle text-center' rowspan='".(count($cursos)==0 ? '' : count($cursos))."'>
                                                 " . $carga['unidad'] . "
@@ -381,7 +382,7 @@
                                                 " . $this->convertirARomano($carga['ciclo']) . "
                                             </td>";
                         
-                        if (count($cursos) > 1) {
+                        if (count($cursos) > 0) {
                             foreach ($cursos as $curso_id => $curso) {
                                 $tabla_carga .= "<td class='align-middle text-center'>
                                                     " . $curso['curso'] . "
@@ -391,13 +392,18 @@
                                                 </td>";
                                 $this->con->close_open_connection_mysql();
                                 $docentes = $this->buscar_docentes_by_curso($curso['chc_id']);
-                                
-                                foreach ($docentes as $index => $docente) {
-                                    $tabla_carga .= "<td class='align-middle text-center'>
-                                                    " . $docente['doc_nombres'] . "
-                                                    </td>";
-                                    $tabla_carga .= "<td class='align-middle text-center'>
-                                                    " . $docente['doc_condicion'] . "
+                                if (count($docentes) > 0) {
+                                    foreach ($docentes as $index => $docente) {
+                                        $tabla_carga .= "<td class='align-middle text-center'>
+                                                        " . $docente['doc_nombres'] . "
+                                                        </td>";
+                                        $tabla_carga .= "<td class='align-middle text-center'>
+                                                        " . $docente['doc_condicion'] . "
+                                                        </td>";
+                                    }
+                                } else {
+                                    $tabla_carga .= "<td class='align-middle text-center' colspan='2'>
+                                                        Sin docente asignado.
                                                     </td>";
                                 }
                                 $this->con->close_open_connection_mysql();
@@ -408,7 +414,7 @@
                                                 <td class='align-middle text-center'>";
                                 
                                 foreach ($fechas as $index => $fecha) {
-                                    $tabla_carga .= "<small class='d-inline-flex mb-3 px-2 py-1 fw-semibold text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-2 mr-5'>" . $fecha['chf_fecha'] . "</small>";
+                                    $tabla_carga .= "<small class='d-inline-flex mb-3 px-2 py-1 fw-semibold text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-2 mr-5'>" . $this->formatearFecha($fecha['chf_fecha']) . "</small>";
                                 }
                                 $tabla_carga .= "</td>";
                                 $tabla_carga .= "</tr>";
@@ -430,6 +436,7 @@
                                         </tbody>
                                     </table>";
                 }
+                // return $total_filas;
                 return $tabla_carga;
             } catch (Exception $ex) {
                 die("Error: " . $this->con->error_mysql(). $ex);
@@ -574,5 +581,31 @@
             } else {
                 return "No se puede convertir a número romano";
             }
+        }
+
+        private function formatearFecha($fecha) {
+            $timestamp = strtotime($fecha); // Convertir el formato de fecha
+            $dia = date('d', $timestamp); // Obtener el día en número
+            $mes = date('F', $timestamp); // Obtener el mes completo en texto
+
+            // Convertir el mes a su forma abreviada en español si es necesario
+            $meses_abreviados = array(
+                'January'   => 'Ene',
+                'February'  => 'Feb',
+                'March'     => 'Mar',
+                'April'     => 'Abr',
+                'May'       => 'May',
+                'June'      => 'Jun',
+                'July'      => 'Jul',
+                'August'    => 'Ago',
+                'September' => 'Sep',
+                'October'   => 'Oct',
+                'November'  => 'Nov',
+                'December'  => 'Dic'
+            );
+
+            $mes_abreviado = $meses_abreviados[$mes];
+
+            return "$dia, $mes_abreviado";
         }
     }

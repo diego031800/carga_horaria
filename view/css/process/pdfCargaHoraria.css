@@ -1,3 +1,128 @@
-.bg-azul {
-  background-color: #cfe2ff;
+/* Styles based on Bootstrap */
+
+body {
+  font-family: Arial, sans-serif;
+  font-size: 11px; /* Cambia el valor según el tamaño deseado */
 }
+
+.table {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: #212529;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 0.75rem;
+  vertical-align: top;
+  border-top: 1px solid #dee2e6;
+}
+
+.table thead th {
+  vertical-align: bottom;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.table tbody + tbody {
+  border-top: 2px solid #dee2e6;
+}
+
+.table-bordered {
+  border: 1px solid #dee2e6;
+}
+
+.table-bordered th,
+.table-bordered td {
+  border: 1px solid #dee2e6;
+}
+
+.table-bordered thead th,
+.table-bordered thead td {
+  border-bottom-width: 2px;
+}
+
+.table-primary,
+.table-primary > th,
+.table-primary > td {
+  background-color: #b8daff;
+}
+
+.bg-azul {
+  background-color: #b8daff;
+  color: white;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.align-middle {
+  vertical-align: middle;
+}
+
+/* Additional styles you may need for your specific content */
+
+.bg-azul {
+  background-color: #b8daff;
+  color: black;
+}
+
+.text-primary-emphasis {
+  color: black;
+}
+
+.bg-primary-subtle {
+  background-color: #81beff;
+}
+
+.border-primary-subtle {
+  border-color: #81beff;
+}
+
+.rounded-2 {
+  border-radius: 0.5rem;
+}
+
+/* NUEVOS ESTILOS */
+
+.d-inline-flex {
+  display: inline-flex;
+}
+
+.mb-3 {
+  margin-bottom: 1rem;
+}
+
+.px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.py-1 {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.fw-semibold {
+  font-weight: 600;
+}
+
+.border {
+  border-width: 1px;
+  border-style: solid;
+}
+
+.border-primary-subtle {
+  border-color: #81beff;
+}
+
+.rounded-2 {
+  border-radius: 0.25rem;
+}
+
+.mr-5 {
+  margin-right: 1.25rem;
+}
+
+/* ... add more styles based on your HTML content ... */

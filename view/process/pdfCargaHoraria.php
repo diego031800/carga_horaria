@@ -31,6 +31,32 @@
       }
   }
 
+  function formatearFecha($fecha) {
+    $timestamp = strtotime($fecha); // Convertir el formato de fecha
+    $dia = date('d', $timestamp); // Obtener el día en número
+    $mes = date('F', $timestamp); // Obtener el mes completo en texto
+
+    // Convertir el mes a su forma abreviada en español si es necesario
+    $meses_abreviados = array(
+        'January'   => 'Ene',
+        'February'  => 'Feb',
+        'March'     => 'Mar',
+        'April'     => 'Abr',
+        'May'       => 'May',
+        'June'      => 'Jun',
+        'July'      => 'Jul',
+        'August'    => 'Ago',
+        'September' => 'Sep',
+        'October'   => 'Oct',
+        'November'  => 'Nov',
+        'December'  => 'Dic'
+    );
+
+    $mes_abreviado = $meses_abreviados[$mes];
+
+    return "$dia, $mes_abreviado";
+}
+
   /* DATOS CARGA HORARIA */
   $con = conectar();
 
@@ -134,13 +160,19 @@
               array_push($docentes, $docente);
             }
             $con->close();
-            foreach ($docentes as $index => $docente) {
+            if (count($docentes)) {
+              foreach ($docentes as $index => $docente) {
                 $html .= "<td class='align-middle text-center'>
                           " . $docente['doc_nombres'] . "
                           </td>";
                 $html .= "<td class='align-middle text-center'>
                           " . $docente['doc_condicion'] . "
                           </td>";
+              }
+            } else {
+              $html .= "<td class='align-middle text-center' colspan='2'>
+                          Sin asignar docente
+                        </td>";
             }
             $con = conectar();
             $sql = "CALL sp_searchFechasByCursos(";
@@ -161,7 +193,14 @@
                             <td class='align-middle text-center'>";
             
             foreach ($fechas as $index => $fecha) {
-                $html .= "<small class='d-inline-flex mb-3 px-2 py-1 fw-semibold text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-2 mr-5'>" . $fecha['chf_fecha'] . "</small>";
+                if ($index == 0) {
+                  $html .= "<p>Inicio:</p>";
+                  $html .= "<small class='d-inline-flex mb-3 px-2 py-1 fw-semibold'>".formatearFecha($fecha['chf_fecha'])."</small>";
+                }
+                if ($index == count($fechas) - 1) {
+                  $html .= "<p>Fin:</p>";
+                  $html .= "<small class='d-inline-flex mb-3 px-2 py-1 fw-semibold'>".formatearFecha($fecha['chf_fecha'])."</small>";
+                }
             }
             $html .= "</td>";
             $html .= "</tr>";
@@ -169,8 +208,8 @@
         }
       } else {
           $html .= "<td class='align-middle text-center' colspan='6'>
-                              Sin cursos registrados.
-                          </td></tr>";
+                      Sin cursos registrados.
+                    </td></tr>";
       }
     }
     $html .= "</tbody></table>
