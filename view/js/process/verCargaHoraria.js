@@ -1,8 +1,8 @@
 // VARIABLES
 let cboSemestre = document.getElementById('cboSemestre');
 let cboUnidad = document.getElementById('cboUnidad');
-let cboPrograma = document.getElementById('cboPrograma');
-let cboCiclo = document.getElementById('cboCiclo');
+let btnDescargarPdf = document.getElementById('btnDescargarPdf');
+let btnDescargarExc = document.getElementById('btnDescargarExc');
 let btnBuscar = document.getElementById('btnBuscar');
 
 // FUNCIONES
@@ -39,45 +39,14 @@ function get_cbo_unidades() {
   });
 }
 
-function get_cbo_programas() {
-  let opcion = "get_cbo_programas";
-  let sec_id = cboUnidad.value;
-  $.ajax({
-    type: "POST",
-    url: "../../controllers/main/CargaHorariaController.php",
-    data: "opcion=" + opcion +
-      "&sec_id=" + sec_id,
-    success: function (data) {
-      objeto = JSON.parse(data);
-      let opciones = objeto.programas;
-      cboPrograma.disabled = false;
-      if (objeto.has_data == 0) {
-        cboPrograma.disabled = true;
-      }
-      $('#cboPrograma').html(opciones);
-    },
-    error: function (data) {
-      alert("Error al mostrar");
-    },
-  });
-}
+function enable_btnBuscar() {
+  let semestre = cboSemestre.value;
+  let unidad = cboUnidad.value;
 
-function change_cbo_ciclo() {
-  let unidad = $("#cboUnidad option[value='" + cboUnidad.value + "']").text();
-  if (unidad == 'DOCTORADO') {
-    $('#cboCiclo').html('<option value="">Ciclo ...</option>' +
-                        '<option value="1">1</option>' +
-                        '<option value="2">2</option>' +
-                        '<option value="3">3</option>' +
-                        '<option value="4">4</option>' +
-                        '<option value="5">5</option>' +
-                        '<option value="6">6</option>');
-  } else {
-    $('#cboCiclo').html('<option value="">Ciclo ...</option>' +
-                        '<option value="1">1</option>' +
-                        '<option value="2">2</option>' +
-                        '<option value="3">3</option>' +
-                        '<option value="4">4</option>');
+  btnBuscar.disabled = false;
+
+  if (semestre == null || semestre == '' || unidad == null || unidad == '') {
+    btnBuscar.disabled = true;
   }
 }
 
@@ -86,19 +55,19 @@ function search_carga_horaria() {
   let opcion = "buscar_carga_horaria";
   let p_sem_id = cboSemestre.value;
   let p_sec_id = cboUnidad.value;
-  let p_prg_id = cboPrograma.value;
-  let p_cgh_ciclo = cboCiclo.value;
+  /* let p_prg_id = cboPrograma.value;
+  let p_cgh_ciclo = cboCiclo.value; */
   $.ajax({
     type: "POST",
     url: "../../controllers/main/CargaHorariaController.php",
     data: "opcion=" + opcion +
       "&p_sem_id=" + p_sem_id +
-      "&p_sec_id=" + p_sec_id +
-      "&p_prg_id=" + p_prg_id +
-      "&p_cgh_ciclo=" + p_cgh_ciclo,
+      "&p_sec_id=" + p_sec_id,
     success: function (data) {
       tabla = data;
       $('#tabla_carga_horaria').html(tabla);
+      btnDescargarPdf.disabled = false;
+      btnDescargarExc.disabled = false;
     },
     error: function (data) {
       alert("Error al mostrar");
@@ -106,16 +75,22 @@ function search_carga_horaria() {
   });
 }
 
+/* FUNCION PARA DESCARGAR PDF */
+function mostrarPdf() {
+  let semestre = cboSemestre.value;
+  let unidad = cboUnidad.value;
+  let url = 'pdfCargaHoraria.php?sem_id='+semestre+'&sec_id='+unidad;
+  window.open(url, '_blank');
+}
+
 /* FUNCION AL CARGAR EL DOCUMENTO */
 function load_document() {
     get_cbo_unidades();
     get_cbo_semestres();
-    change_cbo_ciclo();
-    cboSemestre.addEventListener("change", get_cbo_unidades);
-    cboSemestre.addEventListener("change", get_cbo_programas);
-    cboUnidad.addEventListener("change", get_cbo_programas);
-    cboUnidad.addEventListener("change", change_cbo_ciclo);
     btnBuscar.addEventListener("click", search_carga_horaria);
+    cboSemestre.addEventListener("change", enable_btnBuscar);
+    cboUnidad.addEventListener("change", enable_btnBuscar);
+    btnDescargarPdf.addEventListener("click", mostrarPdf);
 }
 
 // EVENTOS

@@ -56,7 +56,7 @@ if (!isset($_SESSION['login'])) {
                             <h3 class="card-title m-3">Carga horaria</h3>
                         </div>
                         <div class="card-body">
-                            <div class="row mb-2">
+                            <div class="row mb-2 d-flex justify-content-center">
                                 <div class="col-lg-2 col-6 mb-3">
                                     <label for="" class="form-label">Semestre</label>
                                     <select class="form-select" id="cboSemestre">
@@ -67,7 +67,7 @@ if (!isset($_SESSION['login'])) {
                                     <select class="form-select" id="cboUnidad">
                                     </select>
                                 </div>
-                                <div class="col-lg-5 col-6 mb-3">
+                                <!-- <div class="col-lg-5 col-6 mb-3">
                                     <label class="form-label" for="cboPrograma">Programa</label><br>
                                     <select class="form-select" id="cboPrograma" disabled>
                                         <option value="SD">Antes selecciona una unidad ...</option>
@@ -77,18 +77,36 @@ if (!isset($_SESSION['login'])) {
                                     <label class="form-label" for="cboCiclo">Ciclo</label>
                                     <select name="ciclo" class="form-select" id="cboCiclo">
                                     </select>
-                                </div>
+                                </div> -->
                                 <div class="col-lg-1 col-6 mb-3">
                                     <label class="form-label"></label><br>
-                                    <button class="btn btn-info" type="button" id="btnBuscar">
+                                    <button class="btn btn-info" type="button" id="btnBuscar" disabled>
                                         <i class="fa fa-search"></i>
                                         &nbsp; Buscar
                                     </button>
                                 </div>
                             </div>
+                            <div class="row mt-3 mb-3 d-flex justify-content-center">
+                                <div class="col-3">
+                                    <div class="d-grid">
+                                        <button class="btn btn-danger" id="btnDescargarPdf" type="button" disabled>
+                                            <i class="fa fa-file-pdf-o"></i>
+                                            &nbsp; Descargar PDF
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="display: none;">
+                                    <div class="d-grid">
+                                        <button class="btn btn-success" id="btnDescargarExc" type="button" disabled>
+                                            <i class="fa fa-file-excel-o"></i>
+                                            &nbsp; Descargar Excel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row mt-3">
                                 <div class="col-12" id="tabla_carga_horaria">
-                                    
+
                                 </div>
                             </div>
                         </div>
