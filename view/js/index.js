@@ -17,7 +17,7 @@ let btnEditarCarga = document.getElementById('btneditarCargaHoraria');
 
 // Docente modal
 
-let txtIdModal = parseInt(document.getElementById("id-curso-docente").value);
+let txtIdModal = document.getElementById("id-curso-docente");
 let txtDocDocumento = document.getElementById("doc-docente");
 let txtDocEmail = document.getElementById("email-docente");
 let txtDocTelefono = document.getElementById("telefono-docente");
@@ -162,7 +162,7 @@ function get_docentes() {
 
 function abrirAgregarCurso(){
   $('#myModal-curso').fadeIn();
-  btnGuardarCurso.style.display = "none";
+  $('#btnGuardarCurso').hide();
 }
 
 function agregar() {
@@ -309,7 +309,7 @@ function llenarTabla() {
 }
 
 function guardar_docente(){
-  let id_curso_modal = txtIdModal;
+  let id_curso_modal = txtIdModal.value;
   let doc_modal = txtDocDocumento.value;
   let email_modal = txtDocEmail.value;
   let telefono_modal = txtDocTelefono.value;
@@ -319,17 +319,18 @@ function guardar_docente(){
   let txtDocente = doc_opcion.text();
   let codigo_modal = txtDocCodigo.value;
   let grado_modal = cboDocGrado.value;
-  if (listacursos.find(item => item.index === id_curso_modal).docentes.length != 0) {
-    listacursos.find(item => item.index === id_curso_modal).docentes[0].doc_id = nombre_docente_modal;
-    listacursos.find(item => item.index === id_curso_modal).docentes[0].docente = txtDocente;
-    listacursos.find(item => item.index === id_curso_modal).docentes[0].condicion = condicion_modal;
-    listacursos.find(item => item.index === id_curso_modal).docentes[0].grado = grado_modal;
-    listacursos.find(item => item.index === id_curso_modal).docentes[0].codigo = codigo_modal;
-    listacursos.find(item => item.index === id_curso_modal).docentes[0].dni = doc_modal;
-    listacursos.find(item => item.index === id_curso_modal).docentes[0].correo = email_modal;
-    listacursos.find(item => item.index === id_curso_modal).docentes[0].telefono = telefono_modal;
+  console.log(listacursos.find(item => item.index == id_curso_modal));
+  if (listacursos.find(item => item.index == id_curso_modal).docentes.length != 0) {
+    listacursos.find(item => item.index == id_curso_modal).docentes[0].doc_id = nombre_docente_modal;
+    listacursos.find(item => item.index == id_curso_modal).docentes[0].docente = txtDocente;
+    listacursos.find(item => item.index == id_curso_modal).docentes[0].condicion = condicion_modal;
+    listacursos.find(item => item.index == id_curso_modal).docentes[0].grado = grado_modal;
+    listacursos.find(item => item.index == id_curso_modal).docentes[0].codigo = codigo_modal;
+    listacursos.find(item => item.index == id_curso_modal).docentes[0].dni = doc_modal;
+    listacursos.find(item => item.index == id_curso_modal).docentes[0].correo = email_modal;
+    listacursos.find(item => item.index == id_curso_modal).docentes[0].telefono = telefono_modal;
   }else{
-    listacursos.find(item => item.index === id_curso_modal).docentes.push(
+    listacursos.find(item => item.index == id_curso_modal).docentes.push(
       {
         chd_id: 0,
         titular: 1,
@@ -348,6 +349,21 @@ function guardar_docente(){
   document.getElementById('myModal').style.display = "none";
   llenarTabla();
 }
+
+function seleccionar_datos_docente() {
+  let doc_opcion = $('#nombre-docente option:selected');
+  let doc_documento = doc_opcion.data('documento');
+  let doc_email = doc_opcion.data('email');
+  let doc_codigo = doc_opcion.data('codigo');
+  let doc_celular = doc_opcion.data('celular');
+  
+  console.log(doc_documento, doc_email, doc_celular, doc_codigo)
+  $("#doc-docente").val(doc_documento);
+  $("#email-docente").val(doc_email);
+  $("#codigo-docente").val(doc_codigo);
+  $("#telefono-docente").val(doc_celular);
+}
+
 //[{ index: 0, id :0, docente: "Profesor 1", condicion:"Invitado Nacional",grado:"dr", codigo:"64", dni:"74",correo:"gggg", telefono:"9"}]
 function limpiarInputsModal(){
   $("#nombre-docente").val(null).trigger("change");
@@ -359,7 +375,9 @@ function limpiarInputsModal(){
 }
 
 function abrir_docente_modal(index){
-  let docente = listacursos.find(item => item.index === index).docente_principal;
+  let docente = listacursos.find(item => item.index == index).docentes[0];
+  console.log(docente)
+  $('#myModal').fadeIn();
   if (docente != null && docente !== undefined ) {
     $("#nombre-docente").val(docente.doc_id);
     $("#condicion-docente").val(docente.condicion);
@@ -368,13 +386,17 @@ function abrir_docente_modal(index){
     $("#doc-docente").val(docente.dni);
     $("#email-docente").val(docente.correo);
     $("#telefono-docente").val(docente.telefono);
+  } else {
+    limpiarInputsModal();
   }
-  $('#myModal').fadeIn();
   $("#id-curso-docente").val(index);
   $('#nombre-docente').select2({
     dropdownCssClass: "limitar-opciones",
     dropdownParent: $("#myModal"),
     placeholder: 'Selecciona un docente ...'
+  });
+  $('#nombre-docente').on('change', function() {
+    seleccionar_datos_docente();
   });
 }
 
@@ -425,26 +447,6 @@ function cancelarEditarCarga(){
   llenarTabla();
 }
 
-// MODAL JS
-
-
-
-document.getElementById('closeModal').addEventListener('click', function() {
-  $('#myModal').fadeOut();
-  limpiarInputsModal();
-});
-
-window.onclick = function(event) {
-  if (event.target === document.getElementById('myModal')) {
-    $('#myModal').fadeOut();
-    limpiarInputsModal();
-  }
-}
-window.onclick = function(event) {
-  if (event.target === document.getElementById('myModal-curso')) {
-    $('#myModal-curso').fadeOut();
-  }
-}
 /* GUARDAR CARGA HORARIA */
 function saveCargaHoraria() {
   if ($('#cboSemestre').val()==="" || $('#cboUnidad').val()==="" || $('#cboPrograma').val()==="" || $('#cboCiclo').val()==="") {
@@ -524,6 +526,7 @@ function load_document() {
   btnGuardar.disabled = true;
   btnCerrar.disabled = true;
   btnCancelar.disabled = true;
+  /* CAMPOS GENERALES */
   cboSemestre.addEventListener("change", get_cbo_unidades);
   cboSemestre.addEventListener("change", get_cbo_programas);
   cboUnidad.addEventListener("change", get_cbo_programas);
@@ -534,3 +537,21 @@ function load_document() {
 
 // EVENTOS
 window.addEventListener("load", load_document);
+
+// MODAL JS
+document.getElementById('closeModal').addEventListener('click', function() {
+  $('#myModal').fadeOut();
+  limpiarInputsModal();
+});
+
+window.onclick = function(event) {
+  if (event.target === document.getElementById('myModal')) {
+    $('#myModal').fadeOut();
+    limpiarInputsModal();
+  }
+}
+window.onclick = function(event) {
+  if (event.target === document.getElementById('myModal-curso')) {
+    $('#myModal-curso').fadeOut();
+  }
+}

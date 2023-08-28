@@ -32,7 +32,10 @@
                     echo $this->get_docentes();
                     break;
                 case 'saveCargaHoraria':
-                    echo $this->saveCargaHoraria();
+                    echo $this->save();
+                    break;
+                case 'buscar_carga_horaria':
+                    echo $this->buscar();
                     break;
             }
         }
@@ -44,7 +47,7 @@
                         SEM.sem_codigo,
                         UPPER(SEM.sem_nombre) as semestre
                     FROM ADMISION.SEMESTRE SEM
-                    WHERE sem_estado = 1 AND sem_activo = 1 
+                    WHERE sem_estado = 1/*  AND sem_activo = 1  */
                     ORDER BY SEM.sem_id DESC";
             $datos = $this->con->return_query_sqlsrv($sql);
             $semestres = "<option value=''>Selecciona un semestre ...</option>\n";
@@ -147,6 +150,60 @@
             return $docentes;
         }
 
+        private function save()
+        {
+            try {
+                $this->con->begin_transaction_mysql();
+                $respCargaHoraria = $this->saveCargaHoraria();
+                
+                if ($respCargaHoraria['respuesta'] == 1) {
+                    $cgh_id = $respCargaHoraria['cgh_id'];
+                    
+                    /* GUARDAR CURSOS */
+                    $cursos = json_decode($this->parametros['p_cursos']);
+                    foreach ($cursos as $curso) {
+                        $respCargaHorariaCursos = $this->saveCargaHorariaCurso($cgh_id, $curso);
+                        if ($respCargaHorariaCursos['respuesta'] == 1) {
+                            $chc_id = $respCargaHorariaCursos['chc_id'];
+                            
+                            /* GUARDAR FECHAS POR CURSO */
+                            $fechas = $curso->fechas;
+                            foreach ($fechas as $fecha) {
+                                $respCargaHorariaCursosFechas = $this->saveCargaHorariaCursosFecha($chc_id, $fecha);
+                                if ($respCargaHorariaCursosFechas['respuesta'] != 1) {
+                                    $this->con->rollback_mysql();
+                                    return json_encode(['respuesta' => 'error', 'mensaje' => 'Error en saveCargaHorariaFechas']);
+                                }
+                            }
+
+                            /* GUARDAR DOCENTES POR CURSO */
+                            $docentes = $curso->docentes;
+                            foreach ($docentes as $docente) {
+                                $respCargaHorariaCursosDocentes = $this->saveCargaHorariaCursosDocente($chc_id, $docente);
+                                if ($respCargaHorariaCursosDocentes['respuesta'] != 1) {
+                                    $this->con->rollback_mysql();
+                                    return json_encode(['respuesta' => 'error', 'mensaje' => 'Error en saveCargaHorariaDocentes']);
+                                }
+                            }
+                        } else {
+                            $this->con->rollback_mysql();
+                            return json_encode(['respuesta' => 0, 'mensaje' => 'Error en saveCargaHorariaCursos']);
+                        }
+                    }
+                    
+                    $this->con->commit_mysql();
+    
+                    return json_encode(['respuesta' => 1, 'mensaje' => 'Registros guardados correctamente.', 'cgh_id' => $cgh_id]);
+                } else {
+                    $this->con->rollback_mysql();
+                    return json_encode(['respuesta' => 0, 'mensaje' => 'Error en saveCargaHoraria']);
+                }
+            } catch (Exception $e) {
+                $this->con->rollback_mysql();
+                return json_encode(['respuesta' => 0, 'mensaje' => $e->getMessage()]);
+            }
+        }
+
         private function saveCargaHoraria() 
         {
             try {
@@ -170,145 +227,352 @@
                 if (empty($error)) {
                     while ($row = mysqli_fetch_array($datos)) {
                         if ($row['respuesta'] == 1 && !empty($row['cgh_id'])) {
-                            $respDetalle = $this->saveCargaHorariaCursos($row['cgh_id']);
-                            return json_encode($respDetalle);
-                            foreach ($respDetalle[0] as $value) {
-                                if ($value['respuesta'] == 0) {
-                                    return json_encode(['respuesta' => $value['respuesta'], 'mensaje' => $value['mensaje']]);
-                                }
-                            }
-                            foreach ($respDetalle[1] as $value) {
-                                if ($value['respuesta'] == 0) {
-                                    return json_encode(['respuesta' => $value['respuesta'], 'mensaje' => $value['mensaje']]);
-                                }
-                            }
-                            return json_encode(['respuesta' => $row['respuesta'], 'mensaje' => 'La carga horaria se guardo exitosamente.']);
+                            return ['respuesta' => $row['respuesta'], 'mensaje' => 'La carga horaria se guardo exitosamente.', 'cgh_id' => $row['cgh_id']];
                         } else {
-                            return json_encode(array('respuesta' => 0, 'mensaje' => 'La carga horaria no se guardo'));
+                            return ['respuesta' => $row['respuesta'], 'mensaje' => $row['mensaje'], 'cgh_id' => $row['cgh_id']];
                         }
                     }
                 } else {
-                    return json_encode(array('respuesta' => 0, 'mensaje' => 'Ocurrio un error en la consulta '.$error));
+                    return ['respuesta' => 0, 'mensaje' => 'Ocurrio un error al guardar la carga horaria '.$error];
                 }
             } catch (Exception $ex) {
                 die("Error: " . $ex);
             }
         }
 
-        private function saveCargaHorariaCursos($cgh_id)
+        private function saveCargaHorariaCurso($cgh_id, $curso)
         {
             try {
-                $cursos = json_decode($this->parametros['p_cursos']);
-                $resp = array();
-                foreach ($cursos as $curso) {
-                    $this->con->close_open_connection_mysql();
-                    $sql = "CALL sp_saveCargaHorariaCursos(";
-                    $sql .= "'".$curso->chc_id."', "; // p_chc_id
-                    $sql .= "'".$cgh_id."', "; // p_cgh_id
-                    $sql .= "'".$curso->index."', "; // p_cur_id
-                    $sql .= "'".$curso->cur_codigo."', "; // p_cur_codigo
-                    $sql .= "'".$curso->curso."', "; // p_cur_descripcion
-                    $sql .= "'".$curso->cur_ciclo."', "; // p_cur_ciclo
-                    $sql .= "'".$curso->cur_creditos."', "; // p_cur_creditos
-                    $sql .= "'".$curso->horas."', "; // p_chc_horas
-                    $sql .= "'0001', "; // p_chc_estado
-                    $sql .= "'".$_SESSION['usu_id']."');"; // p_usuario
-                    // return $sql;
-                    $datos = $this->con->return_query_mysql($sql);
-                    $error = $this->con->error_mysql();
-                    if (empty($error)) {
-                        while ($row = mysqli_fetch_array($datos)) {
-                            if ($row['respuesta'] == 1 && !empty($row['chc_id'])) {
-                                array_push($resp, $this->saveCargaHorariaCursosFechas($row['chc_id'], $curso));
-                                array_push($resp, $this->saveCargaHorariaCursosDocentes($row['chc_id'], $curso));
-                            } else {
-                                return [array('respuesta' => 0, 'mensaje' => 'No se pudo guardar el curso id:'.$curso->index.' curso: '.$curso->curso)];
-                            }
+                $this->con->close_open_connection_mysql();
+                $sql = "CALL sp_saveCargaHorariaCursos(";
+                $sql .= "'".$curso->chc_id."', "; // p_chc_id
+                $sql .= "'".$cgh_id."', "; // p_cgh_id
+                $sql .= "'".$curso->index."', "; // p_cur_id
+                $sql .= "'".$curso->cur_codigo."', "; // p_cur_codigo
+                $sql .= "'".$curso->curso."', "; // p_cur_descripcion
+                $sql .= "'".$curso->cur_ciclo."', "; // p_cur_ciclo
+                $sql .= "'".$curso->cur_creditos."', "; // p_cur_creditos
+                $sql .= "'".$curso->horas."', "; // p_chc_horas
+                $sql .= "'0001', "; // p_chc_estado
+                $sql .= "'".$_SESSION['usu_id']."');"; // p_usuario
+                // return $sql;
+                $datos = $this->con->return_query_mysql($sql);
+                $error = $this->con->error_mysql();
+                if (empty($error)) {
+                    while ($row = mysqli_fetch_array($datos)) {
+                        if ($row['respuesta'] == 1 && !empty($row['chc_id'])) {
+                            return ['respuesta' => $row['respuesta'], 'mensaje' => 'El curso se guardo exitosamente.', 'chc_id' => $row['chc_id']];
+                        } else {
+                            return ['respuesta' => 0, 'mensaje' => 'No se pudo guardar el curso id:'.$curso->index.' curso: '.$curso->curso];
                         }
-                    } else {
-                        return [array('respuesta' => 0, 'mensaje' => 'Ocurrio un error en la consulta '.$error)];
                     }
+                } else {
+                    return ['respuesta' => 0, 'mensaje' => 'Ocurrio un error al guardar un curso '.$error];
                 }
-                return $resp;
             } catch (Exception $ex) {
                 die("Error: " . $this->con->error_mysql(). $ex);
             }
         }
 
-        private function saveCargaHorariaCursosFechas($chc_id, $curso)
+        private function saveCargaHorariaCursosFecha($chc_id, $fecha)
         {
             try {
-                $fechas = $curso->fechas;
-                $resp = array();
-                foreach ($fechas as $fecha) {
-                    $this->con->close_open_connection_mysql();
-                    $sql = "CALL sp_saveCargaHorariaFechas(";
-                    $sql .= "'".$fecha->p_chf_id."', "; // p_chf_id
-                    $sql .= "'".$chc_id."', "; // p_chc_id
-                    $sql .= "'".date('Y-m-d', strtotime(str_replace('/', '-', $fecha->fecha)))."', "; // p_chf_fecha
-                    $sql .= "NULL, "; // p_chf_hora_inicio
-                    $sql .= "NULL, "; // p_chf_hora_fin
-                    $sql .= "NULL, "; // p_chf_horas
-                    $sql .= "'0001', "; // p_chf_estado
-                    $sql .= "'".$_SESSION['usu_id']."');"; // p_usuario
-                    // return $sql;
-                    $datos = $this->con->return_query_mysql($sql);
-                    $error = $this->con->error_mysql();
-                    if (empty($error)) {
-                        while ($row = mysqli_fetch_array($datos)) {
-                            if ($row['respuesta'] == 1 && !empty($row['chf_id'])) {
-                                array_push($resp, array('respuesta' => $row['respuesta'], 'chf_id' => $row['chf_id']));
-                            } else {
-                                return [array('respuesta' => 0, 'mensaje' => 'No se pudo guardar la fecha id:'.$fecha->id.' fecha: '.date('Y-m-d', strtotime(str_replace('/', '-', $fecha->fecha))))];
-                            }
+                $this->con->close_open_connection_mysql();
+                $sql = "CALL sp_saveCargaHorariaFechas(";
+                $sql .= "'".$fecha->p_chf_id."', "; // p_chf_id
+                $sql .= "'".$chc_id."', "; // p_chc_id
+                $sql .= "'".date('Y-m-d', strtotime(str_replace('/', '-', $fecha->fecha)))."', "; // p_chf_fecha
+                $sql .= "NULL, "; // p_chf_hora_inicio
+                $sql .= "NULL, "; // p_chf_hora_fin
+                $sql .= "NULL, "; // p_chf_horas
+                $sql .= "'0001', "; // p_chf_estado
+                $sql .= "'".$_SESSION['usu_id']."');"; // p_usuario
+                // return $sql;
+                $datos = $this->con->return_query_mysql($sql);
+                $error = $this->con->error_mysql();
+                if (empty($error)) {
+                    while ($row = mysqli_fetch_array($datos)) {
+                        if ($row['respuesta'] == 1 && !empty($row['chf_id'])) {
+                            return ['respuesta' => $row['respuesta'], 'mensaje' => 'La fecha se guardo exitosamente.','chf_id' => $row['chf_id']];
+                        } else {
+                            return [array('respuesta' => 0, 'mensaje' => 'No se pudo guardar la fecha id:'.$fecha->id.' fecha: '.date('Y-m-d', strtotime(str_replace('/', '-', $fecha->fecha))))];
                         }
-                    } else {
-                        return [array('respuesta' => 0, 'mensaje' => 'Ocurrio un error en la consulta '.$error)];
                     }
+                } else {
+                    return [array('respuesta' => 0, 'mensaje' => 'Ocurrio un error al guardar una fecha '.$error)];
                 }
-                return $resp;
             } catch (Exception $ex) {
                 die("Error: " . $this->con->error_mysql(). $ex);
             }
         }
 
-        private function saveCargaHorariaCursosDocentes($chc_id, $curso)
+        private function saveCargaHorariaCursosDocente($chc_id, $docente)
         {
             try {
-                $docentes = $curso->docentes;
-                $resp = array();
-                foreach ($docentes as $docente) {
-                    $this->con->close_open_connection_mysql();
-                    $sql = "CALL sp_saveCargaHorariaDocentes(";
-                    $sql .= "'".$docente->chd_id."', "; // p_chd_id
-                    $sql .= "'".$chc_id."', "; // p_chc_id
-                    $sql .= "'".$docente->titular."', "; // p_chd_titular
-                    $sql .= "'".$docente->doc_id."', "; // p_doc_id
-                    $sql .= "'".$docente->codigo."', "; // p_doc_codigo
-                    $sql .= "'".$docente->docente."', "; // p_doc_nombres
-                    $sql .= "'".$docente->telefono."', "; // p_doc_celular
-                    $sql .= "'".$docente->correo."', "; // p_doc_email
-                    $sql .= "'0001', "; // p_chd_estado
-                    $sql .= "'".$_SESSION['usu_id']."');"; // p_usuario
-                    // return $sql;
-                    $datos = $this->con->return_query_mysql($sql);
-                    $error = $this->con->error_mysql();
-                    if (empty($error)) {
-                        while ($row = mysqli_fetch_array($datos)) {
-                            if ($row['respuesta'] == 1 && !empty($row['chd_id'])) {
-                                array_push($resp, array('respuesta' => $row['respuesta'], 'chd_id' => $row['chd_id']));
-                            } else {
-                                return [array('respuesta' => 0, 'mensaje' => 'No se pudo guardar al docente id:'.$docente->doc_id.' docente: '.$docente->docente)];
-                            }
+                $this->con->close_open_connection_mysql();
+                $sql = "CALL sp_saveCargaHorariaDocentes(";
+                $sql .= "'".$docente->chd_id."', "; // p_chd_id
+                $sql .= "'".$chc_id."', "; // p_chc_id
+                $sql .= "'".$docente->titular."', "; // p_chd_titular
+                $sql .= "'".$docente->condicion."', "; // p_chd_titular
+                $sql .= "'".$docente->doc_id."', "; // p_doc_id
+                $sql .= "'".$docente->dni."', "; // p_doc_codigo
+                $sql .= "'".$docente->codigo."', "; // p_doc_codigo
+                $sql .= "'".$docente->docente."', "; // p_doc_nombres
+                $sql .= "'".$docente->telefono."', "; // p_doc_celular
+                $sql .= "'".$docente->correo."', "; // p_doc_email
+                $sql .= "'0001', "; // p_chd_estado
+                $sql .= "'".$_SESSION['usu_id']."');"; // p_usuario
+                // return $sql;
+                $datos = $this->con->return_query_mysql($sql);
+                $error = $this->con->error_mysql();
+                if (empty($error)) {
+                    while ($row = mysqli_fetch_array($datos)) {
+                        if ($row['respuesta'] == 1 && !empty($row['chd_id'])) {
+                            return ['respuesta' => $row['respuesta'], 'mensaje' => 'Los datos del docente se guardaron exitosamente.', 'chd_id' => $row['chd_id']];
+                        } else {
+                            return [array('respuesta' => 0, 'mensaje' => 'No se pudo guardar al docente id:'.$docente->doc_id.' docente: '.$docente->docente)];
                         }
-                    } else {
-                        return [array('respuesta' => 0, 'mensaje' => 'Ocurrio un error en la consulta '.$error)];
                     }
+                } else {
+                    return [array('respuesta' => 0, 'mensaje' => 'Ocurrio un error al guardar un docente '.$error)];
                 }
-                return $resp;
             } catch (Exception $ex) {
                 die("Error: " . $this->con->error_mysql(). $ex);
+            }
+        }
+
+        private function buscar()
+        {
+            try {
+                $tabla_carga = "";
+                $carga_horaria = $this->buscar_carga_horaria();
+                $total_filas = 0;
+                if (count($carga_horaria) > 1) {
+                    $tabla_carga .= "<table class='table table-bordered rounded'>
+                                        <tbody>
+                                            <tr>
+                                                <td class='table-primary text-center' colspan='9'><b>SEMESTRE: &nbsp;&nbsp;".$carga_horaria[0]['semestre']. "</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td class='table-primary text-center'><b>UNIDAD</b></td>
+                                                <td class='table-primary text-center'><b>MENCIÓN</b></td>
+                                                <td class='table-primary text-center'><b>CICLO</b></td>
+                                                <td class='table-primary text-center'><b>CURSO</b></td>
+                                                <td class='table-primary text-center'><b>CRED.</b></td>
+                                                <td class='table-primary text-center'><b>DOCENTE</b></td>
+                                                <td class='table-primary text-center'><b>COND.</b></td>
+                                                <td class='table-primary text-center'><b>HORAS</b></td>
+                                                <td class='table-primary text-center'><b>FECHAS</b></td>
+                                            </tr>";
+                    /* ITERAR CARGAS HORARIAS */
+                    foreach ($carga_horaria as $carga_id => $carga) {
+                        /* OBTENER CURSOS */
+                        $this->con->close_open_connection_mysql();
+                        $cursos = $this->buscar_cursos_by_carga_horaria($carga['cgh_id']);
+                        $tabla_carga .= "<tr>
+                                            <td class='align-middle text-center' rowspan='".(count($cursos)==0 ? '' : count($cursos))."'>
+                                                " . $carga['unidad'] . "
+                                            </td>
+                                            <td class='align-middle text-center' rowspan='".(count($cursos)==0 ? '' : count($cursos))."'>
+                                                " . $carga['mencion'] . "
+                                            </td>
+                                            <td class='align-middle text-center' rowspan='".(count($cursos)==0 ? '' : count($cursos))."'>
+                                                " . $this->convertirARomano($carga['ciclo']) . "
+                                            </td>";
+                        
+                        if (count($cursos) > 1) {
+                            foreach ($cursos as $curso_id => $curso) {
+                                $tabla_carga .= "<td class='align-middle text-center'>
+                                                    " . $curso['curso'] . "
+                                                </td>
+                                                <td class='align-middle text-center'>
+                                                    " . $curso['cur_creditos'] . "
+                                                </td>";
+                                $this->con->close_open_connection_mysql();
+                                $docentes = $this->buscar_docentes_by_curso($curso['chc_id']);
+                                
+                                foreach ($docentes as $index => $docente) {
+                                    $tabla_carga .= "<td class='align-middle text-center'>
+                                                    " . $docente['doc_nombres'] . "
+                                                    </td>";
+                                    $tabla_carga .= "<td class='align-middle text-center'>
+                                                    " . $docente['doc_condicion'] . "
+                                                    </td>";
+                                }
+                                $this->con->close_open_connection_mysql();
+                                $fechas = $this->buscar_fechas_by_curso($curso['chc_id']);
+                                $tabla_carga .= "<td class='align-middle text-center'>
+                                                    " . $curso['chc_horas'] . "
+                                                </td>
+                                                <td class='align-middle text-center'>";
+                                
+                                foreach ($fechas as $index => $fecha) {
+                                    $tabla_carga .= "<small class='d-inline-flex mb-3 px-2 py-1 fw-semibold text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-2 mr-5'>" . $fecha['chf_fecha'] . "</small>";
+                                }
+                                $tabla_carga .= "</td>";
+                                $tabla_carga .= "</tr>";
+                                $curso_id < count($cursos) - 1?$tabla_carga .= "<tr>":$tabla_carga .= "";
+                            }
+                        } else {
+                            $tabla_carga .= "<td class='align-middle text-center' colspan='6'>
+                                                Sin cursos registrados.
+                                            </td></tr>";
+                        }
+                    }
+                    $tabla_carga .= "</tbody></table>";
+                } else {
+                    $tabla_carga = "<table class='table table-bordered rounded'>
+                                        <tbody>
+                                            <tr>
+                                                <td class='align-middle text-center'><b>Sin registros.</b></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>";
+                }
+                return $tabla_carga;
+            } catch (Exception $ex) {
+                die("Error: " . $this->con->error_mysql(). $ex);
+            }
+        }
+
+        private function buscar_carga_horaria()
+        {
+            try {
+                $sql = "CALL sp_getCargaHorariaBySemSec(";
+                $sql .= "'".$this->parametros['p_sem_id']."', "; // p_sem_id
+                $sql .= "'".$this->parametros['p_sec_id']."');"; // p_sec_id
+                // return $sql;
+                $datos = $this->con->return_query_mysql($sql);
+                $resp = array();
+                $error = $this->con->error_mysql();
+                if (empty($error)) {
+                    while ($row = mysqli_fetch_array($datos)) {
+                        $carga_horaria = [];
+                        $carga_horaria['cgh_id'] = $row['cgh_id'];
+                        $carga_horaria['codigoCH'] = $row['codigoCH'];
+                        $carga_horaria['sem_id'] = $row['sem_id'];
+                        $carga_horaria['codSemestre'] = $row['codSemestre'];
+                        $carga_horaria['semestre'] = $row['semestre'];
+                        $carga_horaria['sec_id'] = $row['sec_id'];
+                        $carga_horaria['unidad'] = $row['unidad'];
+                        $carga_horaria['prg_id'] = $row['prg_id'];
+                        $carga_horaria['mencion'] = $row['mencion'];
+                        $carga_horaria['ciclo'] = $row['ciclo'];
+                        array_push($resp, $carga_horaria);
+                    }
+                    return $resp;
+                } else {
+                    return ['respuesta' => 0, 'mensaje' => 'Error en la consulta.'];
+                }
+            } catch (Exception $ex) {
+                die("Error: " . $this->con->error_mysql(). $ex);
+            }
+        }
+
+        private function buscar_cursos_by_carga_horaria($cgh_id)
+        {
+            try {
+                $sql = "CALL sp_searchCargaHorariaCursos(";
+                $sql .= "'".$cgh_id."');"; // p_cgh_id
+                // return $sql;
+                $datos = $this->con->return_query_mysql($sql);
+                $resp = array();
+                $error = $this->con->error_mysql();
+                if (empty($error)) {
+                    while ($row = mysqli_fetch_array($datos)) {
+                        $curso = [];
+                        $curso['chc_id'] = $row['chc_id'];
+                        $curso['cgh_id'] = $row['cgh_id'];
+                        $curso['cur_id'] = $row['cur_id'];
+                        $curso['cur_codigo'] = $row['cur_codigo'];
+                        $curso['curso'] = $row['curso'];
+                        $curso['cur_ciclo'] = $row['cur_ciclo'];
+                        $curso['cur_creditos'] = $row['cur_creditos'];
+                        $curso['chc_horas'] = $row['chc_horas'];
+                        array_push($resp, $curso);
+                    }
+                    return $resp;
+                } else {
+                    return ['respuesta' => 0, 'mensaje' => 'Error en la consulta.'];
+                }
+            } catch (Exception $ex) {
+                die("Error: " . $this->con->error_mysql(). $ex);
+            }
+        }
+
+        private function buscar_fechas_by_curso($chc_id)
+        {
+            try {
+                $sql = "CALL sp_searchFechasByCursos(";
+                $sql .= "'".$chc_id."');"; // p_cgh_id
+                // return $sql;
+                $datos = $this->con->return_query_mysql($sql);
+                $resp = array();
+                $error = $this->con->error_mysql();
+                if (empty($error)) {
+                    while ($row = mysqli_fetch_array($datos)) {
+                        $fecha = [];
+                        $fecha['chf_id'] = $row['chf_id'];
+                        $fecha['chc_id'] = $row['chc_id'];
+                        $fecha['chf_fecha'] = $row['chf_fecha'];
+                        array_push($resp, $fecha);
+                    }
+                    return $resp;
+                } else {
+                    return ['respuesta' => 0, 'mensaje' => 'Error en la consulta.'];
+                }
+            } catch (Exception $ex) {
+                die("Error: " . $this->con->error_mysql(). $ex);
+            }
+        }
+
+        private function buscar_docentes_by_curso($chc_id)
+        {
+            try {
+                $sql = "CALL sp_searchDocentesByCurso(";
+                $sql .= "'".$chc_id."');"; // p_cgh_id
+                // return $sql;
+                $datos = $this->con->return_query_mysql($sql);
+                $resp = array();
+                $error = $this->con->error_mysql();
+                if (empty($error)) {
+                    while ($row = mysqli_fetch_array($datos)) {
+                        $docente = [];
+                        $docente['chd_id'] = $row['chd_id'];
+                        $docente['chc_id'] = $row['chc_id'];
+                        $docente['chd_titular'] = $row['chd_titular'];
+                        $docente['doc_condicion'] = $row['doc_condicion'];
+                        $docente['doc_id'] = $row['doc_id'];
+                        $docente['doc_codigo'] = $row['doc_codigo'];
+                        $docente['doc_nombres'] = $row['doc_nombres'];
+                        $docente['doc_celular'] = $row['doc_celular'];
+                        $docente['doc_email'] = $row['doc_email'];
+                        array_push($resp, $docente);
+                    }
+                    return $resp;
+                } else {
+                    return ['respuesta' => 0, 'mensaje' => 'Error en la consulta.'];
+                }
+            } catch (Exception $ex) {
+                die("Error: " . $this->con->error_mysql(). $ex);
+            }
+        }
+
+        private function convertirARomano($numero) {
+            $romanos = array(
+                1 => 'I',
+                2 => 'II',
+                3 => 'III',
+                4 => 'IV',
+                5 => 'V',
+                6 => 'VI'
+            );
+            
+            if (array_key_exists($numero, $romanos)) {
+                return $romanos[$numero];
+            } else {
+                return "No se puede convertir a número romano";
             }
         }
     }
-?>

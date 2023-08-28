@@ -14,7 +14,7 @@ if (!isset($_SESSION['login'])) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- BOOTSTRAP -->
         <link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
-        <link rel="stylesheet" href="../../assets/css/bootstrap-theme.min.css">
+        <!-- <link rel="stylesheet" href="../../assets/css/bootstrap-theme.min.css"> -->
         <link rel="stylesheet" href="../../assets/css/bootstrap-datepicker3.min.css">
         <link rel="stylesheet" href="../../assets/css/bootstrapValidator.min.css">
         <!-- TEMPLATE -->
@@ -31,7 +31,7 @@ if (!isset($_SESSION['login'])) {
         <link rel="stylesheet" href="../../assets/css/styles.css">
         <link rel="stylesheet" href="../../assets/css/responsive.css">
         <!-- modernizr css -->
-        <script src="../assets/js/vendor/modernizr-2.8.3.min.js"></script>
+        <script src="../../assets/js/vendor/modernizr-2.8.3.min.js"></script>
         <!-- SELECT 2 -->
         <link rel="stylesheet" href="../../assets/css/select2/select2.css">
         <!-- ESTILOS PROPIOS -->
@@ -46,19 +46,85 @@ if (!isset($_SESSION['login'])) {
             <!-- END SIDE BAR -->
 
             <!-- main content area start -->
-            <div class="main-content">
+            <div class="main-content" style="height: 100%;">
                 <!-- START NAV BAR -->
                 <?php require_once('../navbar.php') ?>
                 <!-- END NAV BAR -->
                 <div class="main-content-inner">
-                    <h3>AQUÍ SE VERA LA CARGA HORARIA</h3>
-                </div>
+                    <div class="card mt-5" style="min-height: 620px;">
+                        <div class="card-header bg-transparent">
+                            <h3 class="card-title m-3">Carga horaria</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-2 d-flex justify-content-center">
+                                <div class="col-lg-2 col-6 mb-3">
+                                    <label for="" class="form-label">Semestre</label>
+                                    <select class="form-select" id="cboSemestre">
+                                    </select>
+                                </div>
+                                <div class="col-lg-3 col-6 mb-3">
+                                    <label for="cboUnidad" class="form-label">Unidad</label>
+                                    <select class="form-select" id="cboUnidad">
+                                    </select>
+                                </div>
+                                <!-- <div class="col-lg-5 col-6 mb-3">
+                                    <label class="form-label" for="cboPrograma">Programa</label><br>
+                                    <select class="form-select" id="cboPrograma" disabled>
+                                        <option value="SD">Antes selecciona una unidad ...</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-1 col-6 mb-3">
+                                    <label class="form-label" for="cboCiclo">Ciclo</label>
+                                    <select name="ciclo" class="form-select" id="cboCiclo">
+                                    </select>
+                                </div> -->
+                                <div class="col-lg-1 col-6 mb-3">
+                                    <label class="form-label"></label><br>
+                                    <button class="btn btn-info" type="button" id="btnBuscar" disabled>
+                                        <i class="fa fa-search"></i>
+                                        &nbsp; Buscar
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row mt-3 mb-3 d-flex justify-content-center">
+                                <div class="col-3">
+                                    <div class="d-grid">
+                                        <button class="btn btn-danger" id="btnDescargarPdf" type="button" disabled>
+                                            <i class="fa fa-file-pdf-o"></i>
+                                            &nbsp; Descargar PDF
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="display: none;">
+                                    <div class="d-grid">
+                                        <button class="btn btn-success" id="btnDescargarExc" type="button" disabled>
+                                            <i class="fa fa-file-excel-o"></i>
+                                            &nbsp; Descargar Excel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-12" id="tabla_carga_horaria">
 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end m-3">
+                                <button class="btn btn-danger" type="button" id="btnCancelar">
+                                    <i class="fa fa-close"></i>
+                                    &nbsp; Cancelar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- main content area end -->
 
             <!-- START FOOTER -->
-            <?php /* require_once('./footer.php') */ ?>
+            <?php require_once('../footer.php') ?>
             <!-- END FOOTER -->
 
         </div>
@@ -85,8 +151,16 @@ if (!isset($_SESSION['login'])) {
         <script src="../../assets/js/plugins.js"></script>
         <script src="../../assets/js/scripts.js"></script>
         <!-- SCRIPT DESPACHO -->
-        <script src="../../view/js/index.js"></script>
+        <script src="../../view/js/process/verCargaHoraria.js"></script>
         <!-- SCRIPT PROPIO INICIO -->
+        <script>
+            $(document).ready(function() {
+                $('#cboPrograma').select2({
+                    dropdownCssClass: "limitar-opciones",
+                    placeholder: 'Selecciona un programa ...'
+                });
+            });
+        </script>
     </body>
 
     </html>
