@@ -7,6 +7,7 @@
 
     // Definir los enlaces y sus URLs correspondientes
     $menuItems = array(
+        'Mis cargas horarias' => '/carga_horaria/view/process/misCargasHorarias.php',   // Ruta relativa
         'Nueva carga horaria' => '/carga_horaria/view/process/registrarCargaHoraria.php', // Ruta relativa
         'Ver carga horaria por mención y ciclo' => '/carga_horaria/view/process/verCargaHoraria.php'   // Ruta relativa
     );

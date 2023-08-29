@@ -15,8 +15,12 @@ function login()
     data: "opcion="+opcion+
           "&usuario="+usuario+
           "&password="+password,
-    url: "../../../../carga_horaria/controllers/security/LoginController.php",
+    url: "controllers/security/LoginController.php",
+    beforesend: function () {
+      btnAcceso.disabled = true;
+    },
     success: function (data) {
+      btnAcceso.disabled = false;
       let objeto = JSON.parse(data);
       if (objeto.respuesta=='Acceso permitido') {
         location.href = "view/process/registrarCargaHoraria.php";
