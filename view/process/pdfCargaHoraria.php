@@ -78,26 +78,45 @@
       $ch['unidad'] = $row['unidad'];
       $ch['prg_id'] = $row['prg_id'];
       $ch['mencion'] = $row['mencion'];
-      $ch['ciclo'] = $row['ciclo'];
       array_push($carga_horaria, $ch);
     }
     $con->close();
     return $carga_horaria;
   }
 
+  /* OBTENER CICLOS */
+  function get_ciclos_by_carga_horaria($cgh_id)
+  {
+    $con = conectar();
+    $sql = "CALL sp_searchCargaHorariaCiclos(";
+    $sql .= "'".$cgh_id."');"; // p_sec_id
+    // return $sql;
+    $datos = $con->query($sql);
+    $ciclos = array();
+    while ($row = mysqli_fetch_array($datos)) {
+      $ciclo = [];
+      $ciclo['cgc_id'] = $row['cgc_id'];
+      $ciclo['cgh_id'] = $row['cgh_id'];
+      $ciclo['ciclo'] = $row['ciclo'];
+      array_push($ciclos, $ciclo);
+    }
+    $con->close();
+    return $ciclos;
+  }
+
   /* OBTENER CURSOS */
-  function get_cursos_by_carga_horaria($cgh_id)
+  function get_cursos_by_ciclo($cgc_id)
   {
     $con = conectar();
     $sql = "CALL sp_searchCargaHorariaCursos(";
-    $sql .= "'". $cgh_id."');"; // p_cgh_id
+    $sql .= "'". $cgc_id."');"; // p_cgh_id
     // return $sql;
     $datos = $con->query($sql);
     $cursos = array();
     while ($row = mysqli_fetch_array($datos)) {
       $curso = [];
       $curso['chc_id'] = $row['chc_id'];
-      $curso['cgh_id'] = $row['cgh_id'];
+      $curso['cgc_id'] = $row['cgc_id'];
       $curso['cur_id'] = $row['cur_id'];
       $curso['cur_codigo'] = $row['cur_codigo'];
       $curso['curso'] = $row['curso'];
@@ -161,14 +180,19 @@
     $total_filas = 0;
     $carga_horaria = get_cargas_horarias($sem_id, $sec_id);
     foreach ($carga_horaria as $carga) {
-      $cursos = get_cursos_by_carga_horaria($carga['cgh_id']);
-      if (count($cursos) > 0) {
-        foreach ($cursos as $cur_id => $curso) {
-          $docentes = get_docentes_by_curso($curso['chc_id']);
-          if (count($docentes)) {
-            $total_filas += count($docentes);
-          } else {
-            $total_filas ++;
+      $ciclos = get_ciclos_by_carga_horaria($carga['cgh_id']);
+      if (count($ciclos) > 0) {
+        foreach ($ciclos as $ciclo) {
+          $cursos = get_cursos_by_ciclo($ciclo['cgc_id']);
+          if (count($cursos) > 0) {
+            foreach ($cursos as $curso) {
+              $docentes = get_docentes_by_curso($curso['chc_id']);
+              if (count($docentes)) {
+                $total_filas += count($docentes);
+              } else {
+                $total_filas ++;
+              }
+            }
           }
         }
       }
@@ -199,65 +223,76 @@
                         <td class='table-primary text-center'><b>FECHAS</b></td>
                     </tr>";
     $html .= "<tr>
-                <td class='align-middle text-center' rowspan='".(get_nro_filas_by_ciclo($sem_id, $sec_id) + 1)."'>
+                <td class='text-center' style='vertical-align: middle; width: 180px;' rowspan='".(get_nro_filas_by_ciclo($sem_id, $sec_id))."'>
                     " . $carga_horaria[0]['unidad'] . "
                 </td>";
     foreach ($carga_horaria as $carga_id => $carga) {
-      $cursos = get_cursos_by_carga_horaria($carga['cgh_id']);
-      $html .= "<tr>
-                  <td class='align-middle text-center' rowspan='".(count($cursos)==0 ? '' : count($cursos))."'>
-                      " . $carga['mencion'] . "
-                  </td>
-                  <td class='align-middle text-center' rowspan='".(count($cursos)==0 ? '' : count($cursos))."'>
-                      " . convertirARomano($carga['ciclo']) . "
-                  </td>";
-      if (count($cursos) > 1) {
-        foreach ($cursos as $curso_id => $curso) {
-            $html .= "<td class='align-middle text-center'>
-                                " . $curso['curso'] . "
-                            </td>
-                            <td class='align-middle text-center'>
-                                " . $curso['cur_creditos'] . "
-                            </td>";
-            $docentes = get_docentes_by_curso($curso['chc_id']);
-            if (count($docentes)) {
-              foreach ($docentes as $index => $docente) {
-                $html .= "<td class='align-middle text-center'>
-                          " . $docente['doc_nombres'] . "
-                          </td>";
-                $html .= "<td class='align-middle text-center'>
-                          " . $docente['doc_condicion'] . "
-                          </td>";
-              }
-            } else {
-              $html .= "<td class='align-middle text-center' colspan='2'>
-                          Sin asignar docente
-                        </td>";
-            }
-            
-            $html .= "<td class='align-middle text-center'>
-                                " . $curso['chc_horas'] . "
-                            </td>
-                            <td class='align-middle text-center'>";
-            $fechas = get_fechas_by_curso($curso['chc_id']);
-            foreach ($fechas as $index => $fecha) {
-                if ($index == 0) {
-                  $html .= "<p>Inicio:</p>";
-                  $html .= "<small class='d-inline-flex mb-3 px-2 py-1 fw-semibold'>".formatearFecha($fecha['chf_fecha'])."</small>";
-                }
-                if ($index == count($fechas) - 1) {
-                  $html .= "<p>Fin:</p>";
-                  $html .= "<small class='d-inline-flex mb-3 px-2 py-1 fw-semibold'>".formatearFecha($fecha['chf_fecha'])."</small>";
-                }
-            }
-            $html .= "</td>";
-            $html .= "</tr>";
-            $curso_id < count($cursos) - 1?$html .= "<tr>":$html .= "";
+      $ciclos = get_ciclos_by_carga_horaria($carga['cgh_id']);
+      if (count($ciclos) > 0) {
+        $filas_curso_by_ciclo = 0;
+        foreach ($ciclos as $ciclo) {
+          $cursos = get_cursos_by_ciclo($ciclo['cgc_id']);
+          $filas_curso_by_ciclo += count($cursos);
         }
-      } else {
-          $html .= "<td class='align-middle text-center' colspan='6'>
-                      Sin cursos registrados.
-                    </td></tr>";
+        $html .= $carga_id == 0?'':'<tr>';
+        $html .= "<td class='text-center' style='vertical-align: middle; width: 190px;' rowspan='" . ($filas_curso_by_ciclo) . "'>
+                    " . $carga['mencion'] . "
+                  </td>";
+        foreach ($ciclos as $ciclo_id => $ciclo) {
+          $cursos = get_cursos_by_ciclo($ciclo['cgc_id']);
+          $html .= $ciclo_id == 0?'':'<tr>';
+          $html .= "<td class='text-center' style='vertical-align: middle; width: 50px;' rowspan='".(count($cursos)==0 ? '' : count($cursos))."'>
+                      " . convertirARomano($ciclo['ciclo']) . "
+                    </td>";
+          if (count($cursos) > 1) {
+            foreach ($cursos as $curso_id => $curso) {
+                $html .= $curso_id == 0?'':'<tr>';
+                $html .= "<td class='text-center' style='vertical-align: middle; width: 350px;'>
+                              " . $curso['curso'] . "
+                          </td>
+                          <td class='text-center' style='vertical-align: middle; width: 50px;'>
+                              " . $curso['cur_creditos'] . "
+                          </td>";
+                $docentes = get_docentes_by_curso($curso['chc_id']);
+                if (count($docentes)) {
+                  foreach ($docentes as $index => $docente) {
+                    $html .= "<td class='text-center' style='vertical-align: middle; width: 300px;'>
+                              " . $docente['doc_nombres'] . "
+                              </td>";
+                    $html .= "<td class='text-center' style='vertical-align: middle; width: 120px;'>
+                              " . $docente['doc_condicion'] . "
+                              </td>";
+                  }
+                } else {
+                  $html .= "<td class='text-center' style='vertical-align: middle;' colspan='2'>
+                              Sin asignar docente
+                            </td>";
+                }
+                
+                $html .= "<td class='text-center' style='vertical-align: middle; width: 80px;'>
+                              " . $curso['chc_horas'] . "
+                          </td>
+                          <td class='text-center' style='vertical-align: middle; width: 90px;'>";
+                $fechas = get_fechas_by_curso($curso['chc_id']);
+                foreach ($fechas as $index => $fecha) {
+                  if ($index == 0) {
+                    $html .= "<p>Inicio:</p>";
+                    $html .= "<small class='d-inline-flex mb-3 px-2 py-1 fw-semibold'>".formatearFecha($fecha['chf_fecha'])."</small>";
+                  }
+                  if ($index == count($fechas) - 1) {
+                    $html .= "<p>Fin:</p>";
+                    $html .= "<small class='d-inline-flex mb-3 px-2 py-1 fw-semibold'>".formatearFecha($fecha['chf_fecha'])."</small>";
+                  }
+                }
+                $html .= "</td>";
+                $html .= "</tr>";
+            }
+          } else {
+              $html .= "<td class='text-center' style='vertical-align: middle;' colspan='6'>
+                          Sin cursos registrados.
+                        </td></tr>";
+          }
+        }
       }
     }
     $html .= "</tbody></table>
@@ -275,40 +310,39 @@
   }
 
   /* SOLO PARA PRUEBAS */
-  // echo get_nro_filas_by_ciclo($sem_id, $sec_id);
-  // echo '<!DOCTYPE html>
-  //         <html lang="en">
-  //         <head>
-  //           <meta charset="UTF-8">
-  //           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  //           <link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
-  //         </head>';
-  // echo $html;
+  echo '<!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link rel="stylesheet" href="../css/process/pdfCargaHoraria.css">
+          </head>';
+  echo $html;
 
   /* CREAR PDF */
-  $mpdf = new \Mpdf\Mpdf(['orientation' => 'L']);
+  // $mpdf = new \Mpdf\Mpdf(['orientation' => 'L']);
 
-  // Definir contenido para el pie de página
-  $footerContent = '<div style="text-align: center; font-size: 10px;">
-      Página {PAGENO}/{nbpg} - Generado el ' . date('d-m-Y') . '
-  </div>';
+  // // Definir contenido para el pie de página
+  // $footerContent = '<div style="text-align: center; font-size: 10px;">
+  //     Página {PAGENO}/{nbpg} - Generado el ' . date('d-m-Y') . '
+  // </div>';
 
-  // Configurar el pie de página
-  $mpdf->SetFooter($footerContent);
+  // // Configurar el pie de página
+  // $mpdf->SetFooter($footerContent);
 
-  // $stylesheet = file_get_contents('../css/process/kv-mpdf-bootstrap.css');
-  $stylesheet1 = file_get_contents('../css/process/pdfCargaHoraria.css');
+  // // $stylesheet = file_get_contents('../css/process/kv-mpdf-bootstrap.css');
+  // $stylesheet1 = file_get_contents('../css/process/pdfCargaHoraria.css');
 
-  // $mpdf->WriteHTML($stylesheet,\Mpdf\HTMLParserMode::HEADER_CSS);
-  $mpdf->WriteHTML($stylesheet1,\Mpdf\HTMLParserMode::HEADER_CSS);
+  // // $mpdf->WriteHTML($stylesheet,\Mpdf\HTMLParserMode::HEADER_CSS);
+  // $mpdf->WriteHTML($stylesheet1,\Mpdf\HTMLParserMode::HEADER_CSS);
 
-  // Write some HTML code:
-  $mpdf->WriteHTML($html, \Mpdf\HTMLParserMode::HTML_BODY);
+  // // Write some HTML code:
+  // $mpdf->WriteHTML($html, \Mpdf\HTMLParserMode::HTML_BODY);
 
-  // Nombre del archivo PDF
-  $nombreArchivo = 'Carga-Horaria-'.$carga_horaria[0]['unidad'].'-'.$carga_horaria[0]['semestre'].'.pdf';
+  // // Nombre del archivo PDF
+  // $nombreArchivo = 'Carga-Horaria-'.$carga_horaria[0]['unidad'].'-'.$carga_horaria[0]['semestre'].'.pdf';
 
-  // Output a PDF file directly to the browser with a specific filename
-  $mpdf->Output($nombreArchivo, \Mpdf\Output\Destination::INLINE);
+  // // Output a PDF file directly to the browser with a specific filename
+  // $mpdf->Output($nombreArchivo, \Mpdf\Output\Destination::INLINE);
 
 ?>

@@ -2,6 +2,7 @@
 let btnAcceso = document.getElementById('btnAcceso');
 let txtUsuario = document.getElementById('txtUsuario');
 let txtPassword = document.getElementById('txtPassword');
+let txtUserIp = document.getElementById('txtUserIp');
 
 // FUNCIONES
 function login()
@@ -9,12 +10,14 @@ function login()
   let opcion = 'login';
   let usuario = txtUsuario.value;
   let password = txtPassword.value;
+  let ip = txtUserIp.value;
 
   $.ajax({
     type: "POST",
     data: "opcion="+opcion+
           "&usuario="+usuario+
-          "&password="+password,
+          "&password="+password+
+          "&ip="+ip,
     url: "controllers/security/LoginController.php",
     beforesend: function () {
       btnAcceso.disabled = true;

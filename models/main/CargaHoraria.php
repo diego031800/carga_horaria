@@ -47,7 +47,7 @@
                         SEM.sem_codigo,
                         UPPER(SEM.sem_nombre) as semestre
                     FROM ADMISION.SEMESTRE SEM
-                    WHERE sem_estado = 1 AND sem_activo = 1 
+                    WHERE sem_estado = 1 /* AND sem_activo = 1  */
                     ORDER BY SEM.sem_id DESC";
             $datos = $this->con->return_query_sqlsrv($sql);
             $semestres = "<option value=''>Selecciona un semestre ...</option>\n";
@@ -157,12 +157,12 @@
                 $respCargaHoraria = $this->saveCargaHoraria();
                 
                 if ($respCargaHoraria['respuesta'] == 1) {
-                    $cgh_id = $respCargaHoraria['cgh_id'];
+                    $cgc_id = $respCargaHoraria['cgc_id'];
                     
                     /* GUARDAR CURSOS */
                     $cursos = json_decode($this->parametros['p_cursos']);
                     foreach ($cursos as $curso) {
-                        $respCargaHorariaCursos = $this->saveCargaHorariaCurso($cgh_id, $curso);
+                        $respCargaHorariaCursos = $this->saveCargaHorariaCurso($cgc_id, $curso);
                         if ($respCargaHorariaCursos['respuesta'] == 1) {
                             $chc_id = $respCargaHorariaCursos['chc_id'];
                             
@@ -193,7 +193,7 @@
                     
                     $this->con->commit_mysql();
     
-                    return json_encode(['respuesta' => 1, 'mensaje' => 'Registros guardados correctamente.', 'cgh_id' => $cgh_id]);
+                    return json_encode(['respuesta' => 1, 'mensaje' => 'Registros guardados correctamente.', 'cgc_id' => $cgc_id]);
                 } else {
                     $this->con->rollback_mysql();
                     return json_encode(['respuesta' => 0, 'mensaje' => $respCargaHoraria['mensaje']]);
@@ -217,17 +217,18 @@
                 $sql .= "'".$this->parametros['p_sec_descripcion']."', "; // p_sec_descripcion
                 $sql .= "'".$this->parametros['p_prg_id']."', "; // p_prg_id
                 $sql .= "'".$this->parametros['p_prg_mencion']."', "; // p_prg_mencion
-                $sql .= "'".$this->parametros['p_cgh_ciclo']."', "; // p_cgh_ciclo
+                $sql .= "'".$this->parametros['p_cgh_ciclo']."', "; // p_cgc_ciclo
                 $sql .= "'".$this->parametros['p_cgh_estado']."', "; // p_cgh_estado
-                $sql .= "'".$_SESSION['usu_id']."');"; // p_usuario
+                $sql .= "'".$_SESSION['usu_id']."',"; // p_usuario
+                $sql .= "'".$_SESSION['usu_ip']."');"; // p_dispositivo
                 // return $sql;
                 $datos = $this->con->return_query_mysql($sql);
                 $respDetalle = array();
                 $error = $this->con->error_mysql();
                 if (empty($error)) {
                     while ($row = mysqli_fetch_array($datos)) {
-                        if ($row['respuesta'] == 1 && !empty($row['cgh_id'])) {
-                            return ['respuesta' => $row['respuesta'], 'mensaje' => 'La carga horaria se guardo exitosamente.', 'cgh_id' => $row['cgh_id']];
+                        if ($row['respuesta'] == 1 && !empty($row['cgc_id'])) {
+                            return ['respuesta' => $row['respuesta'], 'mensaje' => 'La carga horaria se guardo exitosamente.', 'cgc_id' => $row['cgc_id']];
                         } else {
                             return ['respuesta' => $row['respuesta'], 'mensaje' => $row['mensaje'], 'cgh_id' => $row['cgh_id']];
                         }
@@ -240,13 +241,13 @@
             }
         }
 
-        private function saveCargaHorariaCurso($cgh_id, $curso)
+        private function saveCargaHorariaCurso($cgc_id, $curso)
         {
             try {
                 $this->con->close_open_connection_mysql();
                 $sql = "CALL sp_saveCargaHorariaCursos(";
                 $sql .= "'".$curso->chc_id."', "; // p_chc_id
-                $sql .= "'".$cgh_id."', "; // p_cgh_id
+                $sql .= "'".$cgc_id."', "; // p_cgc_id
                 $sql .= "'".$curso->index."', "; // p_cur_id
                 $sql .= "'".$curso->cur_codigo."', "; // p_cur_codigo
                 $sql .= "'".$curso->curso."', "; // p_cur_descripcion
@@ -368,78 +369,98 @@
                     /* FUNCION PARA OBTENER EL NUMERO TOTAL DE FILAS POR UNIDAD */
                     foreach ($carga_horaria as $carga) {
                         $this->con->close_open_connection_mysql();
-                        $cursos = $this->buscar_cursos_by_carga_horaria($carga['cgh_id']);
-                        if (count($cursos) > 0) {
-                            foreach ($cursos as $cur_id => $curso) {
+                        $ciclos = $this->buscar_ciclos_by_carga_horaria($carga['cgh_id']);
+                        if (count($ciclos) > 0) {
+                            foreach ($ciclos as $ciclo) {
                                 $this->con->close_open_connection_mysql();
-                                $docentes = $this->buscar_docentes_by_curso($curso['chc_id']);
-                                if (count($docentes)) {
-                                    $total_filas += count($docentes);
-                                } else {
-                                    $total_filas ++;
+                                $cursos = $this->buscar_cursos_by_carga_horaria($ciclo['cgc_id']);
+                                if (count($cursos) > 0) {
+                                    foreach ($cursos as $cur_id => $curso) {
+                                        $this->con->close_open_connection_mysql();
+                                        $docentes = $this->buscar_docentes_by_curso($curso['chc_id']);
+                                        if (count($docentes)) {
+                                            $total_filas += count($docentes);
+                                        } else {
+                                            $total_filas ++;
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
-                    
-                    $tabla_carga .= "<tr>
-                                        <td class='align-middle text-center' rowspan='".$total_filas."'>
-                                            " . $carga['unidad'] . "
-                                        </td>";
+                    $tabla_carga .= "<td class='align-middle text-center' rowspan='".$total_filas."'>
+                                        " . $carga_horaria[0]['unidad'] . "
+                                    </td>";
                     /* ITERAR CARGAS HORARIAS */
                     foreach ($carga_horaria as $carga_id => $carga) {
-                        /* OBTENER CURSOS */
+                        /* OBTENER CICLOS */
                         $this->con->close_open_connection_mysql();
-                        $cursos = $this->buscar_cursos_by_carga_horaria($carga['cgh_id']);
-                        $tabla_carga .= "<td class='align-middle text-center' rowspan='".(count($cursos)==0 ? '' : count($cursos))."'>
-                                            " . $carga['mencion'] . "
-                                        </td>
-                                        <td class='align-middle text-center' rowspan='".(count($cursos)==0 ? '' : count($cursos))."'>
-                                            " . $this->convertirARomano($carga['ciclo']) . "
-                                        </td>";
+                        $ciclos = $this->buscar_ciclos_by_carga_horaria($carga['cgh_id']);
                         
-                        if (count($cursos) > 0) {
-                            foreach ($cursos as $curso_id => $curso) {
-                                $tabla_carga .= "<td class='align-middle text-center'>
-                                                    " . $curso['curso'] . "
-                                                </td>
-                                                <td class='align-middle text-center'>
-                                                    " . $curso['cur_creditos'] . "
-                                                </td>";
+                        if (count($ciclos) > 0) {
+                            $filas_curso_by_ciclo = 0;
+                            foreach ($ciclos as $ciclo) {
                                 $this->con->close_open_connection_mysql();
-                                $docentes = $this->buscar_docentes_by_curso($curso['chc_id']);
-                                if (count($docentes) > 0) {
-                                    foreach ($docentes as $index => $docente) {
+                                $cursos = $this->buscar_cursos_by_carga_horaria($ciclo['cgc_id']);
+                                $filas_curso_by_ciclo += count($cursos);
+                            }
+                            $tabla_carga .= $carga_id == 0?"":"<tr>";
+                            $tabla_carga .= "<td class='align-middle text-center' rowspan='" . ($filas_curso_by_ciclo) . "'>
+                                                " . $carga['mencion'] . "
+                                            </td>";
+                            foreach ($ciclos as $ciclo_index => $ciclo) {
+                                /* OBTENER CURSOS */
+                                $this->con->close_open_connection_mysql();
+                                $cursos = $this->buscar_cursos_by_carga_horaria($ciclo['cgc_id']);
+                                $tabla_carga .= $ciclo_index == 0?"":"<tr>";
+                                $tabla_carga .= "<td class='align-middle text-center' rowspan='".(count($cursos)==0 ? '' : count($cursos))."'>
+                                                    " . $this->convertirARomano($ciclo['ciclo']) . "
+                                                </td>";
+                                
+                                if (count($cursos) > 0) {
+                                    foreach ($cursos as $curso_id => $curso) {
+                                        $tabla_carga .= $curso_id == 0?"":"<tr>";
                                         $tabla_carga .= "<td class='align-middle text-center'>
-                                                        " . $docente['doc_nombres'] . "
+                                                            " . $curso['curso'] . "
+                                                        </td>
+                                                        <td class='align-middle text-center'>
+                                                            " . $curso['cur_creditos'] . "
                                                         </td>";
+                                        $this->con->close_open_connection_mysql();
+                                        $docentes = $this->buscar_docentes_by_curso($curso['chc_id']);
+                                        if (count($docentes) > 0) {
+                                            foreach ($docentes as $index => $docente) {
+                                                $tabla_carga .= "<td class='align-middle text-center'>
+                                                                " . $docente['doc_nombres'] . "
+                                                                </td>";
+                                                $tabla_carga .= "<td class='align-middle text-center'>
+                                                                " . $docente['doc_condicion'] . "
+                                                                </td>";
+                                            }
+                                        } else {
+                                            $tabla_carga .= "<td class='align-middle text-center' colspan='2'>
+                                                                Sin docente asignado.
+                                                            </td>";
+                                        }
+                                        $this->con->close_open_connection_mysql();
+                                        $fechas = $this->buscar_fechas_by_curso($curso['chc_id']);
                                         $tabla_carga .= "<td class='align-middle text-center'>
-                                                        " . $docente['doc_condicion'] . "
-                                                        </td>";
+                                                            " . $curso['chc_horas'] . "
+                                                        </td>
+                                                        <td class='align-middle text-center'>";
+                                        
+                                        foreach ($fechas as $index => $fecha) {
+                                            $tabla_carga .= "<small class='d-inline-flex mb-3 px-2 py-1 fw-semibold text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-2 mr-5'>" . $this->formatearFecha($fecha['chf_fecha']) . "</small>";
+                                        }
+                                        $tabla_carga .= "</td>";
+                                        $tabla_carga .= "</tr>";
                                     }
                                 } else {
-                                    $tabla_carga .= "<td class='align-middle text-center' colspan='2'>
-                                                        Sin docente asignado.
-                                                    </td>";
+                                    $tabla_carga .= "<td class='align-middle text-center' colspan='6'>
+                                                        Sin cursos registrados.
+                                                    </td></tr>";
                                 }
-                                $this->con->close_open_connection_mysql();
-                                $fechas = $this->buscar_fechas_by_curso($curso['chc_id']);
-                                $tabla_carga .= "<td class='align-middle text-center'>
-                                                    " . $curso['chc_horas'] . "
-                                                </td>
-                                                <td class='align-middle text-center'>";
-                                
-                                foreach ($fechas as $index => $fecha) {
-                                    $tabla_carga .= "<small class='d-inline-flex mb-3 px-2 py-1 fw-semibold text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-2 mr-5'>" . $this->formatearFecha($fecha['chf_fecha']) . "</small>";
-                                }
-                                $tabla_carga .= "</td>";
-                                $tabla_carga .= "</tr>";
-                                $curso_id < count($cursos) - 1?$tabla_carga .= "<tr>":$tabla_carga .= "";
                             }
-                        } else {
-                            $tabla_carga .= "<td class='align-middle text-center' colspan='6'>
-                                                Sin cursos registrados.
-                                            </td></tr>";
                         }
                     }
                     $tabla_carga .= "</tbody></table>";
@@ -481,7 +502,6 @@
                         $carga_horaria['unidad'] = $row['unidad'];
                         $carga_horaria['prg_id'] = $row['prg_id'];
                         $carga_horaria['mencion'] = $row['mencion'];
-                        $carga_horaria['ciclo'] = $row['ciclo'];
                         array_push($resp, $carga_horaria);
                     }
                     return $resp;
@@ -493,11 +513,37 @@
             }
         }
 
-        private function buscar_cursos_by_carga_horaria($cgh_id)
+        private function buscar_ciclos_by_carga_horaria($cgh_id)
+        {
+            try {
+                $sql = "CALL sp_searchCargaHorariaCiclos(";
+                $sql .= "'".$cgh_id."');"; // p_sec_id
+                // return $sql;
+                $datos = $this->con->return_query_mysql($sql);
+                $resp = array();
+                $error = $this->con->error_mysql();
+                if (empty($error)) {
+                    while ($row = mysqli_fetch_array($datos)) {
+                        $ciclos = [];
+                        $ciclos['cgc_id'] = $row['cgc_id'];
+                        $ciclos['cgh_id'] = $row['cgh_id'];
+                        $ciclos['ciclo'] = $row['ciclo'];
+                        array_push($resp, $ciclos);
+                    }
+                    return $resp;
+                } else {
+                    return ['respuesta' => 0, 'mensaje' => 'Error en la consulta.'];
+                }
+            } catch (Exception $ex) {
+                die("Error: " . $this->con->error_mysql(). $ex);
+            }
+        }
+
+        private function buscar_cursos_by_carga_horaria($cgc_id)
         {
             try {
                 $sql = "CALL sp_searchCargaHorariaCursos(";
-                $sql .= "'".$cgh_id."');"; // p_cgh_id
+                $sql .= "'".$cgc_id."');"; // p_cgh_id
                 // return $sql;
                 $datos = $this->con->return_query_mysql($sql);
                 $resp = array();
@@ -506,7 +552,7 @@
                     while ($row = mysqli_fetch_array($datos)) {
                         $curso = [];
                         $curso['chc_id'] = $row['chc_id'];
-                        $curso['cgh_id'] = $row['cgh_id'];
+                        $curso['cgc_id'] = $row['cgc_id'];
                         $curso['cur_id'] = $row['cur_id'];
                         $curso['cur_codigo'] = $row['cur_codigo'];
                         $curso['curso'] = $row['curso'];

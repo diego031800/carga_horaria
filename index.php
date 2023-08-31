@@ -18,6 +18,7 @@
                 <div class="col-12 col-md-8 col-lg-6 col-xl-5">
                     <div class="card shadow-2-strong" style="border-radius: 1rem;">
                         <div class="card-body p-5 text-center">
+                            <input type="hidden" id="txtUserIp" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>">
                             <h3 class="mb-5">LOGIN</h3>
                             <div class="input-group form-outline mb-4">
                                 <span class="input-group-text"><img src="./assets/images/user_icon.svg" style="width: 22px;" alt="usuario"></span>
@@ -27,7 +28,7 @@
                                 </div>
                             </div>
                             <div class="input-group form-outline mb-4">
-                            <span class="input-group-text"><img src="./assets/images/key_icon.svg" style="width: 22px;" alt="password"></span>
+                                <span class="input-group-text"><img src="./assets/images/key_icon.svg" style="width: 22px;" alt="password"></span>
                                 <div class="form-floating">
                                     <input type="password" class="form-control" id="txtPassword" placeholder="Password">
                                     <label for="txtPassword">Password</label>
