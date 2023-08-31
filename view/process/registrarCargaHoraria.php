@@ -99,7 +99,7 @@ if (!isset($_SESSION['login'])) {
                                     </svg>
                                     &nbsp; Agregar curso
                                 </button>
-                                
+
                             </div>
                         </div>
 
@@ -176,14 +176,25 @@ if (!isset($_SESSION['login'])) {
                             <div class="modal-body">
                                 <input type="text" hidden id="id-curso-docente">
                                 <div class="row">
-                                    <div class="col-9 mb-3">
-                                        <label for="" class="form-label">Grupo:</label><br />
-                                        <select class="form-select" id="cbo-grupodocente">
-                                        </select>
-                                    </div>
-                                    <div class="col-3 mb-3">
-                                        <button class="btn btn-outline-warning" onClick="agregarGrupo();" id="btn-addGrupo">Agregar grupo</button>
-                                        <button class="btn btn-outline-danger" onClick="eliminarGrupo();" id="btn-deleteGrupo" >Eliminar grupo</button>
+                                    <div class="col-12 mb-12 row">
+                                        <div class="col-12 mb-12">
+                                            <label for="" class="form-label">Grupo:</label><br />
+                                        </div>
+                                        <div class="col-7 mb-12">
+                                            <select class="form-select" id="cbo-grupodocente">
+                                            </select>
+                                        </div>
+                                        <div class="col-5 mb-12" style="display: flex; justify-content: space-between;">
+                                            <button class="btn btn-outline-warning" style="height: 90%;"
+                                                onClick="agregarGrupo();" id="btn-addGrupo">Agregar grupo</button>
+                                            <button class="btn btn-outline-danger" style="height: 90%;"
+                                                onClick="eliminarGrupo();" id="btn-deleteGrupo">Eliminar grupo</button>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" role="switch"
+                                                    id="tglSuplente">
+                                                <label class="form-check-label" for="tglSuplente">Titular</label>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-12 mb-3">
                                         <label for="" class="form-label">Nombre:</label><br />
@@ -273,7 +284,8 @@ if (!isset($_SESSION['login'])) {
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-success" id="btnAgregarCursoModal" onClick="accionBtnGuardarCurso();">
+                                <button class="btn btn-success" id="btnAgregarCursoModal"
+                                    onClick="accionBtnGuardarCurso();">
                                     Guardar
                                 </button>
                                 <button class="btn btn-danger" onClick="$('#myModal-curso').fadeOut();">
