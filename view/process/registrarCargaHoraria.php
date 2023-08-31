@@ -108,7 +108,7 @@ if (!isset($_SESSION['login'])) {
                                 <tr>
                                     <th scope="col">Curso</th>
                                     <th scope="col">Acciones</th>
-                                    <th scope="col">Docente</th>
+                                    <th scope="col">Grupo</th>
                                     <th scope="col">Asignar</th>
                                 </tr>
                             </thead>

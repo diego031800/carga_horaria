@@ -319,16 +319,18 @@ function llenarTabla() {
     return;
   }
   listacursos.forEach((elementC) => {
-    let stringFecha = elementC.fechas
-      .map(element => element.fecha)
-      .join(',');
-    let nombre;
-    let doc = elementC.docentes[0];
-    if(doc == null){
-      nombre = "Sin asignar docente";
-    }else{
-      nombre = doc.docente;
-    }
+    let grupos = elementC.grupos;
+    let stringG="";
+    grupos.forEach(element => {
+      let nombreG="";
+      if(element.cod_docente==0){
+        nombreG ="Sin asignar docente";
+      } else{
+        nombreG = elementC.docentes.find(docI => docI.codigo == element.cod_docente).docente;
+      }
+      stringG = stringG + '<tr><td>'+element.nombre+': '+nombreG+'</td></tr>';
+      console.log(stringG);
+    });
     fila =
     '<tr><td scope="row">' +
     elementC.curso +
@@ -337,7 +339,7 @@ function llenarTabla() {
     ');">Editar</button><button class="btn btn-danger" onClick="eliminar('+
     elementC.index +
     ')";>Eliminar</button></td>' +
-    '<td>'+nombre+'</td>' +
+    '<td><table>'+stringG+'</table></td>' +
     '<td><button class="btn btn-danger" onClick="abrir_docente_modal('+
     elementC.index+
     ');">Ver</button></td></tr>';
@@ -354,6 +356,7 @@ function actualizarDatosDocenteGrupo(){
     $("#nombre-docente").val(null).trigger("change");
     return;
   }else{
+    $("#nombre-docente").val(null).trigger("change");
     $("#nombre-docente").val(codDG.id_doc).trigger("change");
   }
   seleccionar_datos_docente();
@@ -410,8 +413,6 @@ function seleccionar_datos_docente() {
   let doc_email = doc_opcion.data('email');
   let doc_codigo = doc_opcion.data('codigo');
   let doc_celular = doc_opcion.data('celular');
-  
-  console.log(doc_documento, doc_email, doc_celular, doc_codigo)
   $("#doc-docente").val(doc_documento);
   $("#email-docente").val(doc_email);
   $("#codigo-docente").val(doc_codigo);
@@ -430,7 +431,7 @@ function limpiarInputsModal(){
 
 function abrir_docente_modal(index){
   let docente = listacursos.find(item => item.index == index).docentes[0];
-  console.log(docente)
+  let grupos = listacursos.find(item => item.index == index).grupos;
   $('#myModal').fadeIn();
   if (docente != null && docente !== undefined ) {
     $("#nombre-docente").val(docente.doc_id);
@@ -452,10 +453,15 @@ function abrir_docente_modal(index){
   $('#nombre-docente').on('change', function() {
     seleccionar_datos_docente();
   });
-  cboDocGrupo.addEventListener("change",actualizarDatosDocenteGrupo);
-  
-  $("#btn-deleteGrupo").hide();
+  if(grupos.length == 1){
+    $("#btn-addGrupo").show();
+    $("#btn-deleteGrupo").hide();
+  }else{
+    $("#btn-addGrupo").hide();
+    $("#btn-deleteGrupo").show();
+  }
   actualizarCboGrupoDoc(index);
+  actualizarDatosDocenteGrupo();
 }
 
 // Funcionalidades
@@ -591,6 +597,7 @@ function load_document() {
   cboUnidad.addEventListener("change", change_cbo_ciclo);
   cboCiclo.addEventListener("change", buscar_cursos);
   btnGuardar.addEventListener("click", saveCargaHoraria);
+  cboDocGrupo.addEventListener("change",actualizarDatosDocenteGrupo);
 }
 
 // EVENTOS
