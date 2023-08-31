@@ -47,7 +47,7 @@
                         SEM.sem_codigo,
                         UPPER(SEM.sem_nombre) as semestre
                     FROM ADMISION.SEMESTRE SEM
-                    WHERE sem_estado = 1 /* AND sem_activo = 1  */
+                    WHERE sem_estado = 1 AND sem_activo = 1 
                     ORDER BY SEM.sem_id DESC";
             $datos = $this->con->return_query_sqlsrv($sql);
             $semestres = "<option value=''>Selecciona un semestre ...</option>\n";

@@ -204,8 +204,24 @@
 
   $carga_horaria = get_cargas_horarias($sem_id, $sec_id);
   
-  if (count($carga_horaria) > 1) {
-    $html = "<body>
+  if (count($carga_horaria) > 0) {
+    $html = "<header>
+              <table style='width: 100%;'>
+                <tbody>
+                  <tr>
+                    <td style='width: 30%;'> <img src='../../assets/images/documentos/img_upg.png' style='width: 100px; height: auto;'> </td>
+                    <td class='text-center' style='width: 40%;'>
+                      <div style='text-align: center; font-weight: bold;'>
+                        CARGA HORARIA DEL SEMESTRE ACADÉMICO: ".$carga_horaria[0]['semestre']."
+                      </div> 
+                    </td>
+                    <td style='width: 30%;'></td>
+                  </tr>
+                </tbody>
+              </table>
+            </header>
+            <br>
+            <body>
               <table class='table table-bordered'>
                 <tbody>
                     <tr>
@@ -222,7 +238,7 @@
                         <td class='table-primary text-center'><b>HORAS</b></td>
                         <td class='table-primary text-center'><b>FECHAS</b></td>
                     </tr>";
-    $html .= "<tr>
+    $html .= "<tr style='page-break-inside: auto;'>
                 <td class='text-center' style='vertical-align: middle; width: 180px;' rowspan='".(get_nro_filas_by_ciclo($sem_id, $sec_id))."'>
                     " . $carga_horaria[0]['unidad'] . "
                 </td>";
@@ -244,7 +260,7 @@
           $html .= "<td class='text-center' style='vertical-align: middle; width: 50px;' rowspan='".(count($cursos)==0 ? '' : count($cursos))."'>
                       " . convertirARomano($ciclo['ciclo']) . "
                     </td>";
-          if (count($cursos) > 1) {
+          if (count($cursos) > 0) {
             foreach ($cursos as $curso_id => $curso) {
                 $html .= $curso_id == 0?'':'<tr>';
                 $html .= "<td class='text-center' style='vertical-align: middle; width: 350px;'>
@@ -254,7 +270,7 @@
                               " . $curso['cur_creditos'] . "
                           </td>";
                 $docentes = get_docentes_by_curso($curso['chc_id']);
-                if (count($docentes)) {
+                if (count($docentes) > 0) {
                   foreach ($docentes as $index => $docente) {
                     $html .= "<td class='text-center' style='vertical-align: middle; width: 300px;'>
                               " . $docente['doc_nombres'] . "
@@ -310,39 +326,43 @@
   }
 
   /* SOLO PARA PRUEBAS */
-  echo '<!DOCTYPE html>
-          <html lang="en">
-          <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <link rel="stylesheet" href="../css/process/pdfCargaHoraria.css">
-          </head>';
-  echo $html;
+  // echo '<!DOCTYPE html>
+  //         <html lang="en">
+  //         <head>
+  //           <meta charset="UTF-8">
+  //           <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  //           <link rel="stylesheet" href="../css/process/pdfCargaHoraria.css">
+  //         </head>';
+  // echo $html;
 
   /* CREAR PDF */
-  // $mpdf = new \Mpdf\Mpdf(['orientation' => 'L']);
+  $mpdf = new \Mpdf\Mpdf(['orientation' => 'L']);
+  $mpdf->defaultfooterline = 0;
+  // Definir contenido para el pie de página
+  $footerContent = '<footer style="border-top: solid black 1px; text-align: left; font-size: 10px; position: fixed; bottom: 0; font-weight: bold;">
+                      A. = ACADÉMICA &nbsp;&nbsp;&nbsp;&nbsp; CRED. = CRÉDITOS &nbsp;&nbsp;&nbsp;&nbsp; COND. = CONDICIÓN
+                    </footer>
+                    <hr>
+                    <div style="text-align: center; font-size: 10px;">
+                        Página {PAGENO}/{nbpg} - Generado el ' . date('d-m-Y') . '
+                    </div>';
 
-  // // Definir contenido para el pie de página
-  // $footerContent = '<div style="text-align: center; font-size: 10px;">
-  //     Página {PAGENO}/{nbpg} - Generado el ' . date('d-m-Y') . '
-  // </div>';
+  // Configurar el pie de página
+  $mpdf->SetFooter($footerContent);
 
-  // // Configurar el pie de página
-  // $mpdf->SetFooter($footerContent);
+  // $stylesheet = file_get_contents('../css/process/kv-mpdf-bootstrap.css');
+  $stylesheet1 = file_get_contents('../css/process/pdfCargaHoraria.css');
 
-  // // $stylesheet = file_get_contents('../css/process/kv-mpdf-bootstrap.css');
-  // $stylesheet1 = file_get_contents('../css/process/pdfCargaHoraria.css');
+  // $mpdf->WriteHTML($stylesheet,\Mpdf\HTMLParserMode::HEADER_CSS);
+  $mpdf->WriteHTML($stylesheet1,\Mpdf\HTMLParserMode::HEADER_CSS);
 
-  // // $mpdf->WriteHTML($stylesheet,\Mpdf\HTMLParserMode::HEADER_CSS);
-  // $mpdf->WriteHTML($stylesheet1,\Mpdf\HTMLParserMode::HEADER_CSS);
+  // Write some HTML code:
+  $mpdf->WriteHTML($html, \Mpdf\HTMLParserMode::HTML_BODY);
 
-  // // Write some HTML code:
-  // $mpdf->WriteHTML($html, \Mpdf\HTMLParserMode::HTML_BODY);
+  // Nombre del archivo PDF
+  $nombreArchivo = 'Carga-Horaria-'.$carga_horaria[0]['unidad'].'-'.$carga_horaria[0]['semestre'].'.pdf';
 
-  // // Nombre del archivo PDF
-  // $nombreArchivo = 'Carga-Horaria-'.$carga_horaria[0]['unidad'].'-'.$carga_horaria[0]['semestre'].'.pdf';
-
-  // // Output a PDF file directly to the browser with a specific filename
-  // $mpdf->Output($nombreArchivo, \Mpdf\Output\Destination::INLINE);
+  // Output a PDF file directly to the browser with a specific filename
+  $mpdf->Output($nombreArchivo, \Mpdf\Output\Destination::INLINE);
 
 ?>
