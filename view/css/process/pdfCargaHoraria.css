@@ -2,14 +2,14 @@
 
 body {
   font-family: Arial, sans-serif;
-  font-size: 11px; /* Cambia el valor según el tamaño deseado */
+  font-size: 15px; /* Cambia el valor según el tamaño deseado */
 }
 
 .table {
   width: 100%;
-  margin-bottom: 1rem;
   color: #212529;
   border-collapse: collapse;
+  margin: 0;
   page-break-inside: auto;
 }
 
@@ -65,6 +65,16 @@ body {
 /* Additional styles you may need for your specific content */
 
 .bg-azul {
+  background-color: #0f74e0;
+  color: white;
+}
+
+.bg-medio-azul {
+  background-color: #4089d6;
+  color: white;
+}
+
+.bg-celeste {
   background-color: #b8daff;
   color: black;
 }

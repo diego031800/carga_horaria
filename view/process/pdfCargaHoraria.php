@@ -175,31 +175,6 @@
     return $fechas;
   }
 
-  function get_nro_filas_by_ciclo($sem_id, $sec_id)
-  {
-    $total_filas = 0;
-    $carga_horaria = get_cargas_horarias($sem_id, $sec_id);
-    foreach ($carga_horaria as $carga) {
-      $ciclos = get_ciclos_by_carga_horaria($carga['cgh_id']);
-      if (count($ciclos) > 0) {
-        foreach ($ciclos as $ciclo) {
-          $cursos = get_cursos_by_ciclo($ciclo['cgc_id']);
-          if (count($cursos) > 0) {
-            foreach ($cursos as $curso) {
-              $docentes = get_docentes_by_curso($curso['chc_id']);
-              if (count($docentes)) {
-                $total_filas += count($docentes);
-              } else {
-                $total_filas ++;
-              }
-            }
-          }
-        }
-      }
-    }
-    return $total_filas;
-  }
-
 /* LLENADO DE DOCUMENTO PDF */
 
   $carga_horaria = get_cargas_horarias($sem_id, $sec_id);
@@ -225,23 +200,16 @@
               <table class='table table-bordered'>
                 <tbody>
                     <tr>
-                        <td class='bg-azul text-center' colspan='9'><b>SEMESTRE ACADÉMICO: &nbsp;&nbsp;".$carga_horaria[0]['semestre']. "</b></td>
+                        <td class='bg-azul text-center' colspan='7'><b>SEMESTRE ACADÉMICO: &nbsp;&nbsp;".$carga_horaria[0]['semestre']. "</b></td>
                     </tr>
                     <tr>
-                        <td class='table-primary text-center'><b>UNIDAD A.</b></td>
-                        <td class='table-primary text-center'><b>MENCIÓN</b></td>
-                        <td class='table-primary text-center'><b>CICLO</b></td>
-                        <td class='table-primary text-center'><b>CURSO</b></td>
-                        <td class='table-primary text-center'><b>CRED.</b></td>
-                        <td class='table-primary text-center'><b>DOCENTE</b></td>
-                        <td class='table-primary text-center'><b>COND.</b></td>
-                        <td class='table-primary text-center'><b>HORAS</b></td>
-                        <td class='table-primary text-center'><b>FECHAS</b></td>
-                    </tr>";
-    $html .= "<tr style='page-break-inside: auto;'>
-                <td class='text-center' style='vertical-align: middle; width: 180px;' rowspan='".(get_nro_filas_by_ciclo($sem_id, $sec_id))."'>
-                    " . $carga_horaria[0]['unidad'] . "
-                </td>";
+                      <td class='bg-azul text-center' style='vertical-align: middle; width: 180px;' colspan='7'>
+                        <b>UNIDAD ACADÉMICA: &nbsp;&nbsp; " . $carga_horaria[0]['unidad'] . "</b>
+                      </td>
+                    </tr>
+                </tbody>
+              </table>";
+
     foreach ($carga_horaria as $carga_id => $carga) {
       $ciclos = get_ciclos_by_carga_horaria($carga['cgh_id']);
       if (count($ciclos) > 0) {
@@ -250,20 +218,32 @@
           $cursos = get_cursos_by_ciclo($ciclo['cgc_id']);
           $filas_curso_by_ciclo += count($cursos);
         }
-        $html .= $carga_id == 0?'':'<tr>';
-        $html .= "<td class='text-center' style='vertical-align: middle; width: 190px;' rowspan='" . ($filas_curso_by_ciclo) . "'>
-                    " . $carga['mencion'] . "
-                  </td>";
+        $html .= "<table class='table table-bordered' style='page-break-inside: avoid;'>
+                    <tbody>
+                      <tr>
+                        <td class='bg-celeste text-center' style='vertical-align: middle; width: 190px;' colspan='7'>
+                          <b>MENCIÓN: &nbsp;&nbsp;&nbsp; " . $carga['mencion'] . "</b>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class='table-primary text-center'><b>CICLO</b></td>
+                        <td class='table-primary text-center'><b>CURSO</b></td>
+                        <td class='table-primary text-center'><b>CRED.</b></td>
+                        <td class='table-primary text-center'><b>DOCENTE</b></td>
+                        <td class='table-primary text-center'><b>COND.</b></td>
+                        <td class='table-primary text-center'><b>HORAS</b></td>
+                        <td class='table-primary text-center'><b>FECHAS</b></td>
+                      </tr>";
         foreach ($ciclos as $ciclo_id => $ciclo) {
           $cursos = get_cursos_by_ciclo($ciclo['cgc_id']);
-          $html .= $ciclo_id == 0?'':'<tr>';
+          $html .= "<tr>";
           $html .= "<td class='text-center' style='vertical-align: middle; width: 50px;' rowspan='".(count($cursos)==0 ? '' : count($cursos))."'>
                       " . convertirARomano($ciclo['ciclo']) . "
                     </td>";
           if (count($cursos) > 0) {
             foreach ($cursos as $curso_id => $curso) {
                 $html .= $curso_id == 0?'':'<tr>';
-                $html .= "<td class='text-center' style='vertical-align: middle; width: 350px;'>
+                $html .= "<td class='text-center' style='vertical-align: middle; width: 300px;'>
                               " . $curso['curso'] . "
                           </td>
                           <td class='text-center' style='vertical-align: middle; width: 50px;'>
@@ -288,31 +268,28 @@
                 $html .= "<td class='text-center' style='vertical-align: middle; width: 80px;'>
                               " . $curso['chc_horas'] . "
                           </td>
-                          <td class='text-center' style='vertical-align: middle; width: 90px;'>";
+                          <td class='text-center' style='vertical-align: middle; width: 150px;'>";
                 $fechas = get_fechas_by_curso($curso['chc_id']);
                 foreach ($fechas as $index => $fecha) {
                   if ($index == 0) {
-                    $html .= "<p>Inicio:</p>";
-                    $html .= "<small class='d-inline-flex mb-3 px-2 py-1 fw-semibold'>".formatearFecha($fecha['chf_fecha'])."</small>";
+                    $html .= "<p><b>Inicio:</b> ".formatearFecha($fecha['chf_fecha'])."</p><br>";
                   }
                   if ($index == count($fechas) - 1) {
-                    $html .= "<p>Fin:</p>";
-                    $html .= "<small class='d-inline-flex mb-3 px-2 py-1 fw-semibold'>".formatearFecha($fecha['chf_fecha'])."</small>";
+                    $html .= "<p><b>Fin:</b> ".formatearFecha($fecha['chf_fecha'])."</p>";
                   }
                 }
-                $html .= "</td>";
-                $html .= "</tr>";
+                $html .= "</td></tr>";
             }
           } else {
               $html .= "<td class='text-center' style='vertical-align: middle;' colspan='6'>
                           Sin cursos registrados.
                         </td></tr>";
           }
+          $html .= $ciclo_id == count($ciclos) - 1?"</tbody></table>":"";
         }
       }
     }
-    $html .= "</tbody></table>
-            </body>";
+    $html .= "</body>";
   }else {
     $html = "<body>
               <table class='table table-bordered rounded'>
@@ -336,11 +313,11 @@
   // echo $html;
 
   /* CREAR PDF */
-  $mpdf = new \Mpdf\Mpdf(['orientation' => 'L']);
+  $mpdf = new \Mpdf\Mpdf();
   $mpdf->defaultfooterline = 0;
   // Definir contenido para el pie de página
   $footerContent = '<footer style="border-top: solid black 1px; text-align: left; font-size: 10px; position: fixed; bottom: 0; font-weight: bold;">
-                      A. = ACADÉMICA &nbsp;&nbsp;&nbsp;&nbsp; CRED. = CRÉDITOS &nbsp;&nbsp;&nbsp;&nbsp; COND. = CONDICIÓN
+                      CRED. = CRÉDITOS &nbsp;&nbsp;&nbsp;&nbsp; COND. = CONDICIÓN
                     </footer>
                     <hr>
                     <div style="text-align: center; font-size: 10px;">
