@@ -106,10 +106,10 @@ if (!isset($_SESSION['login'])) {
                         <table class="table" id="cursosTabla" name="cursosTabla">
                             <thead>
                                 <tr>
-                                    <th scope="col">Curso</th>
                                     <th scope="col">Acciones</th>
-                                    <th scope="col">Grupo</th>
-                                    <th scope="col">Asignar</th>
+                                    <th scope="col">Curso</th>
+                                    <th scope="col">Número de Grupos:</th>
+                                    <th scope="col">Gestionar Grupos:</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -189,10 +189,12 @@ if (!isset($_SESSION['login'])) {
                                                 onClick="agregarGrupo();" id="btn-addGrupo">Agregar grupo</button>
                                             <button class="btn btn-outline-danger" style="height: 90%;"
                                                 onClick="eliminarGrupo();" id="btn-deleteGrupo">Eliminar grupo</button>
+                                            <button class="btn btn-outline-danger" style="height: 90%;"
+                                                onClick="eliminarGrupo();" id="btn-deleteDocente">Eliminar grupo</button>
                                             <div class="form-check form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch"
                                                     id="tglSuplente">
-                                                <label class="form-check-label" for="tglSuplente">Titular</label>
+                                                <label class="form-check-label" for="tglSuplente">Ver Suplente</label>
                                             </div>
                                         </div>
                                     </div>

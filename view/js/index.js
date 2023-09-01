@@ -260,7 +260,7 @@ function cursoAgregado(index){
 function agregarGrupo(){
   let id_curso_modal = txtIdModal.value;
   listacursos.find(cursoI => cursoI.index == id_curso_modal).grupos.push(
-    {id: 2, cod_docente: 0, nombre : 'Grupo B', id_doc:0}
+    {id: 2, cod_docente: 0, nombre : 'Grupo B',docentes: []}
   );
   actualizarCboGrupoDoc(id_curso_modal);
   $("#btn-addGrupo").hide();
@@ -319,18 +319,7 @@ function llenarTabla() {
     return;
   }
   listacursos.forEach((elementC) => {
-    let grupos = elementC.grupos;
-    let stringG="";
-    grupos.forEach(element => {
-      let nombreG="";
-      if(element.cod_docente==0){
-        nombreG ="Sin asignar docente";
-      } else{
-        nombreG = elementC.docentes.find(docI => docI.codigo == element.cod_docente).docente;
-      }
-      stringG = stringG + '<tr><td>'+element.nombre+': '+nombreG+'</td></tr>';
-      console.log(stringG);
-    });
+    let stringG=elementC.grupos.length;
     fila =
     '<tr><td scope="row">' +
     elementC.curso +
@@ -350,15 +339,15 @@ function llenarTabla() {
 function actualizarDatosDocenteGrupo(){
   let id_curso_modal = txtIdModal.value;
   let id_grupo_docente = cboDocGrupo.value;
+  let indxCurso = listacursos.findIndex(item => item.index == id_curso_modal);
+  let indxGrupoCurso = listacursos[indxCurso].grupos.findIndex(item => item.id == id_grupo_docente);
   tglDocSuplente.checked = false;
-  let codDG = listacursos.find(item => item.index == id_curso_modal).grupos.find(item => item.id == id_grupo_docente);
-  if(codDG.cod_docente==0){
-    console.log("No pasó");
+  if(comprobarDocenteAsignado(id_curso_modal,id_grupo_docente,1)){
+    let codDG = listacursos[indxCurso].grupos[indxGrupoCurso].docentes.find(item => item.titular == 1).doc_id;
     $("#nombre-docente").val(null).trigger("change");
-    return;
+    $("#nombre-docente").val(codDG).trigger("change");
   }else{
     $("#nombre-docente").val(null).trigger("change");
-    $("#nombre-docente").val(codDG.id_doc).trigger("change");
   }
   seleccionar_datos_docente();
 }
@@ -377,20 +366,21 @@ function guardar_docente(){
   let grado_modal = cboDocGrado.value;
   let indxCurso = listacursos.findIndex(item => item.index == id_curso_modal);
   let indxGrupoCurso = listacursos[indxCurso].grupos.findIndex(item => item.id == id_grupo_docente);
-  console.log(listacursos.find(item => item.index == id_curso_modal));
-  if(comprobarDocenteAsignado(id_curso_modal, id_grupo_docente)){
-    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[0].doc_id = nombre_docente_modal;
-    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[0].docente = txtDocente
-    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[0].condicion = condicion_modal
-    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[0].grado = grado_modal;
-    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[0].codigo = codigo_modal;
-    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[0].dni = doc_modal;
-    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[0].correo = email_modal;
-    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[0].telefono = telefono_modal;
+  let pos = !tglDocSuplente.checked ? 1:0;
+  if(comprobarDocenteAsignado(id_curso_modal,id_grupo_docente,pos)){
+    let indxDocente =listacursos[indxCurso].grupos[indxGrupoCurso].docentes.findIndex(item => item.titular == pos); 
+    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].doc_id = nombre_docente_modal;
+    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].docente = txtDocente
+    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].condicion = condicion_modal
+    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].grado = grado_modal;
+    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].codigo = codigo_modal;
+    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].dni = doc_modal;
+    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].correo = email_modal;
+    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].telefono = telefono_modal;
   }else{
     listacursos[indxCurso].grupos[indxGrupoCurso].docentes.push({
       chd_id: 0,
-      titular: 1,
+      titular: pos,
       doc_id: nombre_docente_modal,
       docente: txtDocente,
       condicion: condicion_modal,
@@ -401,10 +391,8 @@ function guardar_docente(){
       telefono: telefono_modal
     });
   }
-  listacursos[indxCurso].grupos[indxGrupoCurso].cod_docente = codigo_modal;
-  listacursos[indxCurso].grupos[indxGrupoCurso].id_doc = cboDocNombre.value;
   limpiarInputsModal();
-  document.getElementById('myModal').style.display = "none";
+  //document.getElementById('myModal').style.display = "none";
   llenarTabla();
 }
 
@@ -413,21 +401,13 @@ function alternarDatosDoc(){
   let id_grupo_docente = cboDocGrupo.value;
   let indxCurso = listacursos.findIndex(item => item.index == id_curso_modal);
   let indxGrupoCurso = listacursos[indxCurso].grupos.findIndex(item => item.id == id_grupo_docente);
-  if(!tglDocSuplente.checked){
-    if(comprobarDocenteAsignado(id_curso_modal,id_grupo_docente,1)){
-
-    }
-  }else{
-
-  }
-  let codDG = listacursos.find(item => item.index == id_curso_modal).grupos.find(item => item.id == id_grupo_docente).;
-  if(codDG.cod_docente==0){
-    console.log("No pasó");
+  let pos = !tglDocSuplente.checked ? 1:0;
+  if(comprobarDocenteAsignado(id_curso_modal,id_grupo_docente,pos)){
+    let codDG = listacursos[indxCurso].grupos[indxGrupoCurso].docentes.find(item => item.titular == pos).doc_id;
     $("#nombre-docente").val(null).trigger("change");
-    return;
+    $("#nombre-docente").val(codDG).trigger("change");
   }else{
     $("#nombre-docente").val(null).trigger("change");
-    $("#nombre-docente").val(codDG.id_doc).trigger("change");
   }
   seleccionar_datos_docente();
 }
@@ -435,7 +415,7 @@ function alternarDatosDoc(){
 function comprobarDocenteAsignado(idRegistro, idGrupo, puesto){
   let grup = listacursos.find(item => item.index == idRegistro).grupos.find(item => item.id == idGrupo);
   if(grup.docentes.length != 0){
-    let doc = grup.docentes.find(item => item.titular = puesto);
+    let doc = grup.docentes.find(item => item.titular == puesto);
     if(doc != null && doc != undefined){
       return true;
     }else{
@@ -637,7 +617,7 @@ function load_document() {
   cboCiclo.addEventListener("change", buscar_cursos);
   btnGuardar.addEventListener("click", saveCargaHoraria);
   cboDocGrupo.addEventListener("change",actualizarDatosDocenteGrupo);
-  tglDocSuplente.addEventListener("change",prueba);
+  tglDocSuplente.addEventListener("change",alternarDatosDoc);
 }
 
 // EVENTOS
