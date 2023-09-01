@@ -91,7 +91,6 @@ function load_document() {
     cboSemestre.addEventListener("change", enable_btnBuscar);
     cboUnidad.addEventListener("change", enable_btnBuscar);
     btnDescargarPdf.addEventListener("click", mostrarPdf);
-    toastr["success"]("Estuvo mal lo que se hizo", "Error de codigo");
 }
 
 // EVENTOS

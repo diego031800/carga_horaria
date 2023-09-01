@@ -33,6 +33,7 @@ if (!isset($_SESSION['login'])) {
     <link rel="stylesheet" href="../../assets/css/default-css.css">
     <link rel="stylesheet" href="../../assets/css/styles.css">
     <link rel="stylesheet" href="../../assets/css/responsive.css">
+    <link rel="stylesheet" href="../../assets/css/css_toastr.min.css">
     <!-- modernizr css -->
     <script src="../../assets/js/vendor/modernizr-2.8.3.min.js"></script>
     <!-- SELECT 2 -->
@@ -182,28 +183,30 @@ if (!isset($_SESSION['login'])) {
                                         <div class="col-12 mb-12">
                                             <label for="" class="form-label">Grupo:</label><br />
                                         </div>
-                                        <div class="col-7 mb-12">
+                                        <div class="col-5 mb-12">
                                             <select class="form-select" id="cbo-grupodocente">
                                             </select>
                                         </div>
-                                        <div class="col-5 mb-12" style="display: flex; justify-content: space-between;">
+                                        <div class="col-7 mb-12" style="display: flex; justify-content: space-between;">
                                             <button class="btn btn-outline-warning" style="height: 90%;"
                                                 onClick="agregarGrupo();" id="btn-addGrupo">Agregar grupo</button>
                                             <button class="btn btn-outline-danger" style="height: 90%;"
                                                 onClick="eliminarGrupo();" id="btn-deleteGrupo">Eliminar grupo</button>
-                                            <button class="btn btn-outline-danger" style="height: 90%;"
-                                                onClick="eliminarGrupo();" id="btn-deleteDocente">Eliminar grupo</button>
                                             <div class="form-check form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch"
                                                     id="tglSuplente">
                                                 <label class="form-check-label" for="tglSuplente">Ver Suplente</label>
                                             </div>
+                                            <button class="btn btn-outline-danger" style="height: 90%;" onClick=""
+                                                id="btn-deleteDocente">Eliminar docente</button>
                                         </div>
                                     </div>
-                                    <div class="col-12 mb-3">
-                                        <label for="" class="form-label">Nombre:</label><br />
-                                        <select class="form-select" id="nombre-docente">
-                                        </select>
+                                    <div class="col-12 mb-3 row">
+                                        <div class="col-12 mb-5">
+                                            <label for="" class="form-label">Nombre:</label><br />
+                                            <select class="form-select" id="nombre-docente">
+                                            </select>
+                                        </div>
                                     </div>
                                     <div class="col-6 mb-3">
                                         <label for="" class="form-label">Condicion:</label><br />
@@ -331,11 +334,31 @@ if (!isset($_SESSION['login'])) {
     <!-- others plugins -->
     <script src="../../assets/js/plugins.js"></script>
     <script src="../../assets/js/scripts.js"></script>
+    <!-- SCRIPT TOASTR -->
+    <script src="../../assets/js/js_toastr.min.js"></script>
     <!-- SCRIPT DESPACHO -->
     <script src="../../view/js/index.js"></script>
     <!-- SCRIPT PROPIO INICIO -->
     <script>
     $(document).ready(function() {
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+
         $('#cboCurso').select2({
             dropdownCssClass: "limitar-opciones",
             placeholder: 'Selecciona un curso ...'

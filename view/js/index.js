@@ -263,6 +263,7 @@ function agregarGrupo(){
     {id: 2, cod_docente: 0, nombre : 'Grupo B',docentes: []}
   );
   actualizarCboGrupoDoc(id_curso_modal);
+  toastr["success"]("El grupo se ha agregado con éxito", "Grupo agregado");
   $("#btn-addGrupo").hide();
   $("#btn-deleteGrupo").show();
 }
@@ -321,15 +322,15 @@ function llenarTabla() {
   listacursos.forEach((elementC) => {
     let stringG=elementC.grupos.length;
     fila =
-    '<tr><td scope="row">' +
-    elementC.curso +
-    '</td><td><button class="btn btn-info" style="margin-right: 10px;" onClick="editar(' +
+    '<tr><td scope="row"><button class="btn btn-info" style="margin-right: 10px;" onClick="editar(' +
     elementC.index +
     ');">Editar</button><button class="btn btn-danger" onClick="eliminar('+
     elementC.index +
-    ')";>Eliminar</button></td>' +
-    '<td><table>'+stringG+'</table></td>' +
-    '<td><button class="btn btn-danger" onClick="abrir_docente_modal('+
+    ')";>Eliminar</button></td><td>' +
+    elementC.curso+
+    '</td><td>' +
+    +stringG +
+    '</td><td><button class="btn btn-danger" onClick="abrir_docente_modal('+
     elementC.index+
     ');">Ver</button></td></tr>';
     $("#cursosTabla tbody").append(fila);
@@ -391,7 +392,8 @@ function guardar_docente(){
       telefono: telefono_modal
     });
   }
-  limpiarInputsModal();
+  toastr["success"]("El docente se ha asignado con éxito", "Docente asignado");
+  //limpiarInputsModal();
   //document.getElementById('myModal').style.display = "none";
   llenarTabla();
 }
