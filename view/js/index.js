@@ -204,7 +204,7 @@ function agregar() {
       cur_creditos: txtCursoCreditos,
       horas: cursohoras, 
       fechas: fechasagregar,
-      grupos: [{id: 1, cod_docente: 0, nombre : 'Grupo A',docentes: []}]
+      grupos: [{id: 1, nombre : 'Grupo A',docentes: []}]
     }
   );
   llenarTabla();
@@ -260,7 +260,7 @@ function cursoAgregado(index){
 function agregarGrupo(){
   let id_curso_modal = txtIdModal.value;
   listacursos.find(cursoI => cursoI.index == id_curso_modal).grupos.push(
-    {id: 2, cod_docente: 0, nombre : 'Grupo B',docentes: []}
+    {id: 2, nombre : 'Grupo B',docentes: []}
   );
   actualizarCboGrupoDoc(id_curso_modal);
   toastr["success"]("El grupo se ha agregado con éxito", "Grupo agregado");
