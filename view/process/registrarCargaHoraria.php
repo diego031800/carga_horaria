@@ -192,6 +192,15 @@ if (!isset($_SESSION['login'])) {
                                                 onClick="agregarGrupo();" id="btn-addGrupo">Agregar grupo</button>
                                             <button class="btn btn-outline-danger" style="height: 90%;"
                                                 onClick="eliminarGrupo();" id="btn-deleteGrupo">Eliminar grupo</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-3 row">
+                                        <div class="col-6 mb-5">
+                                            <label for="" class="form-label">Nombre:</label><br />
+                                            <select class="form-select" id="nombre-docente">
+                                            </select>
+                                        </div>
+                                        <div class="col-6 mb-5" style="display: flex; justify-content: space-between;">
                                             <div class="form-check form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch"
                                                     id="tglSuplente">
@@ -199,13 +208,6 @@ if (!isset($_SESSION['login'])) {
                                             </div>
                                             <button class="btn btn-outline-danger" style="height: 90%;" onClick=""
                                                 id="btn-deleteDocente">Eliminar docente</button>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 mb-3 row">
-                                        <div class="col-12 mb-5">
-                                            <label for="" class="form-label">Nombre:</label><br />
-                                            <select class="form-select" id="nombre-docente">
-                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-6 mb-3">
