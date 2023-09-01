@@ -2,6 +2,7 @@
 let btnAcceso = document.getElementById('btnAcceso');
 let txtUsuario = document.getElementById('txtUsuario');
 let txtPassword = document.getElementById('txtPassword');
+let txtUserIp = document.getElementById('txtUserIp');
 
 // FUNCIONES
 function login()
@@ -9,14 +10,20 @@ function login()
   let opcion = 'login';
   let usuario = txtUsuario.value;
   let password = txtPassword.value;
+  let ip = txtUserIp.value;
 
   $.ajax({
     type: "POST",
     data: "opcion="+opcion+
           "&usuario="+usuario+
-          "&password="+password,
-    url: "../../../../carga_horaria/controllers/security/LoginController.php",
+          "&password="+password+
+          "&ip="+ip,
+    url: "controllers/security/LoginController.php",
+    beforesend: function () {
+      btnAcceso.disabled = true;
+    },
     success: function (data) {
+      btnAcceso.disabled = false;
       let objeto = JSON.parse(data);
       if (objeto.respuesta=='Acceso permitido') {
         location.href = "view/process/registrarCargaHoraria.php";

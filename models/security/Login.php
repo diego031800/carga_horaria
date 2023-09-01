@@ -42,6 +42,7 @@
         $_SESSION['usu_id'] = $fila['usu_id'];
         $_SESSION['login'] = $fila['usu_login'];
         $_SESSION['nombres'] = $fila['nombres'];
+        $_SESSION['usu_ip'] = $this->parametros['ip'];
       }
       if (!empty($usu_id)) {
         $resp = array('respuesta' => 'Acceso permitido');

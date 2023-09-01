@@ -7,6 +7,7 @@
   $parametros['opcion'] = '';
   $parametros['usuario'] = '';
   $parametros['password'] = '';
+  $parametros['ip'] = '';
 
   if(isset($_POST['opcion']))
 	{
@@ -19,6 +20,10 @@
 	if(isset($_POST['password']))
 	{
 		$parametros['password'] = $_POST['password'];
+	}
+	if(isset($_POST['ip']))
+	{
+		$parametros['ip'] = $_POST['ip'];
 	}
 
   $login = new Login();

@@ -12,11 +12,15 @@ if (!isset($_SESSION['login'])) {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- ICONO DE LA PAG WEB -->
+        <link rel="icon" href="../../assets/images/untr.ico">
         <!-- BOOTSTRAP -->
         <link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
         <!-- <link rel="stylesheet" href="../../assets/css/bootstrap-theme.min.css"> -->
         <link rel="stylesheet" href="../../assets/css/bootstrap-datepicker3.min.css">
         <link rel="stylesheet" href="../../assets/css/bootstrapValidator.min.css">
+        <!-- SELECT 2 -->
+        <link rel="stylesheet" href="../../assets/css/css_toastr.min.css">
         <!-- TEMPLATE -->
         <link rel="stylesheet" href="../../assets/css/font-awesome.min.css">
         <link rel="stylesheet" href="../../assets/css/themify-icons.css">
@@ -150,6 +154,8 @@ if (!isset($_SESSION['login'])) {
         <!-- others plugins -->
         <script src="../../assets/js/plugins.js"></script>
         <script src="../../assets/js/scripts.js"></script>
+        <!-- SCRIPT TOASTR -->
+        <script src="../../assets/js/js_toastr.min.js"></script>
         <!-- SCRIPT DESPACHO -->
         <script src="../../view/js/process/verCargaHoraria.js"></script>
         <!-- SCRIPT PROPIO INICIO -->
@@ -159,6 +165,24 @@ if (!isset($_SESSION['login'])) {
                     dropdownCssClass: "limitar-opciones",
                     placeholder: 'Selecciona un programa ...'
                 });
+
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": true,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
             });
         </script>
     </body>
