@@ -185,11 +185,11 @@ function agregar() {
   let cursohoras = txtHoras.value;
   let fechas = txtFechas.value;
   if(cursoAgregado(id)){
-    alert("Ya has agregado el curso");
+    toastr["warning"]("Ya has agregador el curso", "Agregar curso");
     return;
   }
   if (txtCurso == "" || cursohoras == "" || fechas == "") {
-    alert("No deben haber campos vacíos");
+    toastr["error"]("No deben haber campos vacíos", "Agregar curso");
     return;
   }
   let i = listacursos.length;
@@ -210,6 +210,7 @@ function agregar() {
   llenarTabla();
   limpiarInputs();
   $('#myModal-curso').fadeOut();
+  toastr["success"]("El curso se ha agregado con éxito", "Agregar curso");
 }
 
 function guardar() {
@@ -233,6 +234,7 @@ function guardar() {
   limpiarInputs();
   llenarTabla();
   $('#myModal-curso').fadeOut();
+  toastr["success"]("El curso se ha guardado con éxito", "Agregar curso");
 }
 
 function editar(indexb) {
@@ -263,7 +265,7 @@ function agregarGrupo(){
     {id: 2, nombre : 'Grupo B',docentes: []}
   );
   actualizarCboGrupoDoc(id_curso_modal);
-  toastr["success"]("El grupo se ha agregado con éxito", "Grupo agregado");
+  toastr["success"]("El grupo se ha agregado con éxito", "Agregar grupo");
   $("#btn-addGrupo").hide();
   $("#btn-deleteGrupo").show();
 }
@@ -274,6 +276,7 @@ function eliminarGrupo(){
   actualizarCboGrupoDoc(id_curso_modal);
   $("#btn-addGrupo").show();
   $("#btn-deleteGrupo").hide();
+  toastr["warning"]("El grupo se ha eliminado con éxito", "Eliminar grupo");
 }
 
 function actualizarCboGrupoDoc(ind){
@@ -311,6 +314,7 @@ function limpiarInputs(){
 function eliminar(index){
   listacursos= listacursos.filter((item) => item.index != index);
   llenarTabla();
+  toastr["warning"]("El curso se ha eliminado con éxito", "Eliminar curso");
 }
 
 function llenarTabla() {
@@ -368,6 +372,7 @@ function guardar_docente(){
   let indxCurso = listacursos.findIndex(item => item.index == id_curso_modal);
   let indxGrupoCurso = listacursos[indxCurso].grupos.findIndex(item => item.id == id_grupo_docente);
   let pos = !tglDocSuplente.checked ? 1:0;
+  let mensaje = pos == 1 ? "El docente titular se ha asignado con éxito" : "El docente suplente se ha asignado con éxito";
   if(comprobarDocenteAsignado(id_curso_modal,id_grupo_docente,pos)){
     let indxDocente =listacursos[indxCurso].grupos[indxGrupoCurso].docentes.findIndex(item => item.titular == pos); 
     listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].doc_id = nombre_docente_modal;
@@ -392,10 +397,26 @@ function guardar_docente(){
       telefono: telefono_modal
     });
   }
-  toastr["success"]("El docente se ha asignado con éxito", "Docente asignado");
-  //limpiarInputsModal();
-  //document.getElementById('myModal').style.display = "none";
+  toastr["success"](mensaje, "Docente asignado");
   llenarTabla();
+}
+
+function eliminarDocente(){
+  let id_curso_modal = txtIdModal.value;
+  let id_grupo_docente = cboDocGrupo.value;
+  let pos = !tglDocSuplente.checked ? 1:0;
+  let mensaje = pos == 1 ? "El docente titular se ha eliminado con éxito" : "El docente suplente se ha eliminado con éxito";
+  let indxCurso = listacursos.findIndex(item => item.index == id_curso_modal);
+  let indxGrupoCurso = listacursos[indxCurso].grupos.findIndex(item => item.id == id_grupo_docente);
+  let indxDocente =listacursos[indxCurso].grupos[indxGrupoCurso].docentes.findIndex(item => item.titular == pos);
+  if(comprobarDocenteAsignado(id_curso_modal,id_grupo_docente,pos)){
+    listacursos[indxCurso].grupos[indxGrupoCurso].docentes.splice(indxDocente,1);
+    $("#nombre-docente").val(null).trigger("change");
+    seleccionar_datos_docente();
+    toastr["warning"](mensaje, "Eliminar Docente");
+  } else{
+    toastr['error']("El docente que estás tratando de eliminar, no existe","Eliminar Docente");
+  }
 }
 
 function alternarDatosDoc(){
@@ -481,6 +502,7 @@ function abrir_docente_modal(index){
     $("#btn-addGrupo").hide();
     $("#btn-deleteGrupo").show();
   }
+  toastr['info']('Para ver y/o agregar los datos del docente suplente, active la opcion que dice: "ver suplente" ',"Asignar docente");
   actualizarCboGrupoDoc(index);
   actualizarDatosDocenteGrupo();
 }
@@ -500,6 +522,12 @@ function camposUnidad(bol){
   cboUnidad.disabled =bol;
   cboPrograma.disabled = bol;
   cboCiclo.disabled = bol;
+}
+
+function validarHoras(int){
+  if(int >0){
+    
+  }
 }
 
 function camposCursos(bol){

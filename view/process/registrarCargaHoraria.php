@@ -84,7 +84,7 @@ if (!isset($_SESSION['login'])) {
                             </div>
                             <div class="col-lg-2 col-6 mb-3">
                                 <button class="btn btn-outline-success" id="btneditarCargaHoraria"
-                                    onClick="editarCarga();" disabled>Editar</button>
+                                    onClick="editarCarga();" disabled>Confirmar</button>
                             </div>
                         </div>
                         <div class="row">
@@ -195,19 +195,21 @@ if (!isset($_SESSION['login'])) {
                                         </div>
                                     </div>
                                     <div class="col-12 mb-3 row">
-                                        <div class="col-6 mb-5">
+                                        <div class="col-12 mb-12">
                                             <label for="" class="form-label">Nombre:</label><br />
+                                        </div>
+                                        <div class="col-6 mb-8">
                                             <select class="form-select" id="nombre-docente">
                                             </select>
                                         </div>
-                                        <div class="col-6 mb-5" style="display: flex; justify-content: space-between;">
+                                        <div class="col-6 mb-4" style="display: flex; justify-content: space-between;">
                                             <div class="form-check form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch"
                                                     id="tglSuplente">
                                                 <label class="form-check-label" for="tglSuplente">Ver Suplente</label>
                                             </div>
-                                            <button class="btn btn-outline-danger" style="height: 90%;" onClick=""
-                                                id="btn-deleteDocente">Eliminar docente</button>
+                                            <button class="btn btn-outline-danger" style="height: 90%;" onClick="eliminarDocente();"
+                                                id="btn-deleteDocente" >Eliminar docente</button>
                                         </div>
                                     </div>
                                     <div class="col-6 mb-3">
