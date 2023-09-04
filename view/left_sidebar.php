@@ -18,8 +18,8 @@
  <!-- sidebar menu area start -->
  <div class="sidebar-menu">
      <div class="sidebar-header">
-         <div class="logo">
-             <a href="../../registrarCargaHoraria.php"><img src="../../assets/images/icon/logo.png" alt="logo"></a>
+         <div class="logo" style="height: 100px; width:auto;">
+             <a href="../../view/process/misCargasHorarias.php" style="max-width: 316px;"><img src='../../assets/images/documentos/img_upg_CMYK.png' style="height: auto; width: 280px;"></a>
          </div>
      </div>
      <div class="main-menu">

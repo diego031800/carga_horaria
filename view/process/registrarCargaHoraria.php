@@ -269,7 +269,7 @@ if (!isset($_SESSION['login'])) {
                             <div class="modal-body">
                                 <input type="number" id="cursoEditar" hidden>
                                 <div class="row">
-                                    <div class="col-lg-12 col-12">
+                                    <div class="col-lg-12 col-12 mb-3">
                                         <label for="" class="form-label">Curso</label><br>
                                         <select name="cboCurso" id="cboCurso" class="form-select" disabled>
                                             <option value="SD">Antes selecciona un ciclo ...</option>

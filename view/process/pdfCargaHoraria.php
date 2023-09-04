@@ -184,7 +184,7 @@
               <table style='width: 100%;'>
                 <tbody>
                   <tr>
-                    <td style='width: 30%;'> <img src='../../assets/images/documentos/isologo_web.png' style='width: 160px; height: auto;'> </td>
+                    <td style='width: 30%;'> <img src='../../assets/images/documentos/img_upg_CMYK.png' style='width: 160px; height: auto;'> </td>
                     <td class='text-center' style='width: 40%;'>
                       <div style='text-align: center; font-weight: bold;'>
                         CARGA HORARIA DEL SEMESTRE ACADÉMICO: ".$carga_horaria[0]['semestre']."
