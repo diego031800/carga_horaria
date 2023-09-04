@@ -33,6 +33,7 @@ if (!isset($_SESSION['login'])) {
     <link rel="stylesheet" href="../../assets/css/default-css.css">
     <link rel="stylesheet" href="../../assets/css/styles.css">
     <link rel="stylesheet" href="../../assets/css/responsive.css">
+    <link rel="stylesheet" href="../../assets/css/css_toastr.min.css">
     <!-- modernizr css -->
     <script src="../../assets/js/vendor/modernizr-2.8.3.min.js"></script>
     <!-- SELECT 2 -->
@@ -83,7 +84,7 @@ if (!isset($_SESSION['login'])) {
                             </div>
                             <div class="col-lg-2 col-6 mb-3">
                                 <button class="btn btn-outline-success" id="btneditarCargaHoraria"
-                                    onClick="editarCarga();" disabled>Editar</button>
+                                    onClick="editarCarga();" disabled>Confirmar</button>
                             </div>
                         </div>
                         <div class="row">
@@ -101,18 +102,17 @@ if (!isset($_SESSION['login'])) {
                                     </svg>
                                     &nbsp; Agregar curso
                                 </button>
-                                <input type="number" hidden id="cursoEditar">
-                                
+
                             </div>
                         </div>
 
                         <table class="table" id="cursosTabla" name="cursosTabla">
                             <thead>
                                 <tr>
-                                    <th scope="col">Curso</th>
                                     <th scope="col">Acciones</th>
-                                    <th scope="col">Docente</th>
-                                    <th scope="col">Asignar</th>
+                                    <th scope="col">Curso</th>
+                                    <th scope="col">Número de Grupos:</th>
+                                    <th scope="col">Gestionar Grupos:</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -179,10 +179,38 @@ if (!isset($_SESSION['login'])) {
                             <div class="modal-body">
                                 <input type="text" hidden id="id-curso-docente">
                                 <div class="row">
-                                    <div class="col-12 mb-3">
-                                        <label for="" class="form-label">Nombre:</label><br />
-                                        <select class="form-select" id="nombre-docente">
-                                        </select>
+                                    <div class="col-12 mb-12 row">
+                                        <div class="col-12 mb-12">
+                                            <label for="" class="form-label">Grupo:</label><br />
+                                        </div>
+                                        <div class="col-5 mb-12">
+                                            <select class="form-select" id="cbo-grupodocente">
+                                            </select>
+                                        </div>
+                                        <div class="col-7 mb-12" style="display: flex; justify-content: space-between;">
+                                            <button class="btn btn-outline-warning" style="height: 90%;"
+                                                onClick="agregarGrupo();" id="btn-addGrupo">Agregar grupo</button>
+                                            <button class="btn btn-outline-danger" style="height: 90%;"
+                                                onClick="eliminarGrupo();" id="btn-deleteGrupo">Eliminar grupo</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-3 row">
+                                        <div class="col-12 mb-12">
+                                            <label for="" class="form-label">Nombre:</label><br />
+                                        </div>
+                                        <div class="col-6 mb-8">
+                                            <select class="form-select" id="nombre-docente">
+                                            </select>
+                                        </div>
+                                        <div class="col-6 mb-4" style="display: flex; justify-content: space-between;">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" role="switch"
+                                                    id="tglSuplente">
+                                                <label class="form-check-label" for="tglSuplente">Ver Suplente</label>
+                                            </div>
+                                            <button class="btn btn-outline-danger" style="height: 90%;" onClick="eliminarDocente();"
+                                                id="btn-deleteDocente" >Eliminar docente</button>
+                                        </div>
                                     </div>
                                     <div class="col-6 mb-3">
                                         <label for="" class="form-label">Condicion:</label><br />
@@ -239,7 +267,7 @@ if (!isset($_SESSION['login'])) {
                                 <h5 class="modal-title">Registrar curso</h5>
                             </div>
                             <div class="modal-body">
-                                <!-- <input type="text" hidden id="id-curso-docente"> -->
+                                <input type="number" id="cursoEditar" hidden>
                                 <div class="row">
                                     <div class="col-lg-12 col-12">
                                         <label for="" class="form-label">Curso</label><br>
@@ -267,10 +295,8 @@ if (!isset($_SESSION['login'])) {
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-success" id="btnAgregarCursoModal" onClick="agregar();">
-                                    Agregar
-                                </button>
-                                <button class="btn btn-success" id="btnguardarCurso" onClick="editar();">
+                                <button class="btn btn-success" id="btnAgregarCursoModal"
+                                    onClick="accionBtnGuardarCurso();">
                                     Guardar
                                 </button>
                                 <button class="btn btn-danger" onClick="$('#myModal-curso').fadeOut();">
@@ -312,11 +338,31 @@ if (!isset($_SESSION['login'])) {
     <!-- others plugins -->
     <script src="../../assets/js/plugins.js"></script>
     <script src="../../assets/js/scripts.js"></script>
+    <!-- SCRIPT TOASTR -->
+    <script src="../../assets/js/js_toastr.min.js"></script>
     <!-- SCRIPT DESPACHO -->
     <script src="../../view/js/index.js"></script>
     <!-- SCRIPT PROPIO INICIO -->
     <script>
     $(document).ready(function() {
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+
         $('#cboCurso').select2({
             dropdownCssClass: "limitar-opciones",
             placeholder: 'Selecciona un curso ...'
