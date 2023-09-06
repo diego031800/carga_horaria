@@ -275,6 +275,30 @@ if (!isset($_SESSION['login'])) {
                                             <option value="SD">Antes selecciona un ciclo ...</option>
                                         </select>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-success" id="btnAgregarCursoModal"
+                                    onClick="accionBtnGuardarCurso();">
+                                    Guardar
+                                </button>
+                                <button class="btn btn-danger" onClick="$('#myModal-curso').fadeOut();">
+                                    Cerrar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- MODAL GRUPO -->
+                <div class="modal" id="myModal-grupo">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Gestionar grupos</h5>
+                            </div>
+                            <div class="modal-body">
+                                <input type="number" id="cursoEditar" hidden>
+                                <div class="row">
                                     <div class="col-lg-10 col-6 mb-3">
                                         <label for="" class="form-label">Fecha</label>
                                         <div class="input-group input-group-lg date datepicker3 container-calendar"
