@@ -112,6 +112,7 @@ if (!isset($_SESSION['login'])) {
                                     <th scope="col">Acciones</th>
                                     <th scope="col">Curso</th>
                                     <th scope="col">Número de Grupos:</th>
+                                    <th scope="col">Gestionar grupos:</th>
                                     <th scope="col">Asignar docentes</th>
                                 </tr>
                             </thead>
@@ -278,8 +279,8 @@ if (!isset($_SESSION['login'])) {
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-success" id="btnGuardarDatosGrupo"
-                                    onClick="guardarDatosGrupo();">
+                                <button class="btn btn-success" id="btnGuardarCurso"
+                                    onClick="accionBtnGuardarCurso();">
                                     Guardar
                                 </button>
                                 <button class="btn btn-danger" onClick="$('#myModal-curso').fadeOut();">
