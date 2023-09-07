@@ -112,7 +112,7 @@ if (!isset($_SESSION['login'])) {
                                     <th scope="col">Acciones</th>
                                     <th scope="col">Curso</th>
                                     <th scope="col">Número de Grupos:</th>
-                                    <th scope="col">Gestionar Grupos:</th>
+                                    <th scope="col">Asignar docentes:</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -179,7 +179,7 @@ if (!isset($_SESSION['login'])) {
                             <div class="modal-body">
                                 <input type="text" hidden id="id-curso-docente">
                                 <div class="row">
-                                    <div class="col-12 mb-12 row">
+                                    <div class="col-12 mb-3 row">
                                         <div class="col-12 mb-12">
                                             <label for="" class="form-label">Grupo:</label><br />
                                             <select class="form-select" id="cbo-grupodocente">

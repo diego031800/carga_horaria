@@ -106,6 +106,8 @@
                         CUR.cur_creditos,
                         CUR.cur_codigo,
                         CUR.cur_ciclo,
+                        CUR.tcu_id as cur_tipo,
+	                    CUR.cur_calidad,
                         UPPER(CUR.cur_descripcion) AS curso
                     FROM ADMISION.CURSO CUR
                     WHERE CUR.cur_ciclo = '".$this->parametros['ciclo']. "' AND CUR.cur_estado = 1
@@ -118,7 +120,8 @@
                 $cursos = "<option value=''>Selecciona un curso ...</option>\n";
                 while ($row = $datos->fetch(PDO::FETCH_ASSOC)) {
                     $cursos .= "<option value='".$row['cur_id']."' data-nombre='".$row['curso']."' data-codigo='".$row['cur_codigo'];
-                    $cursos .= "' data-ciclo='".$row['cur_ciclo']."' data-creditos='".$row['cur_creditos']."'>CÓDIGO: ".$row['cur_codigo'];
+                    $cursos .= "' data-ciclo='".$row['cur_ciclo']."' data-creditos='".$row['cur_creditos']."' data-tipo='".$row['cur_tipo'];
+                    $cursos .= "' data-calidad='".$row['cur_calidad']."'>CÓDIGO: ".$row['cur_codigo'];
                     $cursos .= " | CRÉDITOS: ".$row['cur_creditos']." | ".$row['curso']."</option>\n";
                 }
             } else {

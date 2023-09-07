@@ -185,6 +185,8 @@ function agregar() {
   let txtCursoCodigo = cur_option.data("codigo");
   let txtCursoCiclo = cur_option.data("ciclo");
   let txtCursoCreditos = cur_option.data("creditos");
+  let txtCursoTipo = cur_option.data("tipo");
+  let txtCursoCalidad = cur_option.data("calidad");
   if (txtCurso == "" || txtHoras.value == '') {
     toastr["error"]("No deben haber campos vacíos", "Agregar curso");
     return;
@@ -201,6 +203,8 @@ function agregar() {
       cur_codigo: txtCursoCodigo,
       cur_ciclo: txtCursoCiclo,
       cur_creditos: txtCursoCreditos,
+      cur_tipo: ("0000" + txtCursoTipo).slice(-4),
+      cur_calidad: ("0000" + txtCursoCalidad).slice(-4),
       horas : cursohoras, 
       grupos: [{ id: 1, nombre: 'Grupo A', docentes: [], fechas: []}]
     }
@@ -616,11 +620,13 @@ function cancelarEditarCarga() {
 /* GUARDAR CARGA HORARIA */
 function saveCargaHoraria() {
   if ($('#cboSemestre').val() === "" || $('#cboUnidad').val() === "" || $('#cboPrograma').val() === "" || $('#cboCiclo').val() === "") {
-    alert('Llenar todos los campos');
+    toastr['warning']("Llenar todos los campos", "Campos obligatorios");
     return
   }
+
   if (listacursos.length == 0) {
-    alert('Agregar cursos a la carga horaria');
+    toastr['warning']("Agrega cursos a la carga horaria", "Sin agregar cursos");
+    return
   }
 
   let opcion = "saveCargaHoraria";

@@ -10,7 +10,7 @@
     define('USER_NAME_MYSQL', 'root');
     define('PASS_MYSQL', '');
     define('HOST_MYSQL', 'localhost');
-    define('DB_NAME_MYSQL', 'is_posgrado');
+    define('DB_NAME_MYSQL', 'posgrado');
 
     // CONFIGURACION SQL SERVER -----  GERALD  ------
     // define('USER_NAME_SQL_SERVER', 'sa');
