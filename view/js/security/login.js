@@ -40,6 +40,14 @@ function login()
 function load_document()
 {
   btnAcceso.addEventListener("click", login);
+  txtUsuario.addEventListener("keydown", (event) => {
+    if (event.key === 'Enter')
+      btnAcceso.click();
+  })
+  txtPassword.addEventListener("keydown", (event) => {
+    if (event.key === 'Enter')
+      btnAcceso.click();
+  })
 }
 
 // EVENTOS

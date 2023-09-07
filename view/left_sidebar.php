@@ -19,7 +19,7 @@
  <div class="sidebar-menu">
      <div class="sidebar-header">
          <div class="logo" style="height: 100px; width:auto;">
-             <a href="../../view/process/misCargasHorarias.php" style="max-width: 316px;"><img src='../../assets/images/documentos/img_upg_CMYK.png' style="height: auto; width: 280px;"></a>
+             <a href="../../view/process/misCargasHorarias.php" style="max-width: 316px;"><img src='../../assets/images/documentos/img_upg_RGB_blanco.png' style="height: auto; width: 280px;"></a>
          </div>
      </div>
      <div class="main-menu">
