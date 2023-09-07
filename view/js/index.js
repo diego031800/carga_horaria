@@ -13,7 +13,7 @@ let btnGuardarCurso = document.getElementById('btnGuardarCurso');
 let btnAgregarCursoModal = document.getElementById('btnAgregarCursoModal');
 let txtIdCursoEditar = document.getElementById('cursoEditar');
 let btnEditarCarga = document.getElementById('btneditarCargaHoraria');
-
+let cboGrupoCurso = document.getElementById('cbo-grupo');
 
 // Docente modal
 
@@ -165,6 +165,9 @@ function get_docentes() {
 function abrirAgregarCurso() {
   $('#myModal-curso').fadeIn();
   txtIdCursoEditar.value = 0;
+  $("#btn-addGrupo").show();
+  $("#btn-addGrupo").attr('disabled', true);
+  $("#btn-deleteGrupo").hide();
 }
 
 function accionBtnGuardarCurso() {
@@ -182,17 +185,14 @@ function agregar() {
   let txtCursoCodigo = cur_option.data("codigo");
   let txtCursoCiclo = cur_option.data("ciclo");
   let txtCursoCreditos = cur_option.data("creditos");
-  let cursohoras = parseInt(txtHoras.value);
-  let fechas = txtFechas.value;
-  if (txtCurso == "" || cursohoras == 0 || fechas == "") {
+  if (txtCurso == "" || txtHoras.value == '') {
     toastr["error"]("No deben haber campos vacíos", "Agregar curso");
     return;
-  } 
-  if (cursoAgregado(id,0,0) || validarHoras(cursohoras)) {
+  }
+  let cursohoras = parseInt(txtHoras.value);
+  if (cursoAgregado(id, 0, 0) || validarHoras(cursohoras)) {
     return;
   }
-  let i = listacursos.length;
-  let fechasagregar = agregarFechas(fechas);
   listacursos.push(
     {
       chc_id: 0,
@@ -201,15 +201,75 @@ function agregar() {
       cur_codigo: txtCursoCodigo,
       cur_ciclo: txtCursoCiclo,
       cur_creditos: txtCursoCreditos,
-      horas: cursohoras,
-      fechas: fechasagregar,
-      grupos: [{ id: 1, nombre: 'Grupo A', docentes: [] }]
+      horas : cursohoras, 
+      grupos: [{ id: 1, nombre: 'Grupo A', docentes: [], fechas: []}]
     }
   );
   llenarTabla();
-  limpiarInputs();
-  $('#myModal-curso').fadeOut();
+  txtIdCursoEditar.value = id;
+  $("#btn-addGrupo").attr('disabled', false);
+  actualizarCboGrupoCurso(id);
   toastr["success"]("El curso se ha agregado con éxito", "Agregar curso");
+}
+
+function actualizarCboGrupoCurso(ind) {
+  $("#cbo-grupo").empty();
+  let opciones = listacursos.find(cursoI => cursoI.index == ind).grupos;
+  opciones.forEach(element => {
+    $("#cbo-grupo").append('<option value="' + element.id + '">' + element.nombre + '</option>')
+  });
+}
+
+function agregarGrupo() {
+  let id_curso_modal = txtIdCursoEditar.value;
+  listacursos.find(cursoI => cursoI.index == id_curso_modal).grupos.push(
+    { id: 2, nombre: 'Grupo B', docentes: [], fechas: [], horas: 0 }
+  );
+  actualizarCboGrupoCurso(id_curso_modal);
+  toastr["success"]("El grupo se ha agregado con éxito", "Agregar grupo");
+  $("#btn-addGrupo").hide();
+  $("#btn-deleteGrupo").show();
+  llenarTabla();
+}
+
+function eliminarGrupo() {
+  let id_curso_modal = txtIdCursoEditar.value;
+  listacursos.find(cursoI => cursoI.index == id_curso_modal).grupos.pop();
+  actualizarCboGrupoCurso(id_curso_modal);
+  $("#btn-addGrupo").show();
+  $("#btn-deleteGrupo").hide();
+  toastr["warning"]("El grupo se ha eliminado con éxito", "Eliminar grupo");
+  llenarTabla();
+}
+
+function guardarDatosGrupo() {
+  let id = parseInt(txtIdCursoEditar.value);
+  let fechas = txtFechas.value;
+  let indxC = listacursos.findIndex(item => item.index == id);
+  let id_grupo_docente = cboGrupoCurso.value;
+  let indxGrupoCurso = listacursos[indxC].grupos.findIndex(item => item.id == id_grupo_docente);
+  if (fechas == "") {
+    toastr["error"]("No deben haber campos vacíos", "Guardar datos grupo");
+    return;
+  }
+  let fechasagregar = agregarFechas(fechas);
+  listacursos[indxC].grupos[indxGrupoCurso].fechas = fechasagregar;
+  toastr["success"]("Datos del grupo guardados con éxito", "Guardar datos grupo");
+}
+
+function alternarDatosGrupo() {
+  let idGrupo = cboGrupoCurso.value;
+  let index = parseInt(txtIdCursoEditar.value);
+  let grupo = listacursos.find(it => it.index == index).grupos.find(it => it.id == idGrupo);
+  if(grupo.fechas.length != 0){
+    var fechasMostrar =grupo.fechas.map(function (fecha) {
+      var partes = fecha.fecha.split("/");
+      return new Date(partes[2], partes[1] - 1, partes[0]);
+    });
+    $(".datepicker3").datepicker('setDates', fechasMostrar);
+  }else{
+    $(".datepicker3").datepicker('clearDates');
+  }
 }
 
 function guardar() {
@@ -220,22 +280,21 @@ function guardar() {
   let txtCursoCodigo = cur_option.data("codigo");
   let txtCursoCiclo = cur_option.data("ciclo");
   let txtCursoCreditos = cur_option.data("creditos");
+  if (txtCurso == "" || txtHoras.value == '') {
+    toastr["error"]("No deben haber campos vacíos", "Agregar curso");
+    return;
+  }
   let cursohoras = parseInt(txtHoras.value);
-  let fechas = txtFechas.value;
-  let fechasNuevas = agregarFechas(fechas);
-  if (cursoAgregado(index,1,idNuevo) || validarHoras(cursohoras)) {
+  if (cursoAgregado(index, 1, idNuevo) || validarHoras(cursohoras) ) {
     return;
   }
   listacursos.find(cursoI => cursoI.index === index).curso = txtCurso;
   listacursos.find(cursoI => cursoI.index === index).cur_codigo = txtCursoCodigo;
   listacursos.find(cursoI => cursoI.index === index).cur_ciclo = txtCursoCiclo;
   listacursos.find(cursoI => cursoI.index === index).cur_creditos = txtCursoCreditos;
-  listacursos.find(cursoI => cursoI.index === index).horas = cursohoras;
-  listacursos.find(cursoI => cursoI.index === index).fechas = fechasNuevas;
   listacursos.find(cursoI => cursoI.index === index).index = idNuevo;
-  limpiarInputs();
+  listacursos.find(cursoI => cursoI.index === index).horas = cursohoras;
   llenarTabla();
-  $('#myModal-curso').fadeOut();
   toastr["success"]("El curso se ha guardado con éxito", "Agregar curso");
 }
 
@@ -243,14 +302,16 @@ function editar(indexb) {
   $('#myModal-curso').fadeIn();
   let curso = listacursos.find(cursoI => cursoI.index === indexb);
   cboCurso.value = curso.index;
+  if (curso.grupos[0].length != 0) {
+    var fechasMostrar = curso.grupos[0].fechas.map(function (fecha) {
+      var partes = fecha.fecha.split("/");
+      return new Date(partes[2], partes[1] - 1, partes[0]);
+    });
+    $(".datepicker3").datepicker('setDates', fechasMostrar);
+  }
   txtHoras.value = curso.horas;
-  var fechasMostrar = curso.fechas.map(function (fecha) {
-    var partes = fecha.fecha.split("/");
-    return new Date(partes[2], partes[1] - 1, partes[0]);
-  });
   $("#cboCurso").val(indexb).trigger("change");
   txtIdCursoEditar.value = indexb;
-  $(".datepicker3").datepicker('setDates', fechasMostrar);
 }
 
 function cursoAgregado(index, accion, indexnuevo) {
@@ -262,9 +323,9 @@ function cursoAgregado(index, accion, indexnuevo) {
       return false;
     }
   } else {
-    if(indexnuevo == index){
+    if (indexnuevo == index) {
       return false;
-    }else{
+    } else {
       if (listacursos.find(cursoI => cursoI.index === indexnuevo) != null && listacursos.find(cursoI => cursoI.index === indexnuevo) != undefined) {
         toastr["warning"]("Ya has agregador el curso", "Agregar curso");
         return true;
@@ -282,26 +343,6 @@ function validarHoras(int) {
   } else {
     return false;
   }
-}
-
-function agregarGrupo() {
-  let id_curso_modal = txtIdModal.value;
-  listacursos.find(cursoI => cursoI.index == id_curso_modal).grupos.push(
-    { id: 2, nombre: 'Grupo B', docentes: [] }
-  );
-  actualizarCboGrupoDoc(id_curso_modal);
-  toastr["success"]("El grupo se ha agregado con éxito", "Agregar grupo");
-  $("#btn-addGrupo").hide();
-  $("#btn-deleteGrupo").show();
-}
-
-function eliminarGrupo() {
-  let id_curso_modal = txtIdModal.value;
-  listacursos.find(cursoI => cursoI.index == id_curso_modal).grupos.pop();
-  actualizarCboGrupoDoc(id_curso_modal);
-  $("#btn-addGrupo").show();
-  $("#btn-deleteGrupo").hide();
-  toastr["warning"]("El grupo se ha eliminado con éxito", "Eliminar grupo");
 }
 
 function actualizarCboGrupoDoc(ind) {
@@ -520,13 +561,6 @@ function abrir_docente_modal(index) {
   $('#nombre-docente').on('change', function () {
     seleccionar_datos_docente();
   });
-  if (grupos.length == 1) {
-    $("#btn-addGrupo").show();
-    $("#btn-deleteGrupo").hide();
-  } else {
-    $("#btn-addGrupo").hide();
-    $("#btn-deleteGrupo").show();
-  }
   toastr['info']('Para ver y/o agregar los datos del docente suplente, active la opcion que dice: "ver suplente" ', "Asignar docente");
   actualizarCboGrupoDoc(index);
   actualizarDatosDocenteGrupo();
@@ -667,6 +701,7 @@ function load_document() {
   btnGuardar.addEventListener("click", saveCargaHoraria);
   cboDocGrupo.addEventListener("change", actualizarDatosDocenteGrupo);
   tglDocSuplente.addEventListener("change", alternarDatosDoc);
+  cboGrupoCurso.addEventListener("change",alternarDatosGrupo);
 }
 
 // EVENTOS
