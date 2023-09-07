@@ -185,11 +185,12 @@ function agregar() {
   let txtCursoCodigo = cur_option.data("codigo");
   let txtCursoCiclo = cur_option.data("ciclo");
   let txtCursoCreditos = cur_option.data("creditos");
-  if (txtCurso == "") {
+  if (txtCurso == "" || txtHoras.value == '') {
     toastr["error"]("No deben haber campos vacíos", "Agregar curso");
     return;
   }
-  if (cursoAgregado(id, 0, 0)) {
+  let cursohoras = parseInt(txtHoras.value);
+  if (cursoAgregado(id, 0, 0) || validarHoras(cursohoras)) {
     return;
   }
   listacursos.push(
@@ -200,7 +201,8 @@ function agregar() {
       cur_codigo: txtCursoCodigo,
       cur_ciclo: txtCursoCiclo,
       cur_creditos: txtCursoCreditos,
-      grupos: [{ id: 1, nombre: 'Grupo A', docentes: [], fechas: [], horas: 0 }]
+      horas : cursohoras, 
+      grupos: [{ id: 1, nombre: 'Grupo A', docentes: [], fechas: []}]
     }
   );
   llenarTabla();
@@ -242,36 +244,32 @@ function eliminarGrupo() {
 
 function guardarDatosGrupo() {
   let id = parseInt(txtIdCursoEditar.value);
-  let cursohoras = parseInt(txtHoras.value);
   let fechas = txtFechas.value;
   let indxC = listacursos.findIndex(item => item.index == id);
   let id_grupo_docente = cboGrupoCurso.value;
   let indxGrupoCurso = listacursos[indxC].grupos.findIndex(item => item.id == id_grupo_docente);
-  if (cursohoras == 0 || fechas == "") {
+  if (fechas == "") {
     toastr["error"]("No deben haber campos vacíos", "Guardar datos grupo");
-    return;
-  }
-  if (validarHoras(cursohoras)) {
     return;
   }
   let fechasagregar = agregarFechas(fechas);
   listacursos[indxC].grupos[indxGrupoCurso].fechas = fechasagregar;
-  listacursos[indxC].grupos[indxGrupoCurso].horas = cursohoras;
   toastr["success"]("Datos del grupo guardados con éxito", "Guardar datos grupo");
 }
 
 function alternarDatosGrupo() {
   let idGrupo = cboGrupoCurso.value;
   let index = parseInt(txtIdCursoEditar.value);
-  let grupo = listacursos.find(it => it.index == index).grupo.find(it => it.id == idGrupo);
+  let grupo = listacursos.find(it => it.index == index).grupos.find(it => it.id == idGrupo);
   if(grupo.fechas.length != 0){
     var fechasMostrar =grupo.fechas.map(function (fecha) {
       var partes = fecha.fecha.split("/");
       return new Date(partes[2], partes[1] - 1, partes[0]);
     });
+    $(".datepicker3").datepicker('setDates', fechasMostrar);
+  }else{
+    $(".datepicker3").datepicker('clearDates');
   }
-  txtHoras.value = grupo.horas;
-  $(".datepicker3").datepicker('setDates', fechasMostrar);
 }
 
 function guardar() {
@@ -282,11 +280,12 @@ function guardar() {
   let txtCursoCodigo = cur_option.data("codigo");
   let txtCursoCiclo = cur_option.data("ciclo");
   let txtCursoCreditos = cur_option.data("creditos");
-  if (txtCurso == "") {
+  if (txtCurso == "" || txtHoras.value == '') {
     toastr["error"]("No deben haber campos vacíos", "Agregar curso");
     return;
   }
-  if (cursoAgregado(index, 1, idNuevo)) {
+  let cursohoras = parseInt(txtHoras.value);
+  if (cursoAgregado(index, 1, idNuevo) || validarHoras(cursohoras) ) {
     return;
   }
   listacursos.find(cursoI => cursoI.index === index).curso = txtCurso;
@@ -294,6 +293,7 @@ function guardar() {
   listacursos.find(cursoI => cursoI.index === index).cur_ciclo = txtCursoCiclo;
   listacursos.find(cursoI => cursoI.index === index).cur_creditos = txtCursoCreditos;
   listacursos.find(cursoI => cursoI.index === index).index = idNuevo;
+  listacursos.find(cursoI => cursoI.index === index).horas = cursohoras;
   llenarTabla();
   toastr["success"]("El curso se ha guardado con éxito", "Agregar curso");
 }
@@ -309,7 +309,7 @@ function editar(indexb) {
     });
     $(".datepicker3").datepicker('setDates', fechasMostrar);
   }
-  txtHoras.value = curso.grupos[0].horas;
+  txtHoras.value = curso.horas;
   $("#cboCurso").val(indexb).trigger("change");
   txtIdCursoEditar.value = indexb;
 }

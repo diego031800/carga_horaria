@@ -266,11 +266,14 @@ if (!isset($_SESSION['login'])) {
                                 <div class="row">
                                     <div class="col-lg-9 col-9">
                                         <label for="" class="form-label">Curso</label><br>
-                                    </div>
-                                    <div class="col-lg-9 col-9">
                                         <select name="cboCurso" id="cboCurso" class="form-select" disabled>
                                             <option value="SD">Antes selecciona un ciclo ...</option>
                                         </select>
+                                    </div>
+                                    <div class="col-lg-3 col-6 mb-3">
+                                        <label for="" class="form-label">Horas</label>
+                                        <input type="number" class="form-control" name="txtHoras" id="txtHoras"
+                                            required>
                                     </div>
                                     <div class="col-lg-3 col-3">
                                         <button class="btn btn-success" id="btnAgregarCursoModal" style="height: 90%"
@@ -308,11 +311,6 @@ if (!isset($_SESSION['login'])) {
                                                 <i class="glyphicon glyphicon-calendar"></i>
                                             </span>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-2 col-6 mb-3">
-                                        <label for="" class="form-label">Horas</label>
-                                        <input type="number" class="form-control" name="txtHoras" id="txtHoras"
-                                            required>
                                     </div>
                                 </div>
                             </div>
