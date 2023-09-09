@@ -35,6 +35,8 @@ let btnCancelar = document.getElementById('btnCancelar');
 // VARIABLES
 
 let cgh_id = 0;
+let chu_id = 0;
+let chp_id = 0;
 let cgh_codigo = '';
 
 var listacursos = [];
@@ -636,9 +638,11 @@ function saveCargaHoraria() {
   let p_sem_id = cboSemestre.value;
   let p_sem_codigo = sem_option.data("codigo");
   let p_sem_descripcion = sem_option.text();
+  let p_chu_id = chu_id;
   let sec_option = $('#cboUnidad option:selected');
   let p_sec_id = cboUnidad.value;
   let p_sec_descripcion = sec_option.text();
+  let p_chp_id = chp_id;
   let prg_option = $('#cboPrograma option:selected');
   let p_prg_id = cboPrograma.value;
   let p_prg_mencion = prg_option.text();
@@ -657,8 +661,10 @@ function saveCargaHoraria() {
       "&p_sem_id=" + p_sem_id +
       "&p_sem_codigo=" + p_sem_codigo +
       "&p_sem_descripcion=" + p_sem_descripcion +
+      "&p_chu_id=" + p_chu_id +
       "&p_sec_id=" + p_sec_id +
       "&p_sec_descripcion=" + p_sec_descripcion +
+      "&p_chp_id=" + p_chp_id +
       "&p_prg_id=" + p_prg_id +
       "&p_prg_mencion=" + p_prg_mencion +
       "&p_cgh_ciclo=" + p_cgh_ciclo +

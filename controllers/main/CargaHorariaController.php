@@ -16,8 +16,10 @@
   $parametros['p_sem_id'] = '';
   $parametros['p_sem_codigo'] = '';
   $parametros['p_sem_descripcion'] = '';
+  $parametros['p_chu_id'] = '';
   $parametros['p_sec_id'] = '';
   $parametros['p_sec_descripcion'] = '';
+  $parametros['p_chp_id'] = '';
   $parametros['p_prg_id'] = '';
   $parametros['p_prg_mencion'] = '';
   $parametros['p_cgh_ciclo'] = '';
@@ -66,6 +68,10 @@
   {
     $parametros['p_sem_descripcion'] = $_POST['p_sem_descripcion'];
   }
+  if (isset($_POST['p_chu_id'])) 
+  {
+    $parametros['p_chu_id'] = $_POST['p_chu_id'];
+  }
   if (isset($_POST['p_sec_id'])) 
   {
     $parametros['p_sec_id'] = $_POST['p_sec_id'];
@@ -73,6 +79,10 @@
   if (isset($_POST['p_sec_descripcion'])) 
   {
     $parametros['p_sec_descripcion'] = $_POST['p_sec_descripcion'];
+  }
+  if (isset($_POST['p_chp_id'])) 
+  {
+    $parametros['p_chp_id'] = $_POST['p_chp_id'];
   }
   if (isset($_POST['p_prg_id'])) 
   {
