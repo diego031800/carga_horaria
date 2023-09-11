@@ -207,7 +207,7 @@ function agregar() {
       cur_tipo: ("0000" + txtCursoTipo).slice(-4),
       cur_calidad: ("0000" + txtCursoCalidad).slice(-4),
       horas : cursohoras, 
-      grupos: [{ id: 1, nombre: 'Grupo A', docentes: [], fechas: []}]
+      grupos: [{ ccg_id: 0, id: 1, nombre: 'Grupo A', docentes: [], fechas: []}]
     }
   );
   llenarTabla();
@@ -227,7 +227,7 @@ function actualizarCboGrupoCurso(ind) {
 function agregarGrupo() {
   let id_curso_modal = txtIdCursoGrupo.value;
   listacursos.find(cursoI => cursoI.index == id_curso_modal).grupos.push(
-    { id: 2, nombre: 'Grupo B', docentes: [], fechas: [], horas: 0 }
+    { ccg_id: 0, id: 2, nombre: 'Grupo B', docentes: [], fechas: [], horas: 0 }
   );
   actualizarCboGrupoCurso(id_curso_modal);
   toastr["success"]("El grupo se ha agregado con éxito", "Agregar grupo");
@@ -284,6 +284,8 @@ function guardar() {
   let txtCursoCodigo = cur_option.data("codigo");
   let txtCursoCiclo = cur_option.data("ciclo");
   let txtCursoCreditos = cur_option.data("creditos");
+  let txtCursoTipo = cur_option.data("tipo");
+  let txtCursoCalidad = cur_option.data("calidad");
   if (txtCurso == "" || txtHoras.value == '') {
     toastr["error"]("No deben haber campos vacíos", "Agregar curso");
     return;
@@ -296,6 +298,8 @@ function guardar() {
   listacursos.find(cursoI => cursoI.index === index).cur_codigo = txtCursoCodigo;
   listacursos.find(cursoI => cursoI.index === index).cur_ciclo = txtCursoCiclo;
   listacursos.find(cursoI => cursoI.index === index).cur_creditos = txtCursoCreditos;
+  listacursos.find(cursoI => cursoI.index === index).cur_tipo = ("0000" + txtCursoTipo).slice(-4);
+  listacursos.find(cursoI => cursoI.index === index).cur_calidad = ("0000" + txtCursoCalidad).slice(-4);
   listacursos.find(cursoI => cursoI.index === index).index = idNuevo;
   listacursos.find(cursoI => cursoI.index === index).horas = cursohoras;
   llenarTabla();

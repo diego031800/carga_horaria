@@ -168,26 +168,36 @@
                         $respCargaHorariaCursos = $this->saveCargaHorariaCurso($cgc_id, $curso);
                         if ($respCargaHorariaCursos['respuesta'] == 1) {
                             $chc_id = $respCargaHorariaCursos['chc_id'];
-                            
-                            /* GUARDAR FECHAS POR CURSO */
-                            $fechas = $curso->fechas;
-                            foreach ($fechas as $fecha) {
-                                $respCargaHorariaCursosFechas = $this->saveCargaHorariaCursosFecha($chc_id, $fecha);
-                                if ($respCargaHorariaCursosFechas['respuesta'] != 1) {
-                                    $this->con->rollback_mysql();
-                                    return json_encode(['respuesta' => 0, 'mensaje' => $respCargaHorariaCursosFechas['mensaje']]);
+
+                            /* GUARDAR GRUPOS POR CURSO */
+                            $grupos = $curso->grupos;
+                            foreach ($grupos as $grupo) {
+                                $respCursoGrupo = $this->saveGrupoByCurso($chc_id, $grupo);
+                                if ($respCursoGrupo['respuesta'] == 1) {
+                                    $ccg_id = $respCursoGrupo['ccg_id'];
+
+                                    /* GUARDAR FECHAS POR CURSO */
+                                    $fechas = $grupo->fechas;
+                                    foreach ($fechas as $fecha) {
+                                        $respFechaByGrupo = $this->saveCargaHorariaCursosFecha($ccg_id, $fecha);
+                                        if ($respFechaByGrupo['respuesta'] != 1) {
+                                            $this->con->rollback_mysql();
+                                            return json_encode(['respuesta' => 0, 'mensaje' => $respFechaByGrupo['mensaje']]);
+                                        }
+                                    }
+    
+                                    /* GUARDAR DOCENTES POR CURSO */
+                                    $docentes = $grupo->docentes;
+                                    foreach ($docentes as $docente) {
+                                        $respDocenteByGrupo = $this->saveCargaHorariaCursosDocente($ccg_id, $docente);
+                                        if ($respDocenteByGrupo['respuesta'] != 1) {
+                                            $this->con->rollback_mysql();
+                                            return json_encode(['respuesta' => 0, 'mensaje' => $respDocenteByGrupo['mensaje']]);
+                                        }
+                                    }
                                 }
                             }
 
-                            /* GUARDAR DOCENTES POR CURSO */
-                            $docentes = $curso->docentes;
-                            foreach ($docentes as $docente) {
-                                $respCargaHorariaCursosDocentes = $this->saveCargaHorariaCursosDocente($chc_id, $docente);
-                                if ($respCargaHorariaCursosDocentes['respuesta'] != 1) {
-                                    $this->con->rollback_mysql();
-                                    return json_encode(['respuesta' => 0, 'mensaje' => $respCargaHorariaCursosDocentes['mensaje']]);
-                                }
-                            }
                         } else {
                             $this->con->rollback_mysql();
                             return json_encode(['respuesta' => 0, 'mensaje' => $respCargaHorariaCursos['mensaje']]);
@@ -210,7 +220,7 @@
         private function saveCargaHoraria() 
         {
             try {
-                $sql = "CALL sp_saveCargaHoraria(";
+                $sql = "CALL sp_SaveCargaHoraria(";
                 $sql .= "'".$this->parametros['p_cgh_id']."', "; // p_cgh_id
                 $sql .= "'".$this->parametros['p_cgh_codigo']."', "; // p_cgh_codigo
                 $sql .= "'".$this->parametros['p_sem_id']."', "; // p_sem_id
@@ -248,17 +258,20 @@
         {
             try {
                 $this->con->close_open_connection_mysql();
-                $sql = "CALL sp_saveCargaHorariaCursos(";
+                $sql = "CALL sp_SaveCargaHorariaCurso(";
                 $sql .= "'".$curso->chc_id."', "; // p_chc_id
                 $sql .= "'".$cgc_id."', "; // p_cgc_id
                 $sql .= "'".$curso->index."', "; // p_cur_id
                 $sql .= "'".$curso->cur_codigo."', "; // p_cur_codigo
                 $sql .= "'".$curso->curso."', "; // p_cur_descripcion
+                $sql .= "'".$curso->cur_tipo."', "; // p_cur_ciclo
+                $sql .= "'".$curso->cur_calidad."', "; // p_cur_ciclo
                 $sql .= "'".$curso->cur_ciclo."', "; // p_cur_ciclo
                 $sql .= "'".$curso->cur_creditos."', "; // p_cur_creditos
                 $sql .= "'".$curso->horas."', "; // p_chc_horas
                 $sql .= "'0001', "; // p_chc_estado
-                $sql .= "'".$_SESSION['usu_id']."');"; // p_usuario
+                $sql .= "'".$_SESSION['usu_id']."', "; // p_usuario
+                $sql .= "'".$_SESSION['usu_ip']."');"; // p_dispositivo
                 // return $sql;
                 $datos = $this->con->return_query_mysql($sql);
                 $error = $this->con->error_mysql();
@@ -272,6 +285,38 @@
                     }
                 } else {
                     return ['respuesta' => 0, 'mensaje' => 'Ocurrio un error al guardar un curso '.$error];
+                }
+            } catch (Exception $ex) {
+                die("Error: " . $this->con->error_mysql(). $ex);
+            }
+        }
+
+        private function saveGrupoByCurso($chc_id, $grupo)
+        {
+            try {
+                $this->con->close_open_connection_mysql();
+                $sql = "CALL sp_SaveGrupoByCurso(";
+                $sql .= "'".$grupo->ccg_id."', "; // p_ccg_id
+                $sql .= "'".$chc_id."', "; // p_chc_id
+                $sql .= "'".$this->parametros['sem_id']."', "; // p_sem_id
+                $sql .= "'".$this->parametros['prg_id']."', "; // p_prg_id
+                $sql .= "'".$grupo->id."', "; // p_ccg_grupo
+                $sql .= "'0001', "; // p_ccg_estado
+                $sql .= "'".$_SESSION['usu_id']."', "; // p_usuario
+                $sql .= "'".$_SESSION['usu_ip']."');"; // p_dispositivo
+                // return $sql;
+                $datos = $this->con->return_query_mysql($sql);
+                $error = $this->con->error_mysql();
+                if (empty($error)) {
+                    while ($row = mysqli_fetch_array($datos)) {
+                        if ($row['respuesta'] == 1 && !empty($row['chf_id'])) {
+                            return ['respuesta' => $row['respuesta'], 'mensaje' => 'El grupo se guardo exitosamente.','chf_id' => $row['chf_id']];
+                        } else {
+                            return ['respuesta' => 0, 'mensaje' => 'No se pudo guardar el grupo.'];
+                        }
+                    }
+                } else {
+                    return ['respuesta' => 0, 'mensaje' => 'Ocurrio un error al guardar una fecha '.$error];
                 }
             } catch (Exception $ex) {
                 die("Error: " . $this->con->error_mysql(). $ex);
