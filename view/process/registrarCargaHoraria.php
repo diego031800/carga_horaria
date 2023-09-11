@@ -170,12 +170,11 @@ if (!isset($_SESSION['login'])) {
                 </div>
                 <!-- MODALES -->
                 <!-- MODAL DOCENTE -->
-                <div class="modal" id="myModal">
+                <div class="modal" id="myModal-docente">
                     <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title">Registrar docente</h5>
-                                <span class="close-btn" id="closeModal">&times;</span>
                             </div>
                             <div class="modal-body">
                                 <input type="text" hidden id="id-curso-docente">
@@ -248,7 +247,7 @@ if (!isset($_SESSION['login'])) {
                                 <button class="btn btn-success" onClick="guardar_docente();">
                                     Guardar
                                 </button>
-                                <button class="btn btn-danger" onClick="$('#myModal').fadeOut();">
+                                <button class="btn btn-danger" onClick="$('#myModal-docente').fadeOut();">
                                     Cerrar
                                 </button>
                             </div>
