@@ -112,7 +112,8 @@ if (!isset($_SESSION['login'])) {
                                     <th scope="col">Acciones</th>
                                     <th scope="col">Curso</th>
                                     <th scope="col">Número de Grupos:</th>
-                                    <th scope="col">Asignar docentes:</th>
+                                    <th scope="col">Gestionar grupos:</th>
+                                    <th scope="col">Asignar docentes</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -275,16 +276,30 @@ if (!isset($_SESSION['login'])) {
                                         <input type="number" class="form-control" name="txtHoras" id="txtHoras"
                                             required>
                                     </div>
-                                    <div class="col-lg-3 col-3">
-                                        <button class="btn btn-success" id="btnAgregarCursoModal" style="height: 90%"
-                                            onClick="accionBtnGuardarCurso();">
-                                            Guardar
-                                        </button>
-                                    </div>
-                                    <div class="col-12">
-                                        <br>
-                                        <hr>
-                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-success" id="btnGuardarCurso"
+                                    onClick="accionBtnGuardarCurso();">
+                                    Guardar
+                                </button>
+                                <button class="btn btn-danger" onClick="$('#myModal-curso').fadeOut();">
+                                    Cerrar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- MODAL GRUPO -->
+                <div class="modal" id="myModal-grupo">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Registrar grupos</h5>
+                            </div>
+                            <div class="modal-body">
+                                <input type="number" id="cursoIdModalGrupo" hidden>
+                                <div class="row">
                                     <div class="col-12 mb-12 row">
                                         <div class="col-12 mb-12">
                                             <label for="" class="form-label">Grupo:</label><br />
@@ -319,7 +334,7 @@ if (!isset($_SESSION['login'])) {
                                     onClick="guardarDatosGrupo();">
                                     Guardar
                                 </button>
-                                <button class="btn btn-danger" onClick="$('#myModal-curso').fadeOut();">
+                                <button class="btn btn-danger" onClick="$('#myModal-grupo').fadeOut();">
                                     Cerrar
                                 </button>
                             </div>

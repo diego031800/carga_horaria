@@ -8,12 +8,13 @@ let cboCiclo = document.getElementById('cboCiclo');
 let cboCurso = document.getElementById('cboCurso');
 let txtHoras = document.getElementById('txtHoras');
 let txtFechas = document.getElementById('newTratFechaIni');
-let btnAgregarCurso = document.getElementById('btnAgregarCurso');
 let btnGuardarCurso = document.getElementById('btnGuardarCurso');
-let btnAgregarCursoModal = document.getElementById('btnAgregarCursoModal');
 let txtIdCursoEditar = document.getElementById('cursoEditar');
 let btnEditarCarga = document.getElementById('btneditarCargaHoraria');
 let cboGrupoCurso = document.getElementById('cbo-grupo');
+
+// Grupo
+let txtIdCursoGrupo= document.getElementById('cursoIdModalGrupo');
 
 // Docente modal
 
@@ -165,11 +166,9 @@ function get_docentes() {
 // OPERACIONES
 
 function abrirAgregarCurso() {
+  limpiarInputs();
   $('#myModal-curso').fadeIn();
   txtIdCursoEditar.value = 0;
-  $("#btn-addGrupo").show();
-  $("#btn-addGrupo").attr('disabled', true);
-  $("#btn-deleteGrupo").hide();
 }
 
 function accionBtnGuardarCurso() {
@@ -212,9 +211,8 @@ function agregar() {
     }
   );
   llenarTabla();
-  txtIdCursoEditar.value = id;
-  $("#btn-addGrupo").attr('disabled', false);
-  actualizarCboGrupoCurso(id);
+  limpiarInputs();
+  $('#myModal-curso').fadeOut();
   toastr["success"]("El curso se ha agregado con éxito", "Agregar curso");
 }
 
@@ -227,7 +225,7 @@ function actualizarCboGrupoCurso(ind) {
 }
 
 function agregarGrupo() {
-  let id_curso_modal = txtIdCursoEditar.value;
+  let id_curso_modal = txtIdCursoGrupo.value;
   listacursos.find(cursoI => cursoI.index == id_curso_modal).grupos.push(
     { id: 2, nombre: 'Grupo B', docentes: [], fechas: [], horas: 0 }
   );
@@ -239,7 +237,7 @@ function agregarGrupo() {
 }
 
 function eliminarGrupo() {
-  let id_curso_modal = txtIdCursoEditar.value;
+  let id_curso_modal = txtIdCursoGrupo.value;
   listacursos.find(cursoI => cursoI.index == id_curso_modal).grupos.pop();
   actualizarCboGrupoCurso(id_curso_modal);
   $("#btn-addGrupo").show();
@@ -249,7 +247,7 @@ function eliminarGrupo() {
 }
 
 function guardarDatosGrupo() {
-  let id = parseInt(txtIdCursoEditar.value);
+  let id = parseInt(txtIdCursoGrupo.value);
   let fechas = txtFechas.value;
   let indxC = listacursos.findIndex(item => item.index == id);
   let id_grupo_docente = cboGrupoCurso.value;
@@ -265,7 +263,7 @@ function guardarDatosGrupo() {
 
 function alternarDatosGrupo() {
   let idGrupo = cboGrupoCurso.value;
-  let index = parseInt(txtIdCursoEditar.value);
+  let index = parseInt(txtIdCursoGrupo.value);
   let grupo = listacursos.find(it => it.index == index).grupos.find(it => it.id == idGrupo);
   if(grupo.fechas.length != 0){
     var fechasMostrar =grupo.fechas.map(function (fecha) {
@@ -301,20 +299,29 @@ function guardar() {
   listacursos.find(cursoI => cursoI.index === index).index = idNuevo;
   listacursos.find(cursoI => cursoI.index === index).horas = cursohoras;
   llenarTabla();
+  limpiarInputs();
+  $('#myModal-curso').fadeOut();
   toastr["success"]("El curso se ha guardado con éxito", "Agregar curso");
+}
+
+function abrir_grupo_modal(idCurso){
+  $('#myModal-grupo').fadeIn();
+  let grupos = listacursos.find(cursoI => cursoI.index === idCurso).grupos;
+  if (grupos.length == 1) {
+    $("#btn-addGrupo").show();
+    $("#btn-deleteGrupo").hide();
+  }else{
+    $("#btn-addGrupo").hide();
+    $("#btn-deleteGrupo").show();
+  }
+  txtIdCursoGrupo.value = idCurso;
+  actualizarCboGrupoCurso(idCurso);
+  alternarDatosGrupo();
 }
 
 function editar(indexb) {
   $('#myModal-curso').fadeIn();
   let curso = listacursos.find(cursoI => cursoI.index === indexb);
-  cboCurso.value = curso.index;
-  if (curso.grupos[0].length != 0) {
-    var fechasMostrar = curso.grupos[0].fechas.map(function (fecha) {
-      var partes = fecha.fecha.split("/");
-      return new Date(partes[2], partes[1] - 1, partes[0]);
-    });
-    $(".datepicker3").datepicker('setDates', fechasMostrar);
-  }
   txtHoras.value = curso.horas;
   $("#cboCurso").val(indexb).trigger("change");
   txtIdCursoEditar.value = indexb;
@@ -405,8 +412,10 @@ function llenarTabla() {
       ')";>Eliminar</button></td><td>' +
       elementC.curso +
       '</td><td>' +
-      +stringG +
-      '</td><td><button class="btn btn-danger" onClick="abrir_docente_modal(' +
+      stringG +
+      '</td><td><button class="btn btn-warning" onClick="abrir_grupo_modal('+
+      elementC.index+
+      ');">Ver</button></td><td><button class="btn btn-danger" onClick="abrir_docente_modal(' +
       elementC.index +
       ');">Ver</button></td></tr>';
     $("#cursosTabla tbody").append(fila);
