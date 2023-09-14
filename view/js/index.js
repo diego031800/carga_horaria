@@ -14,7 +14,7 @@ let btnEditarCarga = document.getElementById('btneditarCargaHoraria');
 let cboGrupoCurso = document.getElementById('cbo-grupo');
 
 // Grupo
-let txtIdCursoGrupo= document.getElementById('cursoIdModalGrupo');
+let txtIdCursoGrupo = document.getElementById('cursoIdModalGrupo');
 
 // Docente modal
 
@@ -240,6 +240,7 @@ function eliminarGrupo() {
   let id_curso_modal = txtIdCursoGrupo.value;
   listacursos.find(cursoI => cursoI.index == id_curso_modal).grupos.pop();
   actualizarCboGrupoCurso(id_curso_modal);
+  alternarDatosGrupo();
   $("#btn-addGrupo").show();
   $("#btn-deleteGrupo").hide();
   toastr["warning"]("El grupo se ha eliminado con éxito", "Eliminar grupo");
@@ -265,13 +266,13 @@ function alternarDatosGrupo() {
   let idGrupo = cboGrupoCurso.value;
   let index = parseInt(txtIdCursoGrupo.value);
   let grupo = listacursos.find(it => it.index == index).grupos.find(it => it.id == idGrupo);
-  if(grupo.fechas.length != 0){
-    var fechasMostrar =grupo.fechas.map(function (fecha) {
+  if (grupo.fechas.length != 0) {
+    var fechasMostrar = grupo.fechas.map(function (fecha) {
       var partes = fecha.fecha.split("/");
       return new Date(partes[2], partes[1] - 1, partes[0]);
     });
     $(".datepicker3").datepicker('setDates', fechasMostrar);
-  }else{
+  } else {
     $(".datepicker3").datepicker('clearDates');
   }
 }
@@ -291,7 +292,7 @@ function guardar() {
     return;
   }
   let cursohoras = parseInt(txtHoras.value);
-  if (cursoAgregado(index, 1, idNuevo) || validarHoras(cursohoras) ) {
+  if (cursoAgregado(index, 1, idNuevo) || validarHoras(cursohoras)) {
     return;
   }
   listacursos.find(cursoI => cursoI.index === index).curso = txtCurso;
@@ -308,13 +309,13 @@ function guardar() {
   toastr["success"]("El curso se ha guardado con éxito", "Agregar curso");
 }
 
-function abrir_grupo_modal(idCurso){
+function abrir_grupo_modal(idCurso) {
   $('#myModal-grupo').fadeIn();
   let grupos = listacursos.find(cursoI => cursoI.index === idCurso).grupos;
   if (grupos.length == 1) {
     $("#btn-addGrupo").show();
     $("#btn-deleteGrupo").hide();
-  }else{
+  } else {
     $("#btn-addGrupo").hide();
     $("#btn-deleteGrupo").show();
   }
@@ -417,8 +418,8 @@ function llenarTabla() {
       elementC.curso +
       '</td><td>' +
       stringG +
-      '</td><td><button class="btn btn-warning" onClick="abrir_grupo_modal('+
-      elementC.index+
+      '</td><td><button class="btn btn-warning" onClick="abrir_grupo_modal(' +
+      elementC.index +
       ');">Ver</button></td><td><button class="btn btn-danger" onClick="abrir_docente_modal(' +
       elementC.index +
       ');">Ver</button></td></tr>';
@@ -559,7 +560,7 @@ function limpiarInputsModal() {
 function abrir_docente_modal(index) {
   let docente = listacursos.find(item => item.index == index).grupos[0].docentes[0];
   let grupos = listacursos.find(item => item.index == index).grupos;
-  $('#myModal').fadeIn();
+  $('#myModal-docente').fadeIn();
   if (docente != null && docente !== undefined) {
     $("#nombre-docente").val(docente.doc_id);
     $("#condicion-docente").val(docente.condicion);
@@ -574,7 +575,7 @@ function abrir_docente_modal(index) {
   $("#id-curso-docente").val(index);
   $('#nombre-docente').select2({
     dropdownCssClass: "limitar-opciones",
-    dropdownParent: $("#myModal"),
+    dropdownParent: $("#myModal-docente"),
     placeholder: 'Selecciona un docente ...'
   });
   $('#nombre-docente').on('change', function () {
@@ -595,6 +596,8 @@ function cancelarEditarCurso() {
   $("#cursoEditar").val("");
 }
 
+
+/* Habilitar o deshabilitar los campos de la unidad */
 function camposUnidad(bol) {
   cboSemestre.disabled = bol;
   cboUnidad.disabled = bol;
@@ -602,6 +605,8 @@ function camposUnidad(bol) {
   cboCiclo.disabled = bol;
 }
 
+
+/* Habilitar o deshabilitar los campos de los cursos */
 function camposCursos(bol) {
   cboCurso.disabled = bol;
   btnAgregarCurso.disabled = bol;
@@ -612,19 +617,18 @@ function editarCarga() {
   let unidad = cboUnidad.value;
   let programa = cboPrograma.value;
   let ciclo = cboCiclo.value;
-  btnGuardar.disabled = false;
-  btnCerrar.disabled = false;
-  btnCancelar.disabled = false;
-  camposCursos(false, 2);
-  camposUnidad(true);
   console.log(sem + " _ " + unidad + " _ " + programa + " _ " + ciclo);
   if (sem != "" && unidad != "" && programa != "" && ciclo != "") {
-    console.log("Editar" + unidad);
+    btnGuardar.disabled = false;
+    btnCerrar.disabled = false;
+    btnCancelar.disabled = false;
+    camposCursos(false, 2);
+    camposUnidad(true);
   } else {
-    console.log("No pueden haber campos vacios");
+    toastr['error']("No pueden haber campos vacíos", "Confirmar Editar Carga");
   }
 }
-
+/*  */
 function cancelarEditarCarga() {
   listacursos = []
   camposCursos(true, 1);
@@ -709,6 +713,22 @@ function saveCargaHoraria() {
   });
 }
 
+function validarCursos() {
+  listacursos.forEach(element => {
+    element.grupos.forEach(item => {
+      if (item.docentes.length == 0) {
+        toastr['error']("Debe asignar al menos un docente para el grupo: "+item.nombre+", del curso: "+element.curso, "Guardar carga horaria");
+        return true;
+      }
+      if (item.fechas.length == 0) {
+        toastr['error']("Debe registrar las fechas del grupo: "+item.nombre+", del curso: "+element.curso, "Guardar carga horaria");
+        return true;
+      }
+      return false;
+    });
+  });
+}
+
 /* FUNCION AL CARGAR EL DOCUMENTO */
 function load_document() {
   get_cbo_unidades();
@@ -719,6 +739,7 @@ function load_document() {
   btnGuardar.disabled = true;
   btnCerrar.disabled = true;
   btnCancelar.disabled = true;
+  //cboCiclo.disabled = true;
   /* CAMPOS GENERALES */
   cboSemestre.addEventListener("change", get_cbo_unidades);
   cboSemestre.addEventListener("change", get_cbo_programas);
@@ -728,26 +749,24 @@ function load_document() {
   btnGuardar.addEventListener("click", saveCargaHoraria);
   cboDocGrupo.addEventListener("change", actualizarDatosDocenteGrupo);
   tglDocSuplente.addEventListener("change", alternarDatosDoc);
-  cboGrupoCurso.addEventListener("change",alternarDatosGrupo);
+  cboGrupoCurso.addEventListener("change", alternarDatosGrupo);
 }
 
 // EVENTOS
 window.addEventListener("load", load_document);
 
 // MODAL JS
-document.getElementById('closeModal').addEventListener('click', function () {
-  $('#myModal').fadeOut();
-  limpiarInputsModal();
-});
 
 window.onclick = function (event) {
-  if (event.target === document.getElementById('myModal')) {
-    $('#myModal').fadeOut();
+  if (event.target === document.getElementById('myModal-docente')) {
+    console.log("se activó este envento");
+    $('#myModal-docente').fadeOut();
     limpiarInputsModal();
   }
-}
-window.onclick = function (event) {
   if (event.target === document.getElementById('myModal-curso')) {
     $('#myModal-curso').fadeOut();
+  }
+  if (event.target === document.getElementById('myModal-grupo')) {
+    $('#myModal-grupo').fadeOut();
   }
 }
