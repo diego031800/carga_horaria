@@ -222,7 +222,7 @@ if (!isset($_SESSION['login'])) {
                                         <select name="grado-docente" class="form-select" id="grado-docente">
                                             <option value="dr">Doctor</option>
                                             <option value="dra">Doctora</option>
-                                            <option value="ms">Mister</option>
+                                            <option value="ms">Magister</option>
                                         </select>
                                     </div>
                                     <div class="col-6 mb-3">
