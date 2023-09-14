@@ -295,14 +295,15 @@ function guardar() {
   if (cursoAgregado(index, 1, idNuevo) || validarHoras(cursohoras)) {
     return;
   }
-  listacursos.find(cursoI => cursoI.index === index).curso = txtCurso;
-  listacursos.find(cursoI => cursoI.index === index).cur_codigo = txtCursoCodigo;
-  listacursos.find(cursoI => cursoI.index === index).cur_ciclo = txtCursoCiclo;
-  listacursos.find(cursoI => cursoI.index === index).cur_creditos = txtCursoCreditos;
-  listacursos.find(cursoI => cursoI.index === index).cur_tipo = ("0000" + txtCursoTipo).slice(-4);
-  listacursos.find(cursoI => cursoI.index === index).cur_calidad = ("0000" + txtCursoCalidad).slice(-4);
-  listacursos.find(cursoI => cursoI.index === index).index = idNuevo;
-  listacursos.find(cursoI => cursoI.index === index).horas = cursohoras;
+  let idArray = listacursos.findIndex(cursoI => cursoI.index === index);
+  listacursos[idArray].curso = txtCurso;
+  listacursos[idArray].cur_codigo = txtCursoCodigo;
+  listacursos[idArray].cur_ciclo = txtCursoCiclo;
+  listacursos[idArray].cur_creditos = txtCursoCreditos;
+  listacursos[idArray].cur_tipo = ("0000" + txtCursoTipo).slice(-4);
+  listacursos[idArray].cur_calidad = ("0000" + txtCursoCalidad).slice(-4);
+  listacursos[idArray].index = idNuevo;
+  listacursos[idArray].horas = cursohoras;
   llenarTabla();
   limpiarInputs();
   $('#myModal-curso').fadeOut();
