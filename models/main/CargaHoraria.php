@@ -179,7 +179,7 @@
                                     /* GUARDAR FECHAS POR CURSO */
                                     $fechas = $grupo->fechas;
                                     foreach ($fechas as $fecha) {
-                                        $respFechaByGrupo = $this->saveCargaHorariaCursosFecha($ccg_id, $fecha);
+                                        $respFechaByGrupo = $this->saveFechaByGrupo($ccg_id, $fecha);
                                         if ($respFechaByGrupo['respuesta'] != 1) {
                                             $this->con->rollback_mysql();
                                             return json_encode(['respuesta' => 0, 'mensaje' => $respFechaByGrupo['mensaje']]);
@@ -189,12 +189,15 @@
                                     /* GUARDAR DOCENTES POR CURSO */
                                     $docentes = $grupo->docentes;
                                     foreach ($docentes as $docente) {
-                                        $respDocenteByGrupo = $this->saveCargaHorariaCursosDocente($ccg_id, $docente);
+                                        $respDocenteByGrupo = $this->saveDocenteByGrupo($ccg_id, $docente);
                                         if ($respDocenteByGrupo['respuesta'] != 1) {
                                             $this->con->rollback_mysql();
                                             return json_encode(['respuesta' => 0, 'mensaje' => $respDocenteByGrupo['mensaje']]);
                                         }
                                     }
+                                } else {
+                                    $this->con->rollback_mysql();
+                                    return json_encode(['respuesta' => 0, 'mensaje' => $respCursoGrupo['mensaje']]);
                                 }
                             }
 
@@ -298,8 +301,8 @@
                 $sql = "CALL sp_SaveGrupoByCurso(";
                 $sql .= "'".$grupo->ccg_id."', "; // p_ccg_id
                 $sql .= "'".$chc_id."', "; // p_chc_id
-                $sql .= "'".$this->parametros['sem_id']."', "; // p_sem_id
-                $sql .= "'".$this->parametros['prg_id']."', "; // p_prg_id
+                $sql .= "'".$this->parametros['p_sem_id']."', "; // p_sem_id
+                $sql .= "'".$this->parametros['p_prg_id']."', "; // p_prg_id
                 $sql .= "'".$grupo->id."', "; // p_ccg_grupo
                 $sql .= "'0001', "; // p_ccg_estado
                 $sql .= "'".$_SESSION['usu_id']."', "; // p_usuario
@@ -309,8 +312,8 @@
                 $error = $this->con->error_mysql();
                 if (empty($error)) {
                     while ($row = mysqli_fetch_array($datos)) {
-                        if ($row['respuesta'] == 1 && !empty($row['chf_id'])) {
-                            return ['respuesta' => $row['respuesta'], 'mensaje' => 'El grupo se guardo exitosamente.','chf_id' => $row['chf_id']];
+                        if ($row['respuesta'] == 1 && !empty($row['ccg_id'])) {
+                            return ['respuesta' => $row['respuesta'], 'mensaje' => 'El grupo se guardo exitosamente.','ccg_id' => $row['ccg_id']];
                         } else {
                             return ['respuesta' => 0, 'mensaje' => 'No se pudo guardar el grupo.'];
                         }
@@ -323,28 +326,29 @@
             }
         }
 
-        private function saveCargaHorariaCursosFecha($chc_id, $fecha)
+        private function saveFechaByGrupo($ccg_id, $fecha)
         {
             try {
                 $this->con->close_open_connection_mysql();
-                $sql = "CALL sp_saveCargaHorariaFechas(";
-                $sql .= "'".$fecha->p_chf_id."', "; // p_chf_id
-                $sql .= "'".$chc_id."', "; // p_chc_id
-                $sql .= "'".date('Y-m-d', strtotime(str_replace('/', '-', $fecha->fecha)))."', "; // p_chf_fecha
-                $sql .= "NULL, "; // p_chf_hora_inicio
-                $sql .= "NULL, "; // p_chf_hora_fin
-                $sql .= "NULL, "; // p_chf_horas
-                $sql .= "'0001', "; // p_chf_estado
-                $sql .= "'".$_SESSION['usu_id']."');"; // p_usuario
+                $sql = "CALL sp_SaveFechaByGrupo(";
+                $sql .= "'".$fecha->cgf_id."', "; // p_cgf_id
+                $sql .= "'".$ccg_id."', "; // p_ccg_id
+                $sql .= "'".date('Y-m-d', strtotime(str_replace('/', '-', $fecha->fecha)))."', "; // p_cgf_fecha
+                $sql .= "NULL, "; // p_cgf_hora_inicio
+                $sql .= "NULL, "; // p_cgf_hora_fin
+                $sql .= "NULL, "; // p_cgf_horas
+                $sql .= "'0001', "; // p_cgf_estado
+                $sql .= "'".$_SESSION['usu_id']."', "; // p_usuario
+                $sql .= "'".$_SESSION['usu_ip']."');"; // p_dispositivo
                 // return $sql;
                 $datos = $this->con->return_query_mysql($sql);
                 $error = $this->con->error_mysql();
                 if (empty($error)) {
                     while ($row = mysqli_fetch_array($datos)) {
-                        if ($row['respuesta'] == 1 && !empty($row['chf_id'])) {
-                            return ['respuesta' => $row['respuesta'], 'mensaje' => 'La fecha se guardo exitosamente.','chf_id' => $row['chf_id']];
+                        if ($row['respuesta'] == 1 && !empty($row['cgf_id'])) {
+                            return ['respuesta' => $row['respuesta'], 'mensaje' => 'La fecha se guardo exitosamente.','cgf_id' => $row['cgf_id']];
                         } else {
-                            return ['respuesta' => 0, 'mensaje' => 'No se pudo guardar la fecha id:'.$fecha->id.' fecha: '.date('Y-m-d', strtotime(str_replace('/', '-', $fecha->fecha)))];
+                            return ['respuesta' => 0, 'mensaje' => 'No se pudo guardar la fecha:'.$fecha->fecha];
                         }
                     }
                 } else {
@@ -355,32 +359,36 @@
             }
         }
 
-        private function saveCargaHorariaCursosDocente($chc_id, $docente)
+        private function saveDocenteByGrupo($ccg_id, $docente)
         {
             try {
                 $this->con->close_open_connection_mysql();
-                $sql = "CALL sp_saveCargaHorariaDocentes(";
-                $sql .= "'".$docente->chd_id."', "; // p_chd_id
-                $sql .= "'".$chc_id."', "; // p_chc_id
-                $sql .= "".$docente->titular.", "; // p_chd_titular
-                $sql .= "'".$docente->condicion."', "; // p_chd_titular
+                $sql = "CALL sp_SaveDocenteByGrupo(";
+                $sql .= "'".$docente->cgd_id."', "; // p_cgd_id
+                $sql .= "'".$ccg_id."', "; // p_ccg_id
+                $sql .= "".$docente->titular.", "; // p_cgd_titular
+                $sql .= "NULL, "; // p_cgd_horas
+                $sql .= "NULL, "; // p_cgd_fecha_fin
+                $sql .= "NULL, "; // p_cgd_fecha_inicio
+                $sql .= "'".$docente->condicion."', "; // p_doc_condicion
                 $sql .= "'".$docente->doc_id."', "; // p_doc_id
                 $sql .= "'".$docente->dni."', "; // p_doc_codigo
                 $sql .= "'".$docente->codigo."', "; // p_doc_codigo
                 $sql .= "'".$docente->docente."', "; // p_doc_nombres
                 $sql .= "'".$docente->telefono."', "; // p_doc_celular
                 $sql .= "'".$docente->correo."', "; // p_doc_email
-                $sql .= "'0001', "; // p_chd_estado
-                $sql .= "'".$_SESSION['usu_id']."');"; // p_usuario
+                $sql .= "'0001', "; // p_cgd_estado
+                $sql .= "'".$_SESSION['usu_id']."', "; // p_usuario
+                $sql .= "'".$_SESSION['usu_ip']."');"; // p_dispositivo
                 // return $sql;
                 $datos = $this->con->return_query_mysql($sql);
                 $error = $this->con->error_mysql();
                 if (empty($error)) {
                     while ($row = mysqli_fetch_array($datos)) {
-                        if ($row['respuesta'] == 1 && !empty($row['chd_id'])) {
-                            return ['respuesta' => $row['respuesta'], 'mensaje' => 'Los datos del docente se guardaron exitosamente.', 'chd_id' => $row['chd_id']];
+                        if ($row['respuesta'] == 1 && !empty($row['cgd_id'])) {
+                            return ['respuesta' => $row['respuesta'], 'mensaje' => $row['mensaje'], 'cgd_id' => $row['cgd_id']];
                         } else {
-                            return ['respuesta' => 0, 'mensaje' => 'No se pudo guardar al docente id:'.$docente->doc_id.' docente: '.$docente->docente];
+                            return ['respuesta' => 0, 'mensaje' => 'No se pudo guardar al docente'.$docente->doc_id.' docente: '.$docente->docente];
                         }
                     }
                 } else {

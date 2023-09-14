@@ -378,7 +378,7 @@ function agregarFechas(fechas) {
     i += 1;
     fechasdevolver.push(
       {
-        p_chf_id: 0,
+        cgf_id: 0,
         index: i,
         fecha: element
       }
@@ -470,7 +470,7 @@ function guardar_docente() {
     listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].telefono = telefono_modal;
   } else {
     listacursos[indxCurso].grupos[indxGrupoCurso].docentes.push({
-      chd_id: 0,
+      cgd_id: 0,
       titular: pos,
       doc_id: nombre_docente_modal,
       docente: txtDocente,
@@ -689,20 +689,22 @@ function saveCargaHoraria() {
       btnCancelar.disabled = true;
     },
     success: function (data) {
-      btnGuardar.disabled = false;
-      btnCerrar.disabled = false;
-      btnCancelar.disabled = false;
       objeto = JSON.parse(data);
       if (objeto.respuesta == 1) {
-        alert(objeto.mensaje);
-        location.href = 'verCargaHoraria.php';
+        toastr['success'](objeto.mensaje, "Registro exitoso");
+        setTimeout(() => {
+          btnGuardar.disabled = false;
+          btnCerrar.disabled = false;
+          btnCancelar.disabled = false;
+          location.href = 'verCargaHoraria.php';
+        }, 1000);
       } else {
-        alert(objeto.mensaje);
+        toastr['error'](objeto.mensaje, "Algo ocurrió");
       }
     },
     error: function (data) {
       btnBuscar.disabled = false;
-      alert("Error al mostrar");
+      toastr['error'](data, "Algo ocurrió");
     },
   });
 }
