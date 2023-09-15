@@ -174,7 +174,7 @@ if (!isset($_SESSION['login'])) {
                     <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Registrar docente</h5>
+                                <h5 class="modal-title" id="title-Docente">Registrar docente</h5>
                             </div>
                             <div class="modal-body">
                                 <input type="text" hidden id="id-curso-docente">
@@ -294,7 +294,7 @@ if (!isset($_SESSION['login'])) {
                     <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Registrar grupos</h5>
+                                <h5 class="modal-title" id="title-Grupo">Registrar grupos</h5>
                             </div>
                             <div class="modal-body">
                                 <input type="number" id="cursoIdModalGrupo" hidden>
