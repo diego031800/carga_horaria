@@ -404,12 +404,13 @@
             try {
                 $tabla_carga = "";
                 $carga_horaria = $this->buscar_carga_horaria();
-                $total_filas = 0;
+                // return json_encode($carga_horaria);
+                $total_filas = $this->get_nro_total_filas('', '');
                 if (count($carga_horaria) > 0) {
                     $tabla_carga .= "<table class='table table-bordered rounded'>
                                         <tbody>
                                             <tr>
-                                                <td class='table-primary text-center' colspan='9'><b>SEMESTRE ACADÉMICO: &nbsp;&nbsp;".$carga_horaria[0]['semestre']. "</b></td>
+                                                <td class='table-primary text-center' colspan='10'><b>SEMESTRE ACADÉMICO: &nbsp;&nbsp;".$carga_horaria[0]['semestre']. "</b></td>
                                             </tr>
                                             <tr>
                                                 <td class='table-primary text-center'><b>UNIDAD</b></td>
@@ -418,32 +419,11 @@
                                                 <td class='table-primary text-center'><b>CURSO</b></td>
                                                 <td class='table-primary text-center'><b>CRED.</b></td>
                                                 <td class='table-primary text-center'><b>HORAS</b></td>
+                                                <td class='table-primary text-center'><b>GRUPO</b></td>
                                                 <td class='table-primary text-center'><b>DOCENTE</b></td>
                                                 <td class='table-primary text-center'><b>COND.</b></td>
                                                 <td class='table-primary text-center'><b>FECHAS</b></td>
                                             </tr>";
-                    /* FUNCION PARA OBTENER EL NUMERO TOTAL DE FILAS POR UNIDAD */
-                    foreach ($carga_horaria as $carga) {
-                        $this->con->close_open_connection_mysql();
-                        $ciclos = $this->buscar_ciclos_by_carga_horaria($carga['cgh_id']);
-                        if (count($ciclos) > 0) {
-                            foreach ($ciclos as $ciclo) {
-                                $this->con->close_open_connection_mysql();
-                                $cursos = $this->buscar_cursos_by_ciclo($ciclo['cgc_id']);
-                                if (count($cursos) > 0) {
-                                    foreach ($cursos as $cur_id => $curso) {
-                                        $this->con->close_open_connection_mysql();
-                                        $docentes = $this->buscar_docentes_by_curso($curso['chc_id']);
-                                        if (count($docentes)) {
-                                            $total_filas += count($docentes);
-                                        } else {
-                                            $total_filas ++;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
                     $tabla_carga .= "<td class='align-middle text-center' rowspan='".$total_filas."'>
                                         " . $carga_horaria[0]['unidad'] . "
                                     </td>";
@@ -452,71 +432,85 @@
                         /* OBTENER CICLOS */
                         $this->con->close_open_connection_mysql();
                         $ciclos = $this->buscar_ciclos_by_carga_horaria($carga['cgh_id']);
-                        
+                        // return json_encode($ciclos);
                         if (count($ciclos) > 0) {
-                            $filas_curso_by_ciclo = 0;
-                            foreach ($ciclos as $ciclo) {
-                                $this->con->close_open_connection_mysql();
-                                $cursos = $this->buscar_cursos_by_ciclo($ciclo['cgc_id']);
-                                $filas_curso_by_ciclo += count($cursos);
-                            }
+                            $nro_filas_by_mencion = ($this->get_nro_total_filas('mencion', $carga['cgh_id']));
                             $tabla_carga .= $carga_id == 0?"":"<tr>";
-                            $tabla_carga .= "<td class='align-middle text-center' rowspan='" . ($filas_curso_by_ciclo) . "'>
+                            $tabla_carga .= "<td class='align-middle text-center' rowspan='" . ($nro_filas_by_mencion==0?'':$nro_filas_by_mencion) . "'>
                                                 " . $carga['mencion'] . "
                                             </td>";
                             foreach ($ciclos as $ciclo_index => $ciclo) {
+                                $nro_filas_by_ciclo = $this->get_nro_total_filas('ciclo', $ciclo['cgc_id']);
                                 /* OBTENER CURSOS */
                                 $this->con->close_open_connection_mysql();
                                 $cursos = $this->buscar_cursos_by_ciclo($ciclo['cgc_id']);
                                 $tabla_carga .= $ciclo_index == 0?"":"<tr>";
-                                $tabla_carga .= "<td class='align-middle text-center' rowspan='".(count($cursos)==0 ? '' : count($cursos))."'>
+                                $tabla_carga .= "<td class='align-middle text-center' rowspan='".($nro_filas_by_ciclo==0?'':$nro_filas_by_ciclo)."'>
                                                     " . $this->convertirARomano($ciclo['ciclo']) . "
                                                 </td>";
                                 
                                 if (count($cursos) > 0) {
                                     foreach ($cursos as $curso_id => $curso) {
+                                        $nro_filas_by_curso = $this->get_nro_total_filas('curso', $curso['chc_id']);
                                         $tabla_carga .= $curso_id == 0?"":"<tr>";
-                                        $tabla_carga .= "<td class='align-middle text-center'>
+                                        $tabla_carga .= "<td class='align-middle text-center' rowspan='".($nro_filas_by_curso==0?'':$nro_filas_by_curso)."'>
                                                             " . $curso['curso'] . "
                                                         </td>
-                                                        <td class='align-middle text-center'>
+                                                        <td class='align-middle text-center' rowspan='".($nro_filas_by_curso==0?'':$nro_filas_by_curso)."'>
                                                             " . $curso['cur_creditos'] . "
                                                         </td>
-                                                        <td class='align-middle text-center'>
+                                                        <td class='align-middle text-center' rowspan='".($nro_filas_by_curso==0?'':$nro_filas_by_curso)."'>
                                                             " . $curso['chc_horas'] . "
                                                         </td>";
+                                        /* OBTENER GRUPOS POR CURSO */
                                         $this->con->close_open_connection_mysql();
                                         $grupos = $this->buscar_grupos_by_curso($curso['chc_id']);
+                                        // return json_encode($grupos);
                                         if (count($grupos)) {
                                             foreach ($grupos as $ccg_id => $grupo) {
+                                                $nro_filas_by_grupo = $this->get_nro_total_filas('grupo', $grupo['ccg_id']);
                                                 $tabla_carga .= $ccg_id == 0?"":"<tr>";
-                                                $tabla_carga .= "<td class='align-middle text-center'>
-                                                                " . $grupo['grupo']==1?'A':'B' . "
+                                                $letraGrupo = $grupo['grupo']==1?'A':'B';
+                                                $tabla_carga .= "<td class='align-middle text-center' rowspan='".($nro_filas_by_grupo==0?'':$nro_filas_by_grupo)."'>
+                                                                " . $letraGrupo . "
                                                                 </td>";
-                                                $docentes = $this->buscar_docentes_by_curso($grupo['ccg_id']);
+                                                /* OBTENER DOCENTES POR GRUPO */
+                                                $this->con->close_open_connection_mysql();
+                                                $docentes = $this->buscar_docentes_by_grupo($grupo['ccg_id']);
+                                                // return json_encode($docentes);
+                                                /* OBTENER FECHAS POR GRUPO */
+                                                $this->con->close_open_connection_mysql();
+                                                $fechas = $this->buscar_fechas_by_grupo($grupo['ccg_id']);
+                                                // return json_encode($fechas);
                                                 if (count($docentes) > 0) {
-                                                    foreach ($docentes as $docente) {
+                                                    foreach ($docentes as $doc_id => $docente) {
+                                                        $tabla_carga .= $doc_id == 0?"":"<tr>";
                                                         $tabla_carga .= "<td class='align-middle text-center'>
                                                                         " . $docente['doc_nombres'] . "
                                                                         </td>";
                                                         $tabla_carga .= "<td class='align-middle text-center'>
                                                                         " . $docente['doc_condicion'] . "
                                                                         </td>";
+                                                        if ($doc_id == 0) {
+                                                            $tabla_carga .= "<td class='align-middle text-center' rowspan='".count($docentes)."'>";
+                                                            foreach ($fechas as $fecha) {
+                                                                $tabla_carga .= "<small class='d-inline-flex mb-3 px-2 py-1 fw-semibold text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-2 mr-5'>" . $this->formatearFecha($fecha['fecha']) . "</small>";
+                                                            }
+                                                            $tabla_carga .= "</td>";                                                            
+                                                        }
+                                                        $tabla_carga .= "</tr>";
                                                     }
                                                 } else {
                                                     $tabla_carga .= "<td class='align-middle text-center' colspan='2'>
                                                                         Sin docente asignado.
                                                                     </td>";
+                                                    $tabla_carga .= "<td class='align-middle text-center' rowspan='".count($docentes)."'>";
+                                                    foreach ($fechas as $fecha) {
+                                                        $tabla_carga .= "<small class='d-inline-flex mb-3 px-2 py-1 fw-semibold text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-2 mr-5'>" . $this->formatearFecha($fecha['fecha']) . "</small>";
+                                                    }
+                                                    $tabla_carga .= "</td>";
+                                                    $tabla_carga .= "</tr>";
                                                 }
-                                                $this->con->close_open_connection_mysql();
-                                                $fechas = $this->buscar_fechas_by_curso($grupo['ccg_id']);
-                                                $tabla_carga .= "<td class='align-middle text-center'>";
-                                                
-                                                foreach ($fechas as $fecha) {
-                                                    $tabla_carga .= "<small class='d-inline-flex mb-3 px-2 py-1 fw-semibold text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-2 mr-5'>" . $this->formatearFecha($fecha['chf_fecha']) . "</small>";
-                                                }
-                                                $tabla_carga .= "</td>";
-                                                $tabla_carga .= "</tr>";
                                             }
                                         }
                                     }
@@ -572,7 +566,7 @@
                     }
                     return $resp;
                 } else {
-                    return ['respuesta' => 0, 'mensaje' => 'Error en la consulta.'];
+                    return ['respuesta' => 0, 'mensaje' => 'Error en la consulta.'.$error];
                 }
             } catch (Exception $ex) {
                 die("Error: " . $this->con->error_mysql(). $ex);
@@ -635,7 +629,7 @@
                     }
                     return $resp;
                 } else {
-                    return ['respuesta' => 0, 'mensaje' => 'Error en la consulta.'];
+                    return ['respuesta' => 0, 'mensaje' => 'Error en la consulta.'.$error];
                 }
             } catch (Exception $ex) {
                 die("Error: " . $this->con->error_mysql(). $ex);
@@ -664,17 +658,17 @@
                     }
                     return $resp;
                 } else {
-                    return ['respuesta' => 0, 'mensaje' => 'Error en la consulta.'];
+                    return ['respuesta' => 0, 'mensaje' => 'Error en la consulta.'.$error];
                 }
             } catch (Exception $ex) {
                 die("Error: " . $this->con->error_mysql(). $ex);
             }
         }
 
-        private function buscar_fechas_by_curso($ccg_id)
+        private function buscar_fechas_by_grupo($ccg_id)
         {
             try {
-                $sql = "CALL sp_searchFechasByCursos(";
+                $sql = "CALL sp_GetFechasByGrupo(";
                 $sql .= "'".$ccg_id."');"; // p_ccg_id
                 // return $sql;
                 $datos = $this->con->return_query_mysql($sql);
@@ -683,25 +677,26 @@
                 if (empty($error)) {
                     while ($row = mysqli_fetch_array($datos)) {
                         $fecha = [];
-                        $fecha['chf_id'] = $row['chf_id'];
-                        $fecha['chc_id'] = $row['chc_id'];
-                        $fecha['chf_fecha'] = $row['chf_fecha'];
+                        $fecha['cgf_id'] = $row['cgf_id'];
+                        $fecha['ccg_id'] = $row['ccg_id'];
+                        $fecha['fecha'] = $row['fecha'];
+                        $fecha['estado'] = $row['estado'];
                         array_push($resp, $fecha);
                     }
                     return $resp;
                 } else {
-                    return ['respuesta' => 0, 'mensaje' => 'Error en la consulta.'];
+                    return ['respuesta' => 0, 'mensaje' => 'Error en la consulta.'.$error];
                 }
             } catch (Exception $ex) {
                 die("Error: " . $this->con->error_mysql(). $ex);
             }
         }
 
-        private function buscar_docentes_by_curso($chc_id)
+        private function buscar_docentes_by_grupo($ccg_id)
         {
             try {
                 $sql = "CALL sp_GetDocentesByGrupo(";
-                $sql .= "'".$chc_id."');"; // p_cgh_id
+                $sql .= "'".$ccg_id."');"; // p_ccg_id
                 // return $sql;
                 $datos = $this->con->return_query_mysql($sql);
                 $resp = array();
@@ -709,20 +704,25 @@
                 if (empty($error)) {
                     while ($row = mysqli_fetch_array($datos)) {
                         $docente = [];
-                        $docente['chd_id'] = $row['chd_id'];
-                        $docente['chc_id'] = $row['chc_id'];
-                        $docente['chd_titular'] = $row['chd_titular'];
+                        $docente['cgd_id'] = $row['cgd_id'];
+                        $docente['ccg_id'] = $row['ccg_id'];
+                        $docente['cgd_titular'] = $row['cgd_titular'];
+                        $docente['cgd_horas'] = $row['cgd_horas'];
+                        $docente['cgd_fecha_inicio'] = $row['cgd_fecha_inicio'];
+                        $docente['cgd_fecha_fin'] = $row['cgd_fecha_fin'];
                         $docente['doc_condicion'] = $row['doc_condicion'];
                         $docente['doc_id'] = $row['doc_id'];
                         $docente['doc_codigo'] = $row['doc_codigo'];
+                        $docente['doc_documento'] = $row['doc_documento'];
                         $docente['doc_nombres'] = $row['doc_nombres'];
                         $docente['doc_celular'] = $row['doc_celular'];
                         $docente['doc_email'] = $row['doc_email'];
+                        $docente['estado'] = $row['estado'];
                         array_push($resp, $docente);
                     }
                     return $resp;
                 } else {
-                    return ['respuesta' => 0, 'mensaje' => 'Error en la consulta.'];
+                    return ['respuesta' => 0, 'mensaje' => 'Error en la consulta.'.$error];
                 }
             } catch (Exception $ex) {
                 die("Error: " . $this->con->error_mysql(). $ex);
@@ -783,5 +783,72 @@
             $dia_abreviado = $dias_espanol[$dia_numero];
 
             return "$dia, $mes_abreviado";
+        }
+
+        private function get_nro_total_filas($limite, $id)
+        {
+            try {
+                $this->con->close_open_connection_mysql();
+                $carga_horaria = $this->buscar_carga_horaria();
+                // return json_encode($carga_horaria);
+                $total_filas = 0;
+                if (count($carga_horaria) > 0) {
+                    /* FUNCION PARA OBTENER EL NUMERO TOTAL DE FILAS POR UNIDAD */
+                    foreach ($carga_horaria as $carga) {
+                        $nro_filas_x_mencion = 0;
+                        $this->con->close_open_connection_mysql();
+                        $ciclos = $this->buscar_ciclos_by_carga_horaria($carga['cgh_id']);
+                        if (count($ciclos) > 0) {
+                            foreach ($ciclos as $ciclo) {
+                                $nro_filas_x_ciclo = 0;
+                                $this->con->close_open_connection_mysql();
+                                $cursos = $this->buscar_cursos_by_ciclo($ciclo['cgc_id']);
+                                if (count($cursos) > 0) {
+                                    foreach ($cursos as $curso) {
+                                        $nro_filas_x_curso = 0;
+                                        $this->con->close_open_connection_mysql();
+                                        $grupos = $this->buscar_grupos_by_curso($curso['chc_id']);
+                                        if (count($grupos) > 0) {
+                                            foreach ($grupos as $grupo) {
+                                                $nro_filas_x_grupo = 0;
+                                                $this->con->close_open_connection_mysql();
+                                                $docentes = $this->buscar_docentes_by_grupo($grupo['ccg_id']);
+                                                if (count($docentes)) {
+                                                    $total_filas += count($docentes);
+                                                    $nro_filas_x_mencion += count($docentes);
+                                                    $nro_filas_x_ciclo += count($docentes);
+                                                    $nro_filas_x_curso += count($docentes);
+                                                    $nro_filas_x_grupo += count($docentes);
+                                                } else {
+                                                    $total_filas ++;
+                                                    $nro_filas_x_mencion ++;
+                                                    $nro_filas_x_ciclo ++;
+                                                    $nro_filas_x_curso ++;
+                                                    $nro_filas_x_grupo ++;
+                                                }
+                                                if ($limite == 'grupo' && $grupo['ccg_id'] == $id) {
+                                                    return $nro_filas_x_grupo;
+                                                }
+                                            }
+                                        }
+                                        if ($limite == 'curso' && $curso['chc_id'] == $id) {
+                                            return $nro_filas_x_curso;
+                                        }
+                                    }
+                                }
+                                if ($limite == 'ciclo' && $ciclo['cgc_id'] == $id) {
+                                    return $nro_filas_x_ciclo;
+                                }
+                            }
+                        }
+                        if ($limite == 'mencion' && $carga['cgh_id'] == $id) {
+                            return $nro_filas_x_mencion;
+                        }
+                    }
+                }
+                return $total_filas;
+            } catch (Exception $ex) {
+                die("Error: " . $this->con->error_mysql(). $ex);
+            }
         }
     }

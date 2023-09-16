@@ -10,6 +10,6 @@
     define('USER_NAME_MYSQL', 'root');
     define('PASS_MYSQL', '');
     define('HOST_MYSQL', 'localhost');
-    define('DB_NAME_MYSQL', 'is_posgrado');
+    define('DB_NAME_MYSQL', 'posgrado');
 
 ?>
