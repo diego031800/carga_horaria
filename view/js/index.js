@@ -17,7 +17,6 @@ let cboGrupoCurso = document.getElementById("cbo-grupo");
 let txtIdCursoGrupo = document.getElementById("cursoIdModalGrupo");
 let txtTituloModalGrupo = document.getElementById("title-Grupo");
 
-
 // Docente modal
 
 let txtTituloModalDocente = document.getElementById("title-Docente");
@@ -330,10 +329,11 @@ function guardar() {
 }
 
 function abrir_grupo_modal(idCurso) {
-  //let curso = listacursos.find((cursoI) => cursoI.index === idCurso);
+  let curso = listacursos.find((cursoI) => cursoI.index === idCurso);
+  txtTituloModalGrupo.textContent = "REGISTRAR GRUPOS PARA EL CURSO: "+ curso.curso;
   $("#myModal-grupo").fadeIn();
-  let grupos = listacursos.find((cursoI) => cursoI.index === idCurso).grupos;
-  if (grupos.length == 1) {
+  //let grupos = listacursos.find((cursoI) => cursoI.index === idCurso).grupos;
+  if (curso.grupos.length == 1) {
     $("#btn-addGrupo").show();
     $("#btn-deleteGrupo").hide();
   } else {
@@ -438,22 +438,37 @@ function llenarTabla() {
   }
   listacursos.forEach((elementC) => {
     let stringG = elementC.grupos.length;
+    let acciones = menuAcciones(elementC.index);
     fila =
-      '<tr><td scope="row"><button class="btn btn-info" style="margin-right: 10px;" onClick="editar(' +
-      elementC.index +
-      ');">Editar</button><button class="btn btn-danger" onClick="eliminar(' +
-      elementC.index +
-      ')";>Eliminar</button></td><td>' +
+      '<tr><td scope="row">' +
+      acciones +
+      '</td><td>' +
       elementC.curso +
       "</td><td>" +
       stringG +
-      '</td><td><button class="btn btn-warning" onClick="abrir_grupo_modal(' +
+      '</td><td>'+
+      '<button class="btn btn-dark" data-bs-toggle="tooltip" title="Asignar docentes a los grupos" onClick="abrir_docente_modal(' +
       elementC.index +
-      ');">Ver</button></td><td><button class="btn btn-danger" onClick="abrir_docente_modal(' +
+      ');"><i class="fa fa-user"></i> Abrir</button>'+
+      '</td><td>'+
+      '<button class="btn btn-secondary" data-bs-toggle="tooltip" title="Registrar fechas y agregar grupo" onClick="abrir_grupo_modal(' +
       elementC.index +
-      ');">Ver</button></td></tr>';
+      ');"><i class="fa fa-group"></i> Abrir</button>'+
+      '</td></tr>';
     $("#cursosTabla tbody").append(fila);
   });
+  $('[data-bs-toggle="tooltip"]').tooltip();
+}
+
+function menuAcciones(id) {
+  let string =
+    '<button class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip" title="Acciones del curso, editar o eliminar" type="button" data-toggle="dropdown" aria-expanded="false">' +
+    'Acciones</button>' +
+    '<div  class="dropdown-menu">' +
+    '<button class="dropdown-item" onClick="editar('+id+');"><i class="fa fa-pencil-square-o"></i> Editar curso</button>' +
+    '<button class="dropdown-item" onClick="eliminar('+id+');"><i class="fa fa-trash-o"></i> Eliminar curso</button>' +
+    '</div>';
+  return string;
 }
 
 function actualizarDatosDocenteGrupo() {
@@ -628,9 +643,11 @@ function limpiarInputsModal() {
 }
 
 function abrir_docente_modal(index) {
+  let curso = listacursos.find((cursoI) => cursoI.index === index);
+  txtTituloModalDocente.textContent = "ASIGNANDO DOCENTES PARA LOS GRUPOS DEL CURSO: "+ curso.curso;
   let docente = listacursos.find((item) => item.index == index).grupos[0]
     .docentes[0];
-  let grupos = listacursos.find((item) => item.index == index).grupos;
+  //let grupos = listacursos.find((item) => item.index == index).grupos;
   $("#myModal-docente").fadeIn();
   if (docente != null && docente !== undefined) {
     $("#nombre-docente").val(docente.doc_id);
@@ -729,10 +746,10 @@ function saveCargaHoraria() {
     let p_prg_mencion = prg_option.text();
     let p_cgh_ciclo = cboCiclo.value;
     let p_cgh_estado = "0001";
-  
+
     /* CURSOS */
     let p_cursos = JSON.stringify(listacursos);
-  
+
     $.ajax({
       type: "POST",
       url: "../../controllers/main/CargaHorariaController.php",
@@ -776,12 +793,12 @@ function saveCargaHoraria() {
         objeto = JSON.parse(data);
         if (objeto.respuesta == 1) {
           toastr["success"](objeto.mensaje, "Registro exitoso");
-           setTimeout(() => {
-             btnGuardar.disabled = false;
-             btnCerrar.disabled = false;
-             btnCancelar.disabled = false;
-             location.href = "verCargaHoraria.php";
-           }, 1000);
+          setTimeout(() => {
+            btnGuardar.disabled = false;
+            btnCerrar.disabled = false;
+            btnCancelar.disabled = false;
+            location.href = "verCargaHoraria.php";
+          }, 1000);
         } else {
           toastr["error"](objeto.mensaje, "Algo ocurrió");
         }
@@ -796,11 +813,14 @@ function saveCargaHoraria() {
 
 function validarCursos() {
   if (listacursos.length == 0) {
-    toastr["error"]("Debe agregar un curso por lo menos para guardar", "Guardar carga horaria");
+    toastr["error"](
+      "Debe agregar un curso por lo menos para guardar",
+      "Guardar carga horaria"
+    );
     return false;
   }
 
-  let verificar =true;
+  let verificar = true;
   listacursos.forEach((element) => {
     element.grupos.forEach((item) => {
       if (item.docentes.length == 0) {
@@ -814,7 +834,7 @@ function validarCursos() {
         verificar = false;
         return;
       }
-      
+
       if (item.fechas.length == 0) {
         toastr["error"](
           "Debe registrar las fechas del grupo: " +
@@ -827,11 +847,11 @@ function validarCursos() {
         return;
       }
     });
-    if(!verificar){
+    if (!verificar) {
       return verificar;
     }
   });
-  if(!verificar){
+  if (!verificar) {
     return verificar;
   }
   return true;
@@ -858,6 +878,7 @@ function load_document() {
   cboDocGrupo.addEventListener("change", actualizarDatosDocenteGrupo);
   tglDocSuplente.addEventListener("change", alternarDatosDoc);
   cboGrupoCurso.addEventListener("change", alternarDatosGrupo);
+  $('[data-bs-toggle="tooltip"]').tooltip();
 }
 
 // EVENTOS
