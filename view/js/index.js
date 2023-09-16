@@ -330,7 +330,7 @@ function guardar() {
 
 function abrir_grupo_modal(idCurso) {
   let curso = listacursos.find((cursoI) => cursoI.index === idCurso);
-  txtTituloModalGrupo.textContent = "Registrar grupos para el curso: "+ curso.curso;
+  txtTituloModalGrupo.textContent = "REGISTRAR GRUPOS PARA EL CURSO: "+ curso.curso;
   $("#myModal-grupo").fadeIn();
   //let grupos = listacursos.find((cursoI) => cursoI.index === idCurso).grupos;
   if (curso.grupos.length == 1) {
@@ -446,11 +446,15 @@ function llenarTabla() {
       elementC.curso +
       "</td><td>" +
       stringG +
-      '</td><td><button class="btn btn-secondary" data-bs-toggle="tooltip" title="Registrar fechas y agregar grupo" onClick="abrir_grupo_modal(' +
+      '</td><td>'+
+      '<button class="btn btn-dark" data-bs-toggle="tooltip" title="Asignar docentes a los grupos" onClick="abrir_docente_modal(' +
       elementC.index +
-      ');">Abrir</button></td><td><button class="btn btn-dark" data-bs-toggle="tooltip" title="Asignar docentes a los grupos" onClick="abrir_docente_modal(' +
+      ');"><i class="fa fa-user"></i> Abrir</button>'+
+      '</td><td>'+
+      '<button class="btn btn-secondary" data-bs-toggle="tooltip" title="Registrar fechas y agregar grupo" onClick="abrir_grupo_modal(' +
       elementC.index +
-      ');">Abrir</button></td></tr>';
+      ');"><i class="fa fa-group"></i> Abrir</button>'+
+      '</td></tr>';
     $("#cursosTabla tbody").append(fila);
   });
   $('[data-bs-toggle="tooltip"]').tooltip();
@@ -462,7 +466,7 @@ function menuAcciones(id) {
     'Acciones</button>' +
     '<div  class="dropdown-menu">' +
     '<button class="dropdown-item" onClick="editar('+id+');"><i class="fa fa-pencil-square-o"></i> Editar curso</button>' +
-    '<button class="dropdown-item" onClick="eliminar('+id+');">Eliminar curso</button>' +
+    '<button class="dropdown-item" onClick="eliminar('+id+');"><i class="fa fa-trash-o"></i> Eliminar curso</button>' +
     '</div>';
   return string;
 }
@@ -639,9 +643,11 @@ function limpiarInputsModal() {
 }
 
 function abrir_docente_modal(index) {
+  let curso = listacursos.find((cursoI) => cursoI.index === index);
+  txtTituloModalDocente.textContent = "ASIGNANDO DOCENTES PARA LOS GRUPOS DEL CURSO: "+ curso.curso;
   let docente = listacursos.find((item) => item.index == index).grupos[0]
     .docentes[0];
-  let grupos = listacursos.find((item) => item.index == index).grupos;
+  //let grupos = listacursos.find((item) => item.index == index).grupos;
   $("#myModal-docente").fadeIn();
   if (docente != null && docente !== undefined) {
     $("#nombre-docente").val(docente.doc_id);

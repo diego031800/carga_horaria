@@ -85,7 +85,7 @@ if (!isset($_SESSION['login'])) {
                                 </div>
                                 <div class="col-lg-2 col-6 mb-3">
                                     <button class="btn btn-outline-success" id="btneditarCargaHoraria"
-                                        onClick="editarCarga();" disabled>Confirmar</button>
+                                        onClick="editarCarga();" disabled><i class="fa fa-check-circle"></i> Confirmar</button>
                                 </div>
                             </div>
                         </div>
@@ -117,8 +117,8 @@ if (!isset($_SESSION['login'])) {
                                                 <th scope="col">Acciones</th>
                                                 <th scope="col">Curso</th>
                                                 <th scope="col">Número de Grupos:</th>
-                                                <th scope="col">Gestionar grupos:</th>
                                                 <th scope="col">Asignar docentes</th>
+                                                <th scope="col">Gestionar grupos:</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -208,10 +208,10 @@ if (!isset($_SESSION['login'])) {
                                             <div class="form-check form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch"
                                                     id="tglSuplente">
-                                                <label class="form-check-label" for="tglSuplente">Ver Suplente</label>
+                                                <label class="form-check-label" for="tglSuplente">Agregar docente suplente</label>
                                             </div>
                                             <button class="btn btn-outline-danger" style="height: 90%;"
-                                                onClick="eliminarDocente();" id="btn-deleteDocente">Eliminar
+                                                onClick="eliminarDocente();" id="btn-deleteDocente"> <i class="fa fa-trash-o"></i> Eliminar
                                                 docente</button>
                                         </div>
                                     </div>
@@ -252,10 +252,10 @@ if (!isset($_SESSION['login'])) {
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-primary" onClick="guardar_docente();">
-                                    Guardar
+                                    <i class="fa fa-save"></i> Guardar
                                 </button>
                                 <button class="btn btn-danger" onClick="$('#myModal-docente').fadeOut();">
-                                    Cerrar
+                                    <i class="fa fa-close"></i> Cerrar
                                 </button>
                             </div>
                         </div>
@@ -286,10 +286,10 @@ if (!isset($_SESSION['login'])) {
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-success" id="btnGuardarCurso" onClick="accionBtnGuardarCurso();">
-                                    Guardar
+                                    <i class="fa fa-save"></i> Guardar
                                 </button>
                                 <button class="btn btn-danger" onClick="$('#myModal-curso').fadeOut();">
-                                    Cerrar
+                                    <i class="fa fa-close"></i> Cerrar
                                 </button>
                             </div>
                         </div>
@@ -315,9 +315,9 @@ if (!isset($_SESSION['login'])) {
                                         </div>
                                         <div class="col-7 mb-12" style="display: flex; justify-content: space-between;">
                                             <button class="btn btn-outline-warning" style="height: 90%;"
-                                                onClick="agregarGrupo();" id="btn-addGrupo">Agregar grupo</button>
+                                                onClick="agregarGrupo();" id="btn-addGrupo"> <i class="fa fa-plus"></i> Agregar grupo</button>
                                             <button class="btn btn-outline-danger" style="height: 90%;"
-                                                onClick="eliminarGrupo();" id="btn-deleteGrupo">Eliminar grupo</button>
+                                                onClick="eliminarGrupo();" id="btn-deleteGrupo"> <i class="fa fa-trash-o"></i> Eliminar grupo</button>
                                         </div>
                                     </div>
                                     <div class="col-lg-10 col-6 mb-3">
@@ -337,10 +337,10 @@ if (!isset($_SESSION['login'])) {
                             <div class="modal-footer">
                                 <button class="btn btn-primary" id="btnGuardarDatosGrupo"
                                     onClick="guardarDatosGrupo();">
-                                    Guardar
+                                    <i class="fa fa-save"></i> Guardar
                                 </button>
                                 <button class="btn btn-danger" onClick="$('#myModal-grupo').fadeOut();">
-                                    Cerrar
+                                    <i class="fa fa-close"></i> Cerrar
                                 </button>
                             </div>
                         </div>
