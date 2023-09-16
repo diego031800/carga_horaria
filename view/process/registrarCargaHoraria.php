@@ -60,68 +60,76 @@ if (!isset($_SESSION['login'])) {
                         <h3 class="card-title m-3">Registro de la carga horaria</h3>
                     </div>
                     <div class="card-body">
-                        <div class="row mb-2">
-                            <div class="col-lg-2 col-6 mb-3">
-                                <label for="" class="form-label">Semestre</label>
-                                <select class="form-select" id="cboSemestre">
-                                </select>
-                            </div>
-                            <div class="col-lg-3 col-6 mb-3">
-                                <label for="cboUnidad" class="form-label">Unidad</label>
-                                <select class="form-select" id="cboUnidad">
-                                </select>
-                            </div>
-                            <div class="col-lg-5 col-6 mb-3">
-                                <label class="form-label" for="cboPrograma">Programa</label>
-                                <select class="form-select" id="cboPrograma" disabled>
-                                    <option value="SD">Antes selecciona una unidad ...</option>
-                                </select>
-                            </div>
-                            <div class="col-lg-2 col-6 mb-3">
-                                <label class="form-label" for="cboCiclo">Ciclo</label>
-                                <select name="ciclo" class="form-select" id="cboCiclo">
-                                </select>
-                            </div>
-                            <div class="col-lg-2 col-6 mb-3">
-                                <button class="btn btn-outline-success" id="btneditarCargaHoraria"
-                                    onClick="editarCarga();" disabled>Confirmar</button>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-12 col-6 mb-3">
-                                <button class="btn btn-success" onClick="abrirAgregarCurso();" id="btnAgregarCurso">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
-                                        <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                                        <style>
-                                        svg {
-                                            fill: #ffffff
-                                        }
-                                        </style>
-                                        <path
-                                            d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-                                    </svg>
-                                    &nbsp; Agregar curso
-                                </button>
-
+                        <div class="card" style="color: #ffffff; background-color:rgba(135, 135, 135, 0.09); border-radius: 18px;">
+                            <div class="card-body row mb-2">
+                                <div class="col-lg-2 col-6 mb-3">
+                                    <label for="" class="form-label">Semestre</label>
+                                    <select class="form-select" id="cboSemestre">
+                                    </select>
+                                </div>
+                                <div class="col-lg-3 col-6 mb-3">
+                                    <label for="cboUnidad" class="form-label">Unidad</label>
+                                    <select class="form-select" id="cboUnidad">
+                                    </select>
+                                </div>
+                                <div class="col-lg-5 col-6 mb-3">
+                                    <label class="form-label" for="cboPrograma">Programa</label>
+                                    <select class="form-select" id="cboPrograma" disabled>
+                                        <option value="SD">Antes selecciona una unidad ...</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-2 col-6 mb-3">
+                                    <label class="form-label" for="cboCiclo">Ciclo</label>
+                                    <select name="ciclo" class="form-select" id="cboCiclo">
+                                    </select>
+                                </div>
+                                <div class="col-lg-2 col-6 mb-3">
+                                    <button class="btn btn-outline-success" id="btneditarCargaHoraria"
+                                        onClick="editarCarga();" disabled>Confirmar</button>
+                                </div>
                             </div>
                         </div>
+                        <div>
+                            <br>
+                        </div>
+                        <div class="card" style="color: #ffffff; background-color:rgba(135, 135, 135, 0.09); border-radius: 18px;">
+                            <div class="card-body row">
+                                <div class="col-lg-12 col-6 mb-3">
+                                    <button class="btn btn-success" onClick="abrirAgregarCurso();" id="btnAgregarCurso">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
+                                            <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                                            <style>
+                                            svg {
+                                                fill: #ffffff
+                                            }
+                                            </style>
+                                            <path
+                                                d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+                                        </svg>
+                                        &nbsp; Agregar curso
+                                    </button>
 
-                        <table class="table" id="cursosTabla" name="cursosTabla">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Acciones</th>
-                                    <th scope="col">Curso</th>
-                                    <th scope="col">Número de Grupos:</th>
-                                    <th scope="col">Gestionar grupos:</th>
-                                    <th scope="col">Asignar docentes</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="text-center" colspan="6">Sin registros.</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                </div>
+                                <div class="col-12">
+                                    <table class="table" id="cursosTabla" name="cursosTabla">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Acciones</th>
+                                                <th scope="col">Curso</th>
+                                                <th scope="col">Número de Grupos:</th>
+                                                <th scope="col">Gestionar grupos:</th>
+                                                <th scope="col">Asignar docentes</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-center" colspan="6">Sin registros.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-footer bg-transparent">
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end m-3">
@@ -210,11 +218,10 @@ if (!isset($_SESSION['login'])) {
                                     <div class="col-6 mb-3">
                                         <label for="" class="form-label">Condicion:</label><br />
                                         <select name="condicion-docente" class="form-select" id="condicion-docente">
-                                            <option value="UNT">UNT</option>
+                                            <option value="UNT">Docente UNT</option>
                                             <option value="Invitado Nacional">Invitado Nacional</option>
                                             <option value="Invitado Local">Invitado Local</option>
                                             <option value="Invitado Internacional">Invitado Internacional</option>
-                                            <option value="Externo">Externo</option>
                                         </select>
                                     </div>
                                     <div class="col-6 mb-3">
@@ -222,7 +229,7 @@ if (!isset($_SESSION['login'])) {
                                         <select name="grado-docente" class="form-select" id="grado-docente">
                                             <option value="dr">Doctor</option>
                                             <option value="dra">Doctora</option>
-                                            <option value="ms">Magister</option>
+                                            <option value="ms">Maestro</option>
                                         </select>
                                     </div>
                                     <div class="col-6 mb-3">
@@ -244,7 +251,7 @@ if (!isset($_SESSION['login'])) {
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-success" onClick="guardar_docente();">
+                                <button class="btn btn-primary" onClick="guardar_docente();">
                                     Guardar
                                 </button>
                                 <button class="btn btn-danger" onClick="$('#myModal-docente').fadeOut();">
@@ -278,8 +285,7 @@ if (!isset($_SESSION['login'])) {
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-success" id="btnGuardarCurso"
-                                    onClick="accionBtnGuardarCurso();">
+                                <button class="btn btn-success" id="btnGuardarCurso" onClick="accionBtnGuardarCurso();">
                                     Guardar
                                 </button>
                                 <button class="btn btn-danger" onClick="$('#myModal-curso').fadeOut();">
@@ -329,7 +335,7 @@ if (!isset($_SESSION['login'])) {
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-success" id="btnGuardarDatosGrupo"
+                                <button class="btn btn-primary" id="btnGuardarDatosGrupo"
                                     onClick="guardarDatosGrupo();">
                                     Guardar
                                 </button>
