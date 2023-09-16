@@ -4,6 +4,7 @@ let cboUnidad = document.getElementById('cboUnidad');
 let btnDescargarPdf = document.getElementById('btnDescargarPdf');
 let btnDescargarExc = document.getElementById('btnDescargarExc');
 let btnBuscar = document.getElementById('btnBuscar');
+let load_table = document.getElementById('load_table');
 
 // FUNCIONES
 // INICIO OBTENER COMBOS
@@ -63,7 +64,14 @@ function search_carga_horaria() {
     data: "opcion=" + opcion +
       "&p_sem_id=" + p_sem_id +
       "&p_sec_id=" + p_sec_id,
+    beforeSend: function () {
+      btnBuscar.disabled = true;
+      let spinner = '<div class="d-flex justify-content-center mt-5"><div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"><span class="visually-hidden">Loading...</span></div></div>'
+      $('#tabla_carga_horaria').html('');
+      $('#tabla_carga_horaria').html(spinner);
+    },
     success: function (data) {
+      btnBuscar.disabled = false;
       tabla = data;
       $('#tabla_carga_horaria').html(tabla);
       btnDescargarPdf.disabled = false;

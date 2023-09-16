@@ -454,7 +454,7 @@
                                         $nro_filas_by_curso = $this->get_nro_total_filas('curso', $curso['chc_id']);
                                         $tabla_carga .= $curso_id == 0?"":"<tr>";
                                         $tabla_carga .= "<td class='align-middle text-center' rowspan='".($nro_filas_by_curso==0?'':$nro_filas_by_curso)."'>
-                                                            " . $curso['curso'] . "
+                                                            " . $curso['curso'] . "<br>" . ($curso['cur_calidad'] == '0001' ? '<b>(ELECTIVO)</b>' : '') . "
                                                         </td>
                                                         <td class='align-middle text-center' rowspan='".($nro_filas_by_curso==0?'':$nro_filas_by_curso)."'>
                                                             " . $curso['cur_creditos'] . "
@@ -486,13 +486,13 @@
                                                     foreach ($docentes as $doc_id => $docente) {
                                                         $tabla_carga .= $doc_id == 0?"":"<tr>";
                                                         $tabla_carga .= "<td class='align-middle text-center'>
-                                                                        " . $docente['doc_nombres'] . "
+                                                                        " . $docente['doc_nombres'] . "<br>".($docente['cgd_titular']==1?'<b>(TITULAR)</b>':'')."
                                                                         </td>";
                                                         $tabla_carga .= "<td class='align-middle text-center'>
                                                                         " . $docente['doc_condicion'] . "
                                                                         </td>";
                                                         if ($doc_id == 0) {
-                                                            $tabla_carga .= "<td class='align-middle text-center' rowspan='".count($docentes)."'>";
+                                                            $tabla_carga .= "<td class='align-middle text-center' rowspan='".(count($docentes)==0?'':count($docentes))."'>";
                                                             foreach ($fechas as $fecha) {
                                                                 $tabla_carga .= "<small class='d-inline-flex mb-3 px-2 py-1 fw-semibold text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-2 mr-5'>" . $this->formatearFecha($fecha['fecha']) . "</small>";
                                                             }
@@ -504,7 +504,7 @@
                                                     $tabla_carga .= "<td class='align-middle text-center' colspan='2'>
                                                                         Sin docente asignado.
                                                                     </td>";
-                                                    $tabla_carga .= "<td class='align-middle text-center' rowspan='".count($docentes)."'>";
+                                                    $tabla_carga .= "<td class='align-middle text-center' rowspan='".(count($docentes)==0?'':count($docentes))."'>";
                                                     foreach ($fechas as $fecha) {
                                                         $tabla_carga .= "<small class='d-inline-flex mb-3 px-2 py-1 fw-semibold text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-2 mr-5'>" . $this->formatearFecha($fecha['fecha']) . "</small>";
                                                     }

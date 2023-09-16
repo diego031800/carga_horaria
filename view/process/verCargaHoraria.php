@@ -71,20 +71,9 @@ if (!isset($_SESSION['login'])) {
                                     <select class="form-select" id="cboUnidad">
                                     </select>
                                 </div>
-                                <!-- <div class="col-lg-5 col-6 mb-3">
-                                    <label class="form-label" for="cboPrograma">Programa</label><br>
-                                    <select class="form-select" id="cboPrograma" disabled>
-                                        <option value="SD">Antes selecciona una unidad ...</option>
-                                    </select>
-                                </div>
-                                <div class="col-lg-1 col-6 mb-3">
-                                    <label class="form-label" for="cboCiclo">Ciclo</label>
-                                    <select name="ciclo" class="form-select" id="cboCiclo">
-                                    </select>
-                                </div> -->
                                 <div class="col-lg-1 col-6 mb-3">
                                     <label class="form-label"></label><br>
-                                    <button class="btn btn-info" type="button" id="btnBuscar" disabled>
+                                    <button class="btn btn-primary" type="button" id="btnBuscar" disabled>
                                         <i class="fa fa-search"></i>
                                         &nbsp; Buscar
                                     </button>
