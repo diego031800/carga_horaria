@@ -26,7 +26,7 @@ function login()
       btnAcceso.disabled = false;
       let objeto = JSON.parse(data);
       if (objeto.respuesta=='Acceso permitido') {
-        location.href = "view/process/registrarCargaHoraria.php";
+        location.href = "view/process/misCargasHorarias.php";
       } else {
         alert(objeto.respuesta);
       }
