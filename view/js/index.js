@@ -465,8 +465,8 @@ function menuAcciones(id) {
     '<button class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip" title="Acciones del curso, editar o eliminar" type="button" data-toggle="dropdown" aria-expanded="false">' +
     'Acciones</button>' +
     '<div  class="dropdown-menu">' +
-    '<button class="dropdown-item" onClick="editar('+id+');"><i class="fa fa-pencil-square-o"></i> Editar curso</button>' +
-    '<button class="dropdown-item" onClick="eliminar('+id+');"><i class="fa fa-trash-o"></i> Eliminar curso</button>' +
+    '<button class="dropdown-item" onClick="editar('+id+');"><i class="fa fa-pencil-square-o text-primary"></i> Editar curso</button>' +
+    '<button class="dropdown-item" onClick="eliminar('+id+');"><i class="fa fa-trash-o text-danger"></i> Eliminar curso</button>' +
     '</div>';
   return string;
 }
@@ -713,6 +713,8 @@ function editarCarga() {
     btnCancelar.disabled = false;
     camposCursos(false, 2);
     camposUnidad(true);
+    $("#btnCancelar").show();
+    $("#btneditarCargaHoraria").hide();
   } else {
     toastr["error"]("No pueden haber campos vacíos", "Confirmar Editar Carga");
   }
@@ -723,6 +725,8 @@ function cancelarEditarCarga() {
   camposCursos(true, 1);
   camposUnidad(false);
   llenarTabla();
+  $("#btnCancelar").hide();
+  $("#btneditarCargaHoraria").show();
 }
 
 /* GUARDAR CARGA HORARIA */
@@ -869,6 +873,7 @@ function load_document() {
   btnCancelar.disabled = true;
   //cboCiclo.disabled = true;
   /* CAMPOS GENERALES */
+  $("#btnCancelar").hide();
   cboSemestre.addEventListener("change", get_cbo_unidades);
   cboSemestre.addEventListener("change", get_cbo_programas);
   cboUnidad.addEventListener("change", get_cbo_programas);
