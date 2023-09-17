@@ -60,7 +60,8 @@ if (!isset($_SESSION['login'])) {
                         <h3 class="card-title m-3">Registro de la carga horaria</h3>
                     </div>
                     <div class="card-body">
-                        <div class="card" style="color: #ffffff; background-color:rgba(135, 135, 135, 0.09); border-radius: 18px;">
+                        <div class="card"
+                            style="color: #ffffff; background-color:rgba(135, 135, 135, 0.09); border-radius: 18px;">
                             <div class="card-body row mb-2">
                                 <div class="col-lg-2 col-6 mb-3">
                                     <label for="" class="form-label">Semestre</label>
@@ -85,14 +86,30 @@ if (!isset($_SESSION['login'])) {
                                 </div>
                                 <div class="col-lg-2 col-6 mb-3">
                                     <button class="btn btn-outline-success" id="btneditarCargaHoraria"
-                                        onClick="editarCarga();" disabled><i class="fa fa-check-circle"></i> Confirmar</button>
+                                        onClick="editarCarga();" disabled><i class="fa fa-check-circle"></i>
+                                        Confirmar</button>
+                                    <button class="btn btn-danger" type="button" id="btnCancelar"
+                                        onClick="cancelarEditarCarga();">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512">
+                                            <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                                            <style>
+                                            svg {
+                                                fill: #ffffff
+                                            }
+                                            </style>
+                                            <path
+                                                d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+                                        </svg>
+                                        &nbsp; Cancelar
+                                    </button>
                                 </div>
                             </div>
                         </div>
                         <div>
                             <br>
                         </div>
-                        <div class="card" style="color: #ffffff; background-color:rgba(135, 135, 135, 0.09); border-radius: 18px;">
+                        <div class="card"
+                            style="color: #ffffff; background-color:rgba(135, 135, 135, 0.09); border-radius: 18px;">
                             <div class="card-body row">
                                 <div class="col-lg-12 col-6 mb-3">
                                     <button class="btn btn-success" onClick="abrirAgregarCurso();" id="btnAgregarCurso">
@@ -159,20 +176,6 @@ if (!isset($_SESSION['login'])) {
                                 </svg>
                                 &nbsp; Cerrar
                             </button>
-                            <button class="btn btn-danger" type="button" id="btnCancelar"
-                                onClick="cancelarEditarCarga();">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512">
-                                    <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                                    <style>
-                                    svg {
-                                        fill: #ffffff
-                                    }
-                                    </style>
-                                    <path
-                                        d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
-                                </svg>
-                                &nbsp; Cancelar
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -208,10 +211,12 @@ if (!isset($_SESSION['login'])) {
                                             <div class="form-check form-switch">
                                                 <input class="form-check-input" type="checkbox" role="switch"
                                                     id="tglSuplente">
-                                                <label class="form-check-label" for="tglSuplente">Agregar docente suplente</label>
+                                                <label class="form-check-label" for="tglSuplente">Agregar docente
+                                                    suplente</label>
                                             </div>
                                             <button class="btn btn-outline-danger" style="height: 90%;"
-                                                onClick="eliminarDocente();" id="btn-deleteDocente"> <i class="fa fa-trash-o"></i> Eliminar
+                                                onClick="eliminarDocente();" id="btn-deleteDocente"> <i
+                                                    class="fa fa-trash-o"></i> Eliminar
                                                 docente</button>
                                         </div>
                                     </div>
@@ -315,9 +320,11 @@ if (!isset($_SESSION['login'])) {
                                         </div>
                                         <div class="col-7 mb-12" style="display: flex; justify-content: space-between;">
                                             <button class="btn btn-outline-warning" style="height: 90%;"
-                                                onClick="agregarGrupo();" id="btn-addGrupo"> <i class="fa fa-plus"></i> Agregar grupo</button>
+                                                onClick="agregarGrupo();" id="btn-addGrupo"> <i class="fa fa-plus"></i>
+                                                Agregar grupo</button>
                                             <button class="btn btn-outline-danger" style="height: 90%;"
-                                                onClick="eliminarGrupo();" id="btn-deleteGrupo"> <i class="fa fa-trash-o"></i> Eliminar grupo</button>
+                                                onClick="eliminarGrupo();" id="btn-deleteGrupo"> <i
+                                                    class="fa fa-trash-o"></i> Eliminar grupo</button>
                                         </div>
                                     </div>
                                     <div class="col-lg-10 col-6 mb-3">
