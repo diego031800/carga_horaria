@@ -2,7 +2,7 @@
 
     // CONFIGURACION SQL SERVER -----  GERALD  ------
     define('USER_NAME_SQL_SERVER', 'sa');
-    define('PASS_SQL_SERVER', '1478963sws**');
+    define('PASS_SQL_SERVER', '16650039');
     define('HOST_SQL_SERVER', 'localhost');
     define('DB_NAME_SQL_SERVER', 'is_posgrado');
     //  define('USER_NAME_SQL_SERVER', 'sa');
