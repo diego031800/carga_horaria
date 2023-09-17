@@ -34,7 +34,7 @@ include_once '../../models/config.php';
 <!-- page title area start -->
 <div class="page-title-area">
     <div class="row align-items-center">
-        <div class="col-sm-6">
+        <div class="col-sm-8">
             <div class="breadcrumbs-area clearfix">
                 <h4 class="page-title pull-left">Carga Horaria</h4>
                 <ul class="breadcrumbs pull-left">
@@ -43,10 +43,10 @@ include_once '../../models/config.php';
                 </ul>
             </div>
         </div>
-        <div class="col-sm-6 clearfix">
+        <div class="col-sm-4 clearfix">
             <div class="user-profile pull-right">
                 <img class="avatar user-thumb" src="../../assets/images/author/avatar.png" alt="avatar">
-                <h4 class="user-name dropdown-toggle" data-toggle="dropdown"><?php echo $_SESSION['nombres'] ?><i class="fa fa-angle-down"></i></h4>
+                <h5 class="user-name dropdown-toggle" data-toggle="dropdown"><?php echo $_SESSION['nombres'] ?><i class="fa fa-angle-down"></i></h5>
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="../../controllers/security/LogoutController.php">
                         <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->

@@ -36,6 +36,8 @@ if (!isset($_SESSION['login'])) {
         <script src="../../assets/js/vendor/modernizr-2.8.3.min.js"></script>
         <!-- SELECT 2 -->
         <link rel="stylesheet" href="../../assets/css/select2/select2.css">
+        <!-- DATA TABLE -->
+        <link rel="stylesheet" href="../../assets/css/data_table/jquery.dataTables.min.css">
         <!-- ESTILOS PROPIOS -->
         <link rel="stylesheet" href="/carga_horaria/view/css/styles.css">
         <title>CARGA HORARIA</title>
@@ -54,13 +56,66 @@ if (!isset($_SESSION['login'])) {
                 <!-- END NAV BAR -->
                 <div class="main-content-inner">
                     <div class="card mt-5" style="min-height: 620px;">
-                        <div class="card-header bg-transparent">
+                        <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
                             <h3 class="card-title m-3">Mis Cargas Horarias</h3>
+                            <button class="btn btn-primary" type="button" id="btnNuevaCarga">
+                                <i class="fa fa-plus-square"></i> &nbsp;&nbsp; Nueva Carga Horaria
+                            </button>
                         </div>
                         <div class="card-body">
-                            
-                        </div>
-                        <div class="card-footer bg-transparent">
+                            <div class="card" style="color: #ffffff; background-color:rgba(135, 135, 135, 0.09); border-radius: 18px;">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-lg-2 col-6">
+                                            <select class="form-select" id="cboSemestre">
+                                            </select>
+                                            <small style="color: #666666;"><b>Filtar</b> por semestre</small>
+                                        </div>
+                                        <div class="col-lg-3 col-6">
+                                            <select class="form-select" id="cboUnidad">
+                                            </select>
+                                            <small style="color: #666666;"><b>Filtar</b> por Unidad</small>
+                                        </div>
+                                        <div class="col-lg-3 col-6">
+                                            <select class="form-select" id="cboPrograma">
+                                            </select>
+                                            <small style="color: #666666;"><b>Filtar</b> por Programa</small>
+                                        </div>
+                                        <div class="col-lg-2 col-6">
+                                            <select name="ciclo" class="form-select" id="cboCiclo">
+                                            </select>
+                                            <small style="color: #666666;"><b>Filtar</b> por Ciclo</small>
+                                        </div>
+                                        <div class="col-lg-2 col-md-4 col-6 d-grid mx-auto align-items-center">
+                                            <button class="btn btn-primary" type="button" id="btnBuscar">
+                                                <i class="fa fa-search"></i> &nbsp;&nbsp; Buscar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card mt-4" style="color: #ffffff; background-color:rgba(135, 135, 135, 0.09); border-radius: 18px;">
+                                <div class="card-body">
+                                    <table id="table_ch" class="table table-striped table-bordered dt-responsive">
+                                        <thead>
+                                            <tr>
+                                                <th>N°</th>
+                                                <th>ACCIONES</th>
+                                                <th>ESTADO</th>
+                                                <th>CÓDIGO</th>
+                                                <th>SEMESTRE</th>
+                                                <th>UNIDAD</th>
+                                                <th>PROGRAMA</th>
+                                                <th>CICLO</th>
+                                                <th>CREADO</th>
+                                                <th>EDITADO</th>
+                                                <th>USUARIO</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="cuerpo_ch"></tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -94,8 +149,10 @@ if (!isset($_SESSION['login'])) {
         <!-- others plugins -->
         <script src="../../assets/js/plugins.js"></script>
         <script src="../../assets/js/scripts.js"></script>
+        <!-- DATA TABLE -->
+        <script src="../../assets/js/data_table/jquery.dataTables.min.js"></script>
         <!-- SCRIPT DESPACHO -->
-        <script src="../../view/js/process/verCargaHoraria.js"></script>
+        <script src="../../view/js/process/misCargasHorarias.js"></script>
         <!-- SCRIPT PROPIO INICIO -->
         <script>
         </script>

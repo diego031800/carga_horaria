@@ -19,7 +19,7 @@ function login()
           "&password="+password+
           "&ip="+ip,
     url: "controllers/security/LoginController.php",
-    beforesend: function () {
+    beforeSend: function () {
       btnAcceso.disabled = true;
     },
     success: function (data) {
