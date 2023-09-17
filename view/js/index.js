@@ -32,7 +32,6 @@ let cboDocGrupo = document.getElementById("cbo-grupodocente");
 let tglDocSuplente = document.getElementById("tglSuplente");
 
 let btnGuardar = document.getElementById("btnGuardar");
-let btnCerrar = document.getElementById("btnCerrar");
 let btnCancelar = document.getElementById("btnCancelar");
 
 // VARIABLES
@@ -709,8 +708,6 @@ function editarCarga() {
   console.log(sem + " _ " + unidad + " _ " + programa + " _ " + ciclo);
   if (sem != "" && unidad != "" && programa != "" && ciclo != "") {
     btnGuardar.disabled = false;
-    btnCerrar.disabled = false;
-    btnCancelar.disabled = false;
     camposCursos(false, 2);
     camposUnidad(true);
     $("#btnCancelar").show();
@@ -790,8 +787,6 @@ function saveCargaHoraria() {
         p_cursos,
       beforeSend: function () {
         btnGuardar.disabled = true;
-        btnCerrar.disabled = true;
-        btnCancelar.disabled = true;
       },
       success: function (data) {
         objeto = JSON.parse(data);
@@ -799,8 +794,6 @@ function saveCargaHoraria() {
           toastr["success"](objeto.mensaje, "Registro exitoso");
           setTimeout(() => {
             btnGuardar.disabled = false;
-            btnCerrar.disabled = false;
-            btnCancelar.disabled = false;
             location.href = "verCargaHoraria.php";
           }, 1000);
         } else {
@@ -869,8 +862,6 @@ function load_document() {
   get_docentes();
   camposCursos(true, 1);
   btnGuardar.disabled = true;
-  btnCerrar.disabled = true;
-  btnCancelar.disabled = true;
   //cboCiclo.disabled = true;
   /* CAMPOS GENERALES */
   $("#btnCancelar").hide();
