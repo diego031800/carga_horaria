@@ -38,7 +38,7 @@ include_once '../../models/config.php';
             <div class="breadcrumbs-area clearfix">
                 <h4 class="page-title pull-left">Carga Horaria</h4>
                 <ul class="breadcrumbs pull-left">
-                    <li><a href="./registrarCargaHoraria.php">Home</a></li>
+                    <li><a href="./misCargasHorarias.php">Home</a></li>
                     <li><span>Registro</span></li>
                 </ul>
             </div>

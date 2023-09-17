@@ -55,7 +55,7 @@ if (!isset($_SESSION['login'])) {
                 <?php require_once('../navbar.php') ?>
                 <!-- END NAV BAR -->
                 <div class="main-content-inner">
-                    <div class="card mt-5" style="min-height: 620px;">
+                    <div class="card shadow p-3 mb-5 bg-body-tertiary rounded mt-5" style="min-height: 620px;">
                         <div class="card-header bg-transparent">
                             <h3 class="card-title m-3">Carga horaria</h3>
                         </div>

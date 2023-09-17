@@ -55,7 +55,7 @@ if (!isset($_SESSION['login'])) {
                 <?php require_once('../navbar.php') ?>
                 <!-- END NAV BAR -->
                 <div class="main-content-inner">
-                    <div class="card mt-5" style="min-height: 620px;">
+                    <div class="card shadow p-3 mb-5 bg-body-tertiary rounded mt-5" style="min-height: 620px;">
                         <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
                             <h3 class="card-title m-3">Mis Cargas Horarias</h3>
                             <button class="btn btn-primary" type="button" id="btnNuevaCarga">
@@ -96,20 +96,20 @@ if (!isset($_SESSION['login'])) {
                             </div>
                             <div class="card mt-4" style="color: #ffffff; background-color:rgba(135, 135, 135, 0.09); border-radius: 18px;">
                                 <div class="card-body">
-                                    <table id="table_ch" class="table table-striped table-bordered dt-responsive">
+                                    <table id="table_ch" class="table table-bordered dt-responsive table-hover">
                                         <thead>
-                                            <tr>
-                                                <th>N°</th>
-                                                <th>ACCIONES</th>
-                                                <th>ESTADO</th>
-                                                <th>CÓDIGO</th>
-                                                <th>SEMESTRE</th>
-                                                <th>UNIDAD</th>
-                                                <th>PROGRAMA</th>
-                                                <th>CICLO</th>
-                                                <th>CREADO</th>
-                                                <th>EDITADO</th>
-                                                <th>USUARIO</th>
+                                            <tr class="table-info">
+                                                <th class="text-center">N°</th>
+                                                <th class="text-center">ACCIONES</th>
+                                                <th class="text-center">ESTADO</th>
+                                                <th class="text-center">CÓDIGO</th>
+                                                <th class="text-center">SEMESTRE</th>
+                                                <th class="text-center">UNIDAD</th>
+                                                <th class="text-center">PROGRAMA</th>
+                                                <th class="text-center">CICLO</th>
+                                                <th class="text-center">CREADO</th>
+                                                <th class="text-center">EDITADO</th>
+                                                <th class="text-center">USUARIO</th>
                                             </tr>
                                         </thead>
                                         <tbody id="cuerpo_ch"></tbody>
