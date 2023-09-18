@@ -16,12 +16,96 @@
         {
             $this->parametros = $parametros;
             switch ($this->parametros['opcion']) {
+                case 'get_cargas_horarias_by_sem':
+                    echo $this->get_cargas_horarias_by_sem();
+                    break;
                 case 'get_cargas_horarias':
                     echo $this->get_cargas_horarias();
                     break;
                 case 'get_programas':
                     echo $this->get_programas();
                     break;
+            }
+        }
+
+        private function get_cargas_horarias_by_sem()
+        {
+            try {
+                $sql = "CALL sp_GetMisCargasHorariasBySem(";
+                $sql .= "'".$this->parametros['p_fecha_inicio']."', "; // p_fecha_inicio
+                $sql .= "'".$this->parametros['p_fecha_fin']."', "; // p_fecha_fin
+                $sql .= "'".$this->parametros['p_sem_id']."', "; // p_sem_id
+                $sql .= "'".$this->parametros['p_sec_id']."', "; // p_sec_id
+                $sql .= "'".$_SESSION['usu_id']."');"; // p_usuario
+                return $sql;
+                $datos = $this->con->return_query_mysql($sql);
+                // return json_encode($datos);
+                $cuerpo_ch = '';
+                $index = 0;
+                $error = $this->con->error_mysql();
+                if (empty($error)) {
+                    while ($row = mysqli_fetch_array($datos)) {
+                        $index ++;
+                        $cuerpo_ch .= '<tr>
+                                        <td class="align-middle text-center" style="max-width: 50px;">'.$index. '</td>
+                                        <td class="align-middle text-center" style="max-width: 100px;">
+                                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">Acciones</button>
+                                            <div  class="dropdown-menu">
+                                                <button class="dropdown-item btn-sm" onclick="editar('.$row['cgh_id'].', '.$row['cgc_id']. ')">
+                                                    <i class="fa fa-google-plus text-primary"></i>&nbsp;&nbsp;
+                                                    Ver detalle
+                                                </button>
+                                                <button class="dropdown-item btn-sm" onclick="enviar('.$row['cgh_id'].', '.$row['cgc_id']. ')">
+                                                    <i class="fa fa-send-o text-warning"></i>&nbsp;&nbsp;
+                                                    Enviar
+                                                </button>
+                                                <button class="dropdown-item btn-sm" onclick="eliminar('.$row['cgh_id'].', '.$row['cgc_id']. ')">
+                                                    <i class="fa fa-trash-o text-danger"></i>&nbsp;&nbsp;
+                                                    Eliminar
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle text-center" style="max-width: 120px;">
+                                            <h6><span class="badge text-bg-'.$row['color'].'">
+                                                '.$row['estado']. '
+                                            </span></h6>
+                                        </td>
+                                        <td class="align-middle text-center" style="max-width: 120px;">
+                                            '.$row['codigo']. '
+                                        </td>
+                                        <td class="align-middle text-center" style="max-width: 120px;">
+                                            '.$row['semestre']. '
+                                        </td>
+                                        <td class="align-middle text-center" style="max-width: 190px;">
+                                            '.$row['unidad']. '
+                                        </td>
+                                        <td class="align-middle text-center" style="max-width: 200px;">
+                                            '.$row['mencion']. '
+                                        </td>
+                                        <td class="align-middle text-center" style="max-width: 50px;">
+                                            '.($this->convertirARomano($row['ciclo'])). '
+                                        </td>
+                                        <td class="align-middle text-center" style="max-width: 150px;">
+                                            '.$row['fecha_creado']. '
+                                        </td>
+                                        <td class="align-middle text-center" style="max-width: 150px;">
+                                            '.$row['fecha_edicion']. '
+                                        </td>
+                                        <td class="align-middle text-center" style="max-width: 200px;">
+                                            '.($this->get_nombres_usuario($row['usuario'])).'
+                                        </td>
+                                    </tr>';
+                    }
+                    return $cuerpo_ch;
+                } else {
+                    return '<tr>
+                                <td colspan="11">
+                                    '.$error. '
+                                </td>
+                            </tr>';
+                }
+            } catch (Exception $ex) {
+                die("Error: " . $ex);
             }
         }
 
@@ -36,6 +120,7 @@
                 $sql .= "'".$_SESSION['usu_id']."');"; // p_usuario
                 // return $sql;
                 $datos = $this->con->return_query_mysql($sql);
+                return json_encode($datos);
                 $cuerpo_ch = '';
                 $index = 0;
                 $error = $this->con->error_mysql();

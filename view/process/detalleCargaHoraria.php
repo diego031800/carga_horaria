@@ -58,19 +58,14 @@ if (!isset($_SESSION['login'])) {
                     <div class="card shadow p-3 mb-5 bg-body-tertiary rounded mt-5" style="min-height: 620px;">
                         <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
                             <h3 class="card-title m-3">Mis Cargas Horarias</h3>
+                            <button class="btn btn-primary" type="button" id="btnNuevaCarga">
+                                <i class="fa fa-plus-square"></i> &nbsp;&nbsp; Nueva Carga Horaria
+                            </button>
                         </div>
                         <div class="card-body">
                             <div class="card" style="color: #ffffff; background-color:rgba(135, 135, 135, 0.09); border-radius: 18px;">
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-lg-2 col-6">
-                                            <input class="form-control" type="date" id="txtFechaInicio">
-                                            <small style="color: #666666;"><b>Filtar</b> desde</small>
-                                        </div>
-                                        <div class="col-lg-2 col-6">
-                                            <input class="form-control" type="date" id="txtFechaFin">
-                                            <small style="color: #666666;"><b>Filtar</b> hasta</small>
-                                        </div>
                                         <div class="col-lg-2 col-6">
                                             <select class="form-select" id="cboSemestre">
                                             </select>
@@ -80,6 +75,16 @@ if (!isset($_SESSION['login'])) {
                                             <select class="form-select" id="cboUnidad">
                                             </select>
                                             <small style="color: #666666;"><b>Filtar</b> por Unidad</small>
+                                        </div>
+                                        <div class="col-lg-3 col-6">
+                                            <select class="form-select" id="cboPrograma">
+                                            </select>
+                                            <small style="color: #666666;"><b>Filtar</b> por Programa</small>
+                                        </div>
+                                        <div class="col-lg-2 col-6">
+                                            <select name="ciclo" class="form-select" id="cboCiclo">
+                                            </select>
+                                            <small style="color: #666666;"><b>Filtar</b> por Ciclo</small>
                                         </div>
                                         <div class="col-lg-2 col-md-4 col-6 d-grid mx-auto align-items-center">
                                             <button class="btn btn-primary" type="button" id="btnBuscar">
@@ -100,6 +105,8 @@ if (!isset($_SESSION['login'])) {
                                                 <th class="text-center">CÓDIGO</th>
                                                 <th class="text-center">SEMESTRE</th>
                                                 <th class="text-center">UNIDAD</th>
+                                                <th class="text-center">PROGRAMA</th>
+                                                <th class="text-center">CICLO</th>
                                                 <th class="text-center">CREADO</th>
                                                 <th class="text-center">EDITADO</th>
                                                 <th class="text-center">USUARIO</th>
@@ -145,7 +152,7 @@ if (!isset($_SESSION['login'])) {
         <!-- DATA TABLE -->
         <script src="../../assets/js/data_table/jquery.dataTables.min.js"></script>
         <!-- SCRIPT DESPACHO -->
-        <script src="../../view/js/process/misCargasHorarias.js"></script>
+        <script src="../../view/js/process/detalleCargaHoraria.js"></script>
         <!-- SCRIPT PROPIO INICIO -->
         <script>
         </script>

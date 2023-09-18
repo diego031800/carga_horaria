@@ -1,7 +1,5 @@
 let cboSemestre = document.getElementById('cboSemestre');
 let cboUnidad = document.getElementById('cboUnidad');
-let txtFechaInicio = document.getElementById('txtFechaInicio');
-let txtFechaFin = document.getElementById('txtFechaFin');
 let btnBuscar = document.getElementById('btnBuscar');
 let btnNuevaCarga = document.getElementById('btnNuevaCarga');
 
@@ -39,31 +37,68 @@ function get_cbo_unidades() {
   });
 }
 
-// INICIALIZAR FECHAS
-function inicializar_fechas() {
-  const fechaActual = new Date();
-  txtFechaFin.valueAsDate = fechaActual;
-  
-  const fechaAntes = new Date();
-  fechaAntes.setMonth(fechaAntes.getMonth() - 6);
-  txtFechaInicio.valueAsDate = fechaAntes;
+function get_cbo_programas() {
+  let opcion = "get_programas";
+  let p_sec_id = cboUnidad.value;
+  $.ajax({
+    type: "POST",
+    url: "../../controllers/main/MisCargasHorariasController.php",
+    data: "opcion=" + opcion + "&p_sec_id=" + p_sec_id,
+    success: function (data) {
+      let opciones = data;
+      $("#cboPrograma").html(opciones);
+    },
+    error: function (data) {
+      alert("Error al mostrar");
+    },
+  });
+}
+
+function change_cbo_ciclo() {
+  let unidad = $("#cboUnidad option[value='" + cboUnidad.value + "']").text();
+  console.log('cambia');
+  if (unidad == "DOCTORADO") {
+    $("#cboCiclo").html(
+      '<option value="">Selecciona un ciclo ...</option>' +
+        '<option value="1">1</option>' +
+        '<option value="2">2</option>' +
+        '<option value="3">3</option>' +
+        '<option value="4">4</option>' +
+        '<option value="5">5</option>' +
+        '<option value="6">6</option>'
+    );
+  } else {
+    $("#cboCiclo").html(
+      '<option value="">Selecciona un ciclo ...</option>' +
+        '<option value="1">1</option>' +
+        '<option value="2">2</option>' +
+        '<option value="3">3</option>' +
+        '<option value="4">4</option>'
+    );
+  }
+}
+
+/* FUNCION AGREGAR */
+function nuevaCarga() {
+  let url = 'registrarCargaHoraria.php';
+  location.href = url;
 }
 
 /* FUNCION DE BUSCAR */
 function buscar() {
-  let opcion = "get_cargas_horarias_by_sem";
-  let p_sem_id = cboSemestre.value ? cboSemestre.value : 0;
-  let p_sec_id = cboUnidad.value ? cboUnidad.value : 0;
-  let p_fecha_inicio = txtFechaInicio.value ? txtFechaInicio.value : '';
-  let p_fecha_fin = txtFechaFin.value ? txtFechaFin.value : '';
+  let opcion = "get_cargas_horarias";
+  let p_sem_id = cboSemestre.value?cboSemestre.value:0;
+  let p_sec_id = cboUnidad.value?cboUnidad.value:0;
+  let p_prg_id = cboPrograma.value?cboPrograma.value:0;
+  let p_ciclo = cboCiclo.value?cboCiclo.value:0;
   $.ajax({
     type: "POST",
     url: "../../controllers/main/MisCargasHorariasController.php",
     data: "opcion=" + opcion +
       "&p_sem_id=" + p_sem_id +
       "&p_sec_id=" + p_sec_id +
-      "&p_fecha_inicio=" + p_fecha_inicio +
-      "&p_fecha_fin=" + p_fecha_fin,
+      "&p_prg_id=" + p_prg_id +
+      "&p_ciclo=" + p_ciclo,
     beforeSend: function () {
       btnBuscar.disabled = true;
       let spinner = '<div class="d-flex justify-content-center mt-5"><div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"><span class="visually-hidden">Loading...</span></div></div>'
@@ -84,10 +119,15 @@ function buscar() {
 
 /* FUNCION AL CARGAR EL DOCUMENTO */
 function load_document() {
-  inicializar_fechas();
   get_cbo_unidades();
   get_cbo_semestres();
+  get_cbo_programas();
+  change_cbo_ciclo();
   buscar();
+  // btnBuscar.addEventListener("click", buscar);
+  cboUnidad.addEventListener("change", change_cbo_ciclo);
+  cboUnidad.addEventListener("change", get_cbo_programas);
+  btnNuevaCarga.addEventListener("click", nuevaCarga);
   btnBuscar.addEventListener("click", buscar);
 }
 

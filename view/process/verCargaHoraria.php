@@ -103,14 +103,14 @@ if (!isset($_SESSION['login'])) {
                                 </div>
                             </div>
                         </div>
-                        <div class="card-footer bg-transparent">
+                        <!-- <div class="card-footer bg-transparent">
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end m-3">
                                 <button class="btn btn-danger" type="button" id="btnCancelar">
                                     <i class="fa fa-close"></i>
                                     &nbsp; Cancelar
                                 </button>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
