@@ -293,7 +293,7 @@ function alternarDatosGrupo() {
     $(".datepicker3").datepicker("clearDates");
   }
 }
-
+/* Guarda los nuevos datos de un curso en el array */
 function guardar() {
   let index = parseInt(txtIdCursoEditar.value);
   let idNuevo = parseInt(cboCurso.value);
@@ -344,6 +344,7 @@ function abrir_grupo_modal(idCurso) {
   alternarDatosGrupo();
 }
 
+/* Abre el modal de curso, con los datos del curso para editar */
 function editar(indexb) {
   $("#myModal-curso").fadeIn();
   let curso = listacursos.find((cursoI) => cursoI.index === indexb);
@@ -352,6 +353,8 @@ function editar(indexb) {
   txtIdCursoEditar.value = indexb;
 }
 
+/* Valida que el curso que se va a agregar no esté en registrado y 
+si se edita, evita que no se guarde un curso ya guardado y que si es el mismo no haya conflicto */
 function cursoAgregado(index, accion, indexnuevo) {
   if (accion == 0) {
     if (
@@ -380,6 +383,7 @@ function cursoAgregado(index, accion, indexnuevo) {
   }
 }
 
+/* Valida que las horas no sean negativas */
 function validarHoras(int) {
   if (int < 0) {
     toastr["error"]("Número de horas invalidas", "Agregar curso");
@@ -389,6 +393,7 @@ function validarHoras(int) {
   }
 }
 
+/* Poner los grupos de un curso en el cbo del modal de grupos */
 function actualizarCboGrupoDoc(ind) {
   $("#cbo-grupodocente").empty();
   let opciones = listacursos.find((cursoI) => cursoI.index == ind).grupos;
@@ -399,6 +404,7 @@ function actualizarCboGrupoDoc(ind) {
   });
 }
 
+/* Genera un array segun la fechas registradas */
 function agregarFechas(fechas) {
   let arrayFechas = fechas.split(",");
   let i = 0;
@@ -415,8 +421,6 @@ function agregarFechas(fechas) {
 }
 
 function limpiarInputs() {
-  $(".datepicker3").datepicker("clearDates");
-  txtFechas.value = "";
   txtHoras.value = "";
   $("#cboCurso").val(null).trigger("change");
 }
@@ -427,6 +431,8 @@ function eliminar(index) {
   toastr["warning"]("El curso se ha eliminado con éxito", "Eliminar curso");
 }
 
+
+/* Actualiza los datos de los cursos en la tabla */
 function llenarTabla() {
   $("#cursosTabla tbody").empty();
   if (listacursos.length == 0) {
@@ -459,6 +465,7 @@ function llenarTabla() {
   $('[data-bs-toggle="tooltip"]').tooltip();
 }
 
+/* Genera el menú desplegable de acciones para cada curso */
 function menuAcciones(id) {
   let string =
     '<button class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip" title="Acciones del curso, editar o eliminar" type="button" data-toggle="dropdown" aria-expanded="false">' +
@@ -583,6 +590,8 @@ function eliminarDocente() {
   }
 }
 
+
+/* Cambiar los datos de los docentes, según el grupo que se selecciona */
 function alternarDatosDoc() {
   let id_curso_modal = txtIdModal.value;
   let id_grupo_docente = cboDocGrupo.value;
@@ -678,13 +687,6 @@ function abrir_docente_modal(index) {
 
 // Funcionalidades
 
-function cancelarEditarCurso() {
-  limpiarInputs();
-  btnAgregarCurso.disabled = false;
-  btnGuardarCurso.disabled = true;
-  btnCancelarEditar.disabled = true;
-  $("#cursoEditar").val("");
-}
 
 /* Habilitar o deshabilitar los campos de la unidad */
 function camposUnidad(bol) {
@@ -699,7 +701,7 @@ function camposCursos(bol) {
   cboCurso.disabled = bol;
   btnAgregarCurso.disabled = bol;
 }
-
+/* Botón de confirmar carga horaria */
 function editarCarga() {
   let sem = cboSemestre.value;
   let unidad = cboUnidad.value;
