@@ -32,12 +32,10 @@
         {
             try {
                 $sql = "CALL sp_GetMisCargasHorariasBySem(";
-                $sql .= "'".$this->parametros['p_fecha_inicio']."', "; // p_fecha_inicio
-                $sql .= "'".$this->parametros['p_fecha_fin']."', "; // p_fecha_fin
                 $sql .= "'".$this->parametros['p_sem_id']."', "; // p_sem_id
                 $sql .= "'".$this->parametros['p_sec_id']."', "; // p_sec_id
                 $sql .= "'".$_SESSION['usu_id']."');"; // p_usuario
-                return $sql;
+                // return $sql;
                 $datos = $this->con->return_query_mysql($sql);
                 // return json_encode($datos);
                 $cuerpo_ch = '';
@@ -51,15 +49,15 @@
                                         <td class="align-middle text-center" style="max-width: 100px;">
                                             <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">Acciones</button>
                                             <div  class="dropdown-menu">
-                                                <button class="dropdown-item btn-sm" onclick="editar('.$row['cgh_id'].', '.$row['cgc_id']. ')">
-                                                    <i class="fa fa-google-plus text-primary"></i>&nbsp;&nbsp;
+                                                <button class="dropdown-item btn-sm" onclick="editar('.$row['sem_id'].', '.$row['sec_id'].')">
+                                                    <i class="fa fa-plus-circle text-primary"></i>&nbsp;&nbsp;
                                                     Ver detalle
                                                 </button>
-                                                <button class="dropdown-item btn-sm" onclick="enviar('.$row['cgh_id'].', '.$row['cgc_id']. ')">
+                                                <button class="dropdown-item btn-sm" onclick="enviar('.$row['sem_id'].', '.$row['sec_id'].')">
                                                     <i class="fa fa-send-o text-warning"></i>&nbsp;&nbsp;
                                                     Enviar
                                                 </button>
-                                                <button class="dropdown-item btn-sm" onclick="eliminar('.$row['cgh_id'].', '.$row['cgc_id']. ')">
+                                                <button class="dropdown-item btn-sm" onclick="eliminar('.$row['sem_id'].', '.$row['sec_id'].')">
                                                     <i class="fa fa-trash-o text-danger"></i>&nbsp;&nbsp;
                                                     Eliminar
                                                 </button>
@@ -78,18 +76,6 @@
                                         </td>
                                         <td class="align-middle text-center" style="max-width: 190px;">
                                             '.$row['unidad']. '
-                                        </td>
-                                        <td class="align-middle text-center" style="max-width: 200px;">
-                                            '.$row['mencion']. '
-                                        </td>
-                                        <td class="align-middle text-center" style="max-width: 50px;">
-                                            '.($this->convertirARomano($row['ciclo'])). '
-                                        </td>
-                                        <td class="align-middle text-center" style="max-width: 150px;">
-                                            '.$row['fecha_creado']. '
-                                        </td>
-                                        <td class="align-middle text-center" style="max-width: 150px;">
-                                            '.$row['fecha_edicion']. '
                                         </td>
                                         <td class="align-middle text-center" style="max-width: 200px;">
                                             '.($this->get_nombres_usuario($row['usuario'])).'

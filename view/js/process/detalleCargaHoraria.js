@@ -2,6 +2,7 @@ let cboSemestre = document.getElementById('cboSemestre');
 let cboUnidad = document.getElementById('cboUnidad');
 let btnBuscar = document.getElementById('btnBuscar');
 let btnNuevaCarga = document.getElementById('btnNuevaCarga');
+let btnAtras = document.getElementById('btnAtras');
 
 // FUNCIONES
 // INICIO OBTENER COMBOS
@@ -117,18 +118,30 @@ function buscar() {
   });
 }
 
+/* FUNCION PARA EDITAR */
+function editar(cgh_id) {
+  
+}
+
+/* FUNCION PARA IR ATRAS */
+function back() {
+  window.history.back();
+}
+
+/* FUNCION PARA ELIMINAR */
+function eliminar() {
+  
+}
+
 /* FUNCION AL CARGAR EL DOCUMENTO */
 function load_document() {
-  get_cbo_unidades();
-  get_cbo_semestres();
   get_cbo_programas();
   change_cbo_ciclo();
   buscar();
   // btnBuscar.addEventListener("click", buscar);
-  cboUnidad.addEventListener("change", change_cbo_ciclo);
-  cboUnidad.addEventListener("change", get_cbo_programas);
   btnNuevaCarga.addEventListener("click", nuevaCarga);
   btnBuscar.addEventListener("click", buscar);
+  btnAtras.addEventListener("click", back);
 }
 
 // EVENTOS

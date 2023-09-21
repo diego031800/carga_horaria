@@ -82,6 +82,14 @@ function buscar() {
   });
 }
 
+/* FUNCION EDITAR */
+function editar(sem_id, sec_id) {
+  location.href = 'detalleCargaHoraria?sem_id='+sem_id+'&sec_id='+sec_id;
+}
+
+/* FUNCION ENVIAR */
+/* FUNCION ELIMINAR */
+
 /* FUNCION AL CARGAR EL DOCUMENTO */
 function load_document() {
   inicializar_fechas();
