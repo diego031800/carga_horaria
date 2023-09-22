@@ -191,7 +191,7 @@ function agregar() {
   let txtCursoCreditos = cur_option.data("creditos");
   let txtCursoTipo = cur_option.data("tipo");
   let txtCursoCalidad = cur_option.data("calidad");
-  if (txtCurso == "" || txtHoras.value == "") {
+  if (cboCurso.value == '' || txtHoras.value == "") {
     toastr["error"]("No deben haber campos vacíos", "Agregar curso");
     return;
   }
@@ -678,7 +678,7 @@ function abrir_docente_modal(index) {
     seleccionar_datos_docente();
   });
   toastr["info"](
-    'Para ver y/o agregar los datos del docente suplente, active la opcion que dice: "ver suplente" ',
+    'Para ver y/o agregar los datos del docente suplente, active la opcion que dice: "Agregar docente suplente" ',
     "Asignar docente"
   );
   actualizarCboGrupoDoc(index);
@@ -886,7 +886,6 @@ window.addEventListener("load", load_document);
 
 window.onclick = function (event) {
   if (event.target === document.getElementById("myModal-docente")) {
-    console.log("se activó este envento");
     $("#myModal-docente").fadeOut();
     limpiarInputsModal();
   }
