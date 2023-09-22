@@ -1,5 +1,5 @@
-let cboSemestre = document.getElementById('cboSemestre');
-let cboUnidad = document.getElementById('cboUnidad');
+let cboSemestre = document.getElementById('sem_id');
+let cboUnidad = document.getElementById('sec_id');
 let btnBuscar = document.getElementById('btnBuscar');
 let btnNuevaCarga = document.getElementById('btnNuevaCarga');
 let btnAtras = document.getElementById('btnAtras');

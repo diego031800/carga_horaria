@@ -39,15 +39,15 @@
                 $datos = $this->con->return_query_mysql($sql);
                 // return json_encode($datos);
                 $cuerpo_ch = '';
+                $data = [];
+                $data_table = array();
                 $index = 0;
                 $error = $this->con->error_mysql();
                 if (empty($error)) {
                     while ($row = mysqli_fetch_array($datos)) {
                         $index ++;
-                        $cuerpo_ch .= '<tr>
-                                        <td class="align-middle text-center" style="max-width: 50px;">'.$index. '</td>
-                                        <td class="align-middle text-center" style="max-width: 100px;">
-                                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">Acciones</button>
+                        $data['nro'] = $index; 
+                        $data['acciones'] = '<button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">Acciones</button>
                                             <div  class="dropdown-menu">
                                                 <button class="dropdown-item btn-sm" onclick="editar('.$row['sem_id'].', '.$row['sec_id'].')">
                                                     <i class="fa fa-plus-circle text-primary"></i>&nbsp;&nbsp;
@@ -61,7 +61,19 @@
                                                     <i class="fa fa-trash-o text-danger"></i>&nbsp;&nbsp;
                                                     Eliminar
                                                 </button>
-                                            </div>
+                                            </div>'; 
+                        $data['estado'] = '<h6><span class="badge text-bg-'.$row['color'].'">
+                                                '.$row['estado']. '
+                                            </span></h6>';
+                        $data['codigo'] = $row['codigo'];
+                        $data['semestre'] = $row['semestre'];
+                        $data['unidad'] = $row['unidad'];
+                        $data['usuario'] = $this->get_nombres_usuario($row['usuario']);
+                        array_push($data_table, $data);
+                        $cuerpo_ch .= '<tr>
+                                        <td class="align-middle text-center" style="max-width: 50px;">'.$index. '</td>
+                                        <td class="align-middle text-center" style="max-width: 100px;">
+                                            
                                         </td>
                                         <td class="align-middle text-center" style="max-width: 120px;">
                                             <h6><span class="badge text-bg-'.$row['color'].'">
@@ -82,13 +94,13 @@
                                         </td>
                                     </tr>';
                     }
-                    return $cuerpo_ch;
+                    return json_encode(array('data' => $data_table, 'tbody' => $cuerpo_ch));
                 } else {
-                    return '<tr>
-                                <td colspan="11">
-                                    '.$error. '
-                                </td>
-                            </tr>';
+                    return json_encode(array('data' => $data_table, 'tbody' => '<tr>
+                                                                            <td colspan="11">
+                                                                                '.$error. '
+                                                                            </td>
+                                                                        </tr>'));
                 }
             } catch (Exception $ex) {
                 die("Error: " . $ex);

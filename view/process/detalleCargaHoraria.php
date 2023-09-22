@@ -44,8 +44,8 @@ if (!isset($_SESSION['login'])) {
     </head>
 
     <body>
-        <input type="hidden" id="sem_id" value="">
-        <input type="hidden" id="sec_id">
+        <input type="hidden" id="sem_id" value="<?php echo $_GET['sem_id'] ?>">
+        <input type="hidden" id="sec_id" value="<?php echo $_GET['sec_id'] ?>">
         <div class="page-container">
             <!-- START SIDE BAR -->
             <?php require_once('../left_sidebar.php') ?>
@@ -70,7 +70,7 @@ if (!isset($_SESSION['login'])) {
                         <div class="card-body">
                             <div class="card" style="color: #ffffff; background-color:rgba(135, 135, 135, 0.09); border-radius: 18px;">
                                 <div class="card-body">
-                                    <div class="row">
+                                    <div class="row d-flex justify-content-center">
                                         <div class="col-lg-3 col-6">
                                             <select class="form-select" id="cboPrograma">
                                             </select>
@@ -81,9 +81,9 @@ if (!isset($_SESSION['login'])) {
                                             </select>
                                             <small style="color: #666666;"><b>Filtar</b> por Ciclo</small>
                                         </div>
-                                        <div class="col-lg-2 col-md-4 col-6 d-grid mx-auto align-items-center">
+                                        <div class="col-lg-2 col-md-4 col-6 align-items-center">
                                             <button class="btn btn-primary" type="button" id="btnBuscar">
-                                                <i class="fa fa-search"></i> &nbsp;&nbsp; Buscar
+                                                <i class="fa fa-search"></i>
                                             </button>
                                         </div>
                                     </div>

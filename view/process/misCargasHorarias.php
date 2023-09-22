@@ -62,15 +62,7 @@ if (!isset($_SESSION['login'])) {
                         <div class="card-body">
                             <div class="card" style="color: #ffffff; background-color:rgba(135, 135, 135, 0.09); border-radius: 18px;">
                                 <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-lg-2 col-6">
-                                            <input class="form-control" type="date" id="txtFechaInicio">
-                                            <small style="color: #666666;"><b>Filtar</b> desde</small>
-                                        </div>
-                                        <div class="col-lg-2 col-6">
-                                            <input class="form-control" type="date" id="txtFechaFin">
-                                            <small style="color: #666666;"><b>Filtar</b> hasta</small>
-                                        </div>
+                                    <div class="row d-flex justify-content-center">
                                         <div class="col-lg-2 col-6">
                                             <select class="form-select" id="cboSemestre">
                                             </select>
@@ -81,9 +73,9 @@ if (!isset($_SESSION['login'])) {
                                             </select>
                                             <small style="color: #666666;"><b>Filtar</b> por Unidad</small>
                                         </div>
-                                        <div class="col-lg-2 col-md-4 col-6 d-grid mx-auto align-items-center">
+                                        <div class="col-lg-1 col-md-4 col-6 align-items-center">
                                             <button class="btn btn-primary" type="button" id="btnBuscar">
-                                                <i class="fa fa-search"></i> &nbsp;&nbsp; Buscar
+                                                <i class="fa fa-search"></i>
                                             </button>
                                         </div>
                                     </div>
@@ -105,6 +97,7 @@ if (!isset($_SESSION['login'])) {
                                         </thead>
                                         <tbody id="cuerpo_ch"></tbody>
                                     </table>
+                                    <div id="tbl_spinner"></div>
                                 </div>
                             </div>
                         </div>
