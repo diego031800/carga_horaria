@@ -55,7 +55,10 @@ if (!isset($_SESSION['login'])) {
                 <!-- END NAV BAR -->
                 <div class="main-content-inner">
                     <div class="card shadow p-3 mb-5 bg-body-tertiary rounded mt-5" style="min-height: 620px;">
-                        <div class="card-header bg-transparent">
+                        <div class="card-header bg-transparent d-flex align-items-center">
+                            <button class="btn btn-primary" type="button" id="btnAtras">
+                                <i class="fa fa-arrow-left"></i>
+                            </button>&nbsp;&nbsp;&nbsp;
                             <h3 class="card-title m-3">Registro de la carga horaria</h3>
                         </div>
                         <div class="card-body">

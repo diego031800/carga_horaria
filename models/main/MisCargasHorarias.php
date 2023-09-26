@@ -34,7 +34,8 @@
                 $sql = "CALL sp_GetMisCargasHorariasBySem(";
                 $sql .= "'".$this->parametros['p_sem_id']."', "; // p_sem_id
                 $sql .= "'".$this->parametros['p_sec_id']."', "; // p_sec_id
-                $sql .= "'".$_SESSION['usu_id']."');"; // p_usuario
+                $sql .= "'".$_SESSION['usu_id']."', "; // p_usuario
+                $sql .= "'".json_encode($this->get_unidades_asignadas($_SESSION['usu_id']))."'); "; // p_unidades_usuario
                 // return $sql;
                 $datos = $this->con->return_query_mysql($sql);
                 // return json_encode($datos);
@@ -53,13 +54,13 @@
                                                     <i class="fa fa-plus-circle text-primary"></i>&nbsp;&nbsp;
                                                     Ver detalle
                                                 </button>
+                                                <button class="dropdown-item btn-sm" onclick="verPdf('.$row['sem_id'].', '.$row['sec_id'].')">
+                                                    <i class="fa fa-file-pdf-o text-danger"></i>&nbsp;&nbsp;
+                                                    Ver pdf
+                                                </button>
                                                 <button class="dropdown-item btn-sm" onclick="enviar('.$row['sem_id'].', '.$row['sec_id'].')">
                                                     <i class="fa fa-send-o text-warning"></i>&nbsp;&nbsp;
                                                     Enviar
-                                                </button>
-                                                <button class="dropdown-item btn-sm" onclick="eliminar('.$row['sem_id'].', '.$row['sec_id'].')">
-                                                    <i class="fa fa-trash-o text-danger"></i>&nbsp;&nbsp;
-                                                    Eliminar
                                                 </button>
                                             </div>'; 
                         $data['estado'] = '<h6><span class="badge text-bg-'.$row['color'].'">
@@ -69,38 +70,12 @@
                         $data['semestre'] = $row['semestre'];
                         $data['unidad'] = $row['unidad'];
                         $data['usuario'] = $this->get_nombres_usuario($row['usuario']);
+                        // $data['p_unidades'] = $row['p_unidades'];
                         array_push($data_table, $data);
-                        $cuerpo_ch .= '<tr>
-                                        <td class="align-middle text-center" style="max-width: 50px;">'.$index. '</td>
-                                        <td class="align-middle text-center" style="max-width: 100px;">
-                                            
-                                        </td>
-                                        <td class="align-middle text-center" style="max-width: 120px;">
-                                            <h6><span class="badge text-bg-'.$row['color'].'">
-                                                '.$row['estado']. '
-                                            </span></h6>
-                                        </td>
-                                        <td class="align-middle text-center" style="max-width: 120px;">
-                                            '.$row['codigo']. '
-                                        </td>
-                                        <td class="align-middle text-center" style="max-width: 120px;">
-                                            '.$row['semestre']. '
-                                        </td>
-                                        <td class="align-middle text-center" style="max-width: 190px;">
-                                            '.$row['unidad']. '
-                                        </td>
-                                        <td class="align-middle text-center" style="max-width: 200px;">
-                                            '.($this->get_nombres_usuario($row['usuario'])).'
-                                        </td>
-                                    </tr>';
                     }
-                    return json_encode(array('data' => $data_table, 'tbody' => $cuerpo_ch));
+                    return json_encode($data_table);
                 } else {
-                    return json_encode(array('data' => $data_table, 'tbody' => '<tr>
-                                                                            <td colspan="11">
-                                                                                '.$error. '
-                                                                            </td>
-                                                                        </tr>'));
+                    return $error;
                 }
             } catch (Exception $ex) {
                 die("Error: " . $ex);
@@ -118,70 +93,43 @@
                 $sql .= "'".$_SESSION['usu_id']."');"; // p_usuario
                 // return $sql;
                 $datos = $this->con->return_query_mysql($sql);
-                return json_encode($datos);
+                // return json_encode($datos);
+                $data = [];
+                $data_table = array();
                 $cuerpo_ch = '';
                 $index = 0;
                 $error = $this->con->error_mysql();
                 if (empty($error)) {
                     while ($row = mysqli_fetch_array($datos)) {
                         $index ++;
-                        $cuerpo_ch .= '<tr>
-                                        <td class="align-middle text-center" style="max-width: 50px;">'.$index. '</td>
-                                        <td class="align-middle text-center" style="max-width: 100px;">
-                                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">Acciones</button>
+                        $data['nro'] = $index; 
+                        $data['acciones'] = '<button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">Acciones</button>
                                             <div  class="dropdown-menu">
                                                 <button class="dropdown-item btn-sm" onclick="editar('.$row['cgh_id'].', '.$row['cgc_id']. ')">
                                                     <i class="fa fa-edit text-primary"></i>&nbsp;&nbsp;
                                                     Editar
                                                 </button>
-                                                <button class="dropdown-item btn-sm" onclick="enviar('.$row['cgh_id'].', '.$row['cgc_id']. ')">
-                                                    <i class="fa fa-send-o text-warning"></i>&nbsp;&nbsp;
-                                                    Enviar
-                                                </button>
                                                 <button class="dropdown-item btn-sm" onclick="eliminar('.$row['cgh_id'].', '.$row['cgc_id']. ')">
                                                     <i class="fa fa-trash-o text-danger"></i>&nbsp;&nbsp;
                                                     Eliminar
                                                 </button>
-                                            </div>
-                                        </td>
-                                        <td class="align-middle text-center" style="max-width: 120px;">
-                                            <h6><span class="badge text-bg-'.$row['color'].'">
+                                            </div>';
+                        $data['estado'] = '<h6><span class="badge text-bg-'.$row['color'].'">
                                                 '.$row['estado']. '
-                                            </span></h6>
-                                        </td>
-                                        <td class="align-middle text-center" style="max-width: 120px;">
-                                            '.$row['codigo']. '
-                                        </td>
-                                        <td class="align-middle text-center" style="max-width: 120px;">
-                                            '.$row['semestre']. '
-                                        </td>
-                                        <td class="align-middle text-center" style="max-width: 190px;">
-                                            '.$row['unidad']. '
-                                        </td>
-                                        <td class="align-middle text-center" style="max-width: 200px;">
-                                            '.$row['mencion']. '
-                                        </td>
-                                        <td class="align-middle text-center" style="max-width: 50px;">
-                                            '.($this->convertirARomano($row['ciclo'])). '
-                                        </td>
-                                        <td class="align-middle text-center" style="max-width: 150px;">
-                                            '.$row['fecha_creado']. '
-                                        </td>
-                                        <td class="align-middle text-center" style="max-width: 150px;">
-                                            '.$row['fecha_edicion']. '
-                                        </td>
-                                        <td class="align-middle text-center" style="max-width: 200px;">
-                                            '.($this->get_nombres_usuario($row['usuario'])).'
-                                        </td>
-                                    </tr>';
+                                            </span></h6>';
+                        $data['codigo'] = $row['codigo'];
+                        $data['semestre'] = $row['semestre'];
+                        $data['unidad'] = $row['unidad'];
+                        $data['programa'] = $row['programa'];
+                        $data['ciclo'] = $row['ciclo'];
+                        $data['creado'] = $row['creado'];
+                        $data['editado'] = $row['editado'];
+                        $data['usuario'] = $this->get_nombres_usuario($row['usuario']);
+                        array_push($data_table, $data);
                     }
-                    return $cuerpo_ch;
+                    return json_encode($data_table);
                 } else {
-                    return '<tr>
-                                <td colspan="11">
-                                    '.$error. '
-                                </td>
-                            </tr>';
+                    return json_encode($data_table);
                 }
             } catch (Exception $ex) {
                 die("Error: " . $ex);
@@ -226,6 +174,27 @@
                     $usuario = $row['usuario'];
                 }
                 return $usuario;
+            } catch (Exception $ex) {
+                die("Error: " . $ex);
+            }
+        }
+
+        private function get_unidades_asignadas($usu_id)
+        {
+            try {
+                $sql = "SELECT
+                            UUN.sec_id
+                        FROM SISTEMA.USUARIO_UNIDAD UUN
+                        WHERE UUN.usu_id = '$usu_id'
+                        ORDER BY UUN.sec_id DESC";
+                $datos = $this->con->return_query_sqlsrv($sql);
+                $unidades = array();
+                while ($row = $datos->fetch(PDO::FETCH_ASSOC)) {
+                    $unidad = [];
+                    $unidad['unidad_id'] = $row['sec_id'];
+                    array_push($unidades, $unidad);
+                }
+                return $unidades;
             } catch (Exception $ex) {
                 die("Error: " . $ex);
             }

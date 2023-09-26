@@ -1,4 +1,5 @@
 // Elementos HTML
+let btnAtras = document.getElementById('btnAtras');
 //   Unidades
 let cboSemestre = document.getElementById("cboSemestre");
 let cboUnidad = document.getElementById("cboUnidad");
@@ -44,6 +45,12 @@ let cgh_codigo = "";
 var listacursos = [];
 
 // FUNCIONES
+// NAVEGACION
+/* FUNCION PARA IR ATRAS */
+function back() {
+  window.history.back();
+}
+
 // INICIO OBTENER COMBOS
 function get_cbo_semestres() {
   let opcion = "get_cbo_semestres";
@@ -876,6 +883,7 @@ function load_document() {
   cboDocGrupo.addEventListener("change", actualizarDatosDocenteGrupo);
   tglDocSuplente.addEventListener("change", alternarDatosDoc);
   cboGrupoCurso.addEventListener("change", alternarDatosGrupo);
+  btnAtras.addEventListener("click", back);
   $('[data-bs-toggle="tooltip"]').tooltip();
 }
 

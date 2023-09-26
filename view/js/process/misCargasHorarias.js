@@ -61,11 +61,9 @@ function buscar() {
       btnBuscar.disabled = false;
       $('#cuerpo_ch').html('');
       $('#tbl_spinner').html('');
-      // table.clear().draw();
-      // table = $('#table_ch').DataTable().fnDestroy();
       $('#table_ch').DataTable().destroy();
       $('#table_ch').DataTable({
-        data: datos.data,
+        data: datos,
         columns: [
           { data: 'nro', className: 'dt-center' },
           { data: 'acciones', className: 'dt-center' },
@@ -108,6 +106,10 @@ function editar(sem_id, sec_id) {
 }
 
 /* FUNCION ENVIAR */
+function editar(sem_id, sec_id) {
+  location.href = 'detalleCargaHoraria?sem_id='+sem_id+'&sec_id='+sec_id;
+}
+
 /* FUNCION ELIMINAR */
 
 /* FUNCION AL CARGAR EL DOCUMENTO */

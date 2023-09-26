@@ -6,38 +6,6 @@ let btnAtras = document.getElementById('btnAtras');
 
 // FUNCIONES
 // INICIO OBTENER COMBOS
-function get_cbo_semestres() {
-  let opcion = "get_cbo_semestres";
-  $.ajax({
-    type: "POST",
-    url: "../../controllers/main/CargaHorariaController.php",
-    data: "opcion=" + opcion,
-    success: function (data) {
-      let opciones = data;
-      $('#cboSemestre').html(opciones);
-    },
-    error: function (data) {
-      alert("Error al mostrar: " + data);
-    },
-  });
-}
-
-function get_cbo_unidades() {
-  let opcion = "get_cbo_unidades";
-  $.ajax({
-    type: "POST",
-    url: "../../controllers/main/CargaHorariaController.php",
-    data: "opcion=" + opcion,
-    success: function (data) {
-      let opciones = data;
-      $('#cboUnidad').html(opciones);
-    },
-    error: function (data) {
-      alert("Error al mostrar");
-    },
-  });
-}
-
 function get_cbo_programas() {
   let opcion = "get_programas";
   let p_sec_id = cboUnidad.value;
@@ -81,15 +49,31 @@ function change_cbo_ciclo() {
 
 /* FUNCION AGREGAR */
 function nuevaCarga() {
-  let url = 'registrarCargaHoraria.php';
+  let url = 'registrarCargaHoraria.php?sem_id=' + cboSemestre.value + '&sec_id=' + cboUnidad.value;
   location.href = url;
+}
+
+/* FUNCION PARA EDITAR */
+function editar(cgh_id, cgc_id) {
+  let url = 'registrarCargaHoraria.php?cgh_id=' + cgh_id + '&cgc_id=' + cgc_id;
+  location.href = url;
+}
+
+/* FUNCION PARA IR ATRAS */
+function back() {
+  window.history.back();
+}
+
+/* FUNCION PARA ELIMINAR */
+function eliminar() {
+  
 }
 
 /* FUNCION DE BUSCAR */
 function buscar() {
   let opcion = "get_cargas_horarias";
-  let p_sem_id = cboSemestre.value?cboSemestre.value:0;
-  let p_sec_id = cboUnidad.value?cboUnidad.value:0;
+  let p_sem_id = cboSemestre.value ? cboSemestre.value : 0;
+  let p_sec_id = cboUnidad.value ? cboUnidad.value : 0;
   let p_prg_id = cboPrograma.value?cboPrograma.value:0;
   let p_ciclo = cboCiclo.value?cboCiclo.value:0;
   $.ajax({
@@ -104,33 +88,55 @@ function buscar() {
       btnBuscar.disabled = true;
       let spinner = '<div class="d-flex justify-content-center mt-5"><div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"><span class="visually-hidden">Loading...</span></div></div>'
       $('#cuerpo_ch').html('');
-      $('#cuerpo_ch').html(spinner);
+      $('#tbl_spinner').html(spinner);
     },
     success: function (data) {
+      let datos = JSON.parse(data);
+      console.log(datos);
       btnBuscar.disabled = false;
-      tabla = data;
       $('#cuerpo_ch').html('');
-      $('#cuerpo_ch').html(tabla);
+      $('#tbl_spinner').html('');
+      $('#table_ch').DataTable().destroy();
+      $('#table_ch').DataTable({
+        data: datos,
+        columns: [
+          { data: 'nro', className: 'dt-center' },
+          { data: 'acciones', className: 'dt-center' },
+          { data: 'estado', className: 'dt-center' },
+          { data: 'codigo', className: 'dt-center' },
+          { data: 'semestre', className: 'dt-center' },
+          { data: 'unidad', className: 'dt-center' },
+          { data: 'programa', className: 'dt-center' },
+          { data: 'ciclo', className: 'dt-center' },
+          { data: 'creado', className: 'dt-center' },
+          { data: 'editado', className: 'dt-center' },
+          { data: 'usuario', className: 'dt-center' },
+        ],
+        responsive: true,
+        select: true,
+        columnDefs: [
+          {
+              targets: -1,
+              className: 'dt-center'
+          }
+        ],
+        language: {
+          search:"Buscar", 
+          zeroRecords:"Sin Resultados Coincidentes",
+          paginate: {
+            first: "Primera",
+            last: "Ultima",
+            next: "Siguiente",
+            previous: "Anterior"
+          },
+          info: "Mostrando _START_ de _END_ de un total de _TOTAL_ Registros",
+        },
+      });
     },
     error: function (data) {
       alert("Error al mostrar");
     },
   });
-}
-
-/* FUNCION PARA EDITAR */
-function editar(cgh_id) {
-  
-}
-
-/* FUNCION PARA IR ATRAS */
-function back() {
-  window.history.back();
-}
-
-/* FUNCION PARA ELIMINAR */
-function eliminar() {
-  
 }
 
 /* FUNCION AL CARGAR EL DOCUMENTO */
