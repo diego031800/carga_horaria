@@ -1,5 +1,4 @@
 <?php
-
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -11,22 +10,18 @@ $parametros = array();
 $parametros['sec_id'] = '';
 $parametros['prg_id'] = '';
 
-if (isset($_POST['opcion'])) {
-    $parametros['opcion'] = $_POST['opcion'];
-}
-
 $mail = new PHPMailer;
 $mail->isSMTP();
 $mail->Host = 'smtp.gmail.com';
 $mail->Port = 465;
-$mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+$mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; 
 $mail->SMTPAuth = true;
-$mail->Username = 'upg_utic@unitru.edu.pe';
-$mail->Password = 'ojvg gftu qpbd urtr';
+$mail->Username = 'upg_utic@unitru.edu.pe'; 
+$mail->Password = 'ojvg gftu qpbd urtr'; 
 $mail->setFrom('upg_utic@unitru.edu.pe', 'UTIC POSGRADO');
 $mail->addAddress('gayalam@unitru.edu.pe', 'Gerald');
-$mail->Subject = 'Cierre de carga horaria del SEMESTRE ACTUAL DE LA UNIDAD DE CIENCIAS DE LA COMUNICACIÓN';
-$mail->isHTML(true);
+$mail->Subject = 'Cierre de carga horaria del SEMESTRE 2023 DE LA UNIDAD DE CIENCIAS DE LA COMUNICACIÓN';
+$mail->isHTML(true);    
 $mail->Body = '<p>Buenos días, les saluda cordialmente la Unidad de Tecnologías Informáticas y Comunicaciones / Sistemas de la EPG para comunicarles lo siguiente:</p>
     
 <p>Según la Propuesta de Evaluación y Seguimiento al Desempeño Docente de la Escuela de Posgrado de la Universidad Nacional de Trujillo, se les hace llegar a ustedes la encuesta de Desempeño Docente de forma sistemática al término de cada curso del Semestre Académico 2023-I.</p>
@@ -51,3 +46,4 @@ if ($mail->send()) {
 } else {
     echo 'Error al enviar el correo: ' . $mail->ErrorInfo;
 }
+?>
