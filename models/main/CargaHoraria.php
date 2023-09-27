@@ -372,8 +372,8 @@
                 $sql .= "NULL, "; // p_cgd_fecha_inicio
                 $sql .= "'".$docente->condicion."', "; // p_doc_condicion
                 $sql .= "'".$docente->doc_id."', "; // p_doc_id
-                $sql .= "'".$docente->dni."', "; // p_doc_codigo
                 $sql .= "'".$docente->codigo."', "; // p_doc_codigo
+                $sql .= "'".$docente->dni."', "; // p_doc_codigo
                 $sql .= "'".$docente->docente."', "; // p_doc_nombres
                 $sql .= "'".$docente->telefono."', "; // p_doc_celular
                 $sql .= "'".$docente->correo."', "; // p_doc_email

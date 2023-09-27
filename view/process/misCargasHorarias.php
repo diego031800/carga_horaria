@@ -57,7 +57,11 @@ if (!isset($_SESSION['login'])) {
                 <div class="main-content-inner">
                     <div class="card shadow p-3 mb-5 bg-body-tertiary rounded mt-5" style="min-height: 620px;">
                         <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+                            &nbsp;
                             <h3 class="card-title m-3">Mis Cargas Horarias</h3>
+                            <button class="btn btn-primary" type="button" id="btnNuevaCarga">
+                                <i class="fa fa-plus-square"></i> &nbsp;&nbsp; Carga Horaria
+                            </button>
                         </div>
                         <div class="card-body">
                             <div class="card" style="color: #ffffff; background-color:rgba(135, 135, 135, 0.09); border-radius: 18px;">

@@ -1,6 +1,8 @@
 // VARIABLES
 let cboSemestre = document.getElementById('cboSemestre');
+let txtSemestre = document.getElementById('txtSemestre');
 let cboUnidad = document.getElementById('cboUnidad');
+let txtUnidad = document.getElementById('txtUnidad');
 let btnDescargarPdf = document.getElementById('btnDescargarPdf');
 let btnDescargarExc = document.getElementById('btnDescargarExc');
 let btnBuscar = document.getElementById('btnBuscar');
@@ -9,34 +11,40 @@ let load_table = document.getElementById('load_table');
 // FUNCIONES
 // INICIO OBTENER COMBOS
 function get_cbo_semestres() {
-  let opcion = "get_cbo_semestres";
-  $.ajax({
-    type: "POST",
-    url: "../../controllers/main/CargaHorariaController.php",
-    data: "opcion=" + opcion,
-    success: function (data) {
-      let opciones = data;
-      $('#cboSemestre').html(opciones);
-    },
-    error: function (data) {
-      alert("Error al mostrar: " + data);
-    },
+  return new Promise((resolve, reject) => {
+    let opcion = "get_cbo_semestres";
+    $.ajax({
+      type: "POST",
+      url: "../../controllers/main/CargaHorariaController.php",
+      data: "opcion=" + opcion,
+      success: function (data) {
+        let opciones = data;
+        $('#cboSemestre').html(opciones);
+        resolve(); // Resolvemos la promesa cuando los datos se han obtenido con éxito
+      },
+      error: function (data) {
+        reject("Error al mostrar: " + data); // Rechazamos la promesa en caso de error
+      },
+    });
   });
 }
 
 function get_cbo_unidades() {
-  let opcion = "get_cbo_unidades";
-  $.ajax({
-    type: "POST",
-    url: "../../controllers/main/CargaHorariaController.php",
-    data: "opcion=" + opcion,
-    success: function (data) {
-      let opciones = data;
-      $('#cboUnidad').html(opciones);
-    },
-    error: function (data) {
-      alert("Error al mostrar");
-    },
+  return new Promise((resolve, reject) => {
+    let opcion = "get_cbo_unidades";
+    $.ajax({
+      type: "POST",
+      url: "../../controllers/main/CargaHorariaController.php",
+      data: "opcion=" + opcion,
+      success: function (data) {
+        let opciones = data;
+        $('#cboUnidad').html(opciones);
+        resolve(); // Resolvemos la promesa cuando los datos se han obtenido con éxito
+      },
+      error: function (data) {
+        reject("Error al mostrar"); // Rechazamos la promesa en caso de error
+      },
+    });
   });
 }
 
@@ -91,14 +99,38 @@ function mostrarPdf() {
   window.open(url, '_blank');
 }
 
+/* FUNCION PARA IR ATRAS */
+function back() {
+  window.history.back();
+}
+
 /* FUNCION AL CARGAR EL DOCUMENTO */
 function load_document() {
-    get_cbo_unidades();
-    get_cbo_semestres();
+  function asignar_func() {
+    if (txtSemestre.value !== null && txtSemestre.value !== '' && txtUnidad.value !== null && txtUnidad.value !== '') {
+      cboSemestre.value = txtSemestre.value;
+      cboUnidad.value = txtUnidad.value;
+    }
+
     btnBuscar.addEventListener("click", search_carga_horaria);
     cboSemestre.addEventListener("change", enable_btnBuscar);
     cboUnidad.addEventListener("change", enable_btnBuscar);
     btnDescargarPdf.addEventListener("click", mostrarPdf);
+    btnAtras.addEventListener("click", back);
+
+    if (txtSemestre.value !== null && txtSemestre.value !== '' && txtUnidad.value !== null && txtUnidad.value !== '') {
+      enable_btnBuscar();
+      search_carga_horaria();
+    }
+  }
+
+  Promise.all([get_cbo_unidades(), get_cbo_semestres()])
+    .then(() => {
+      asignar_func();
+    })
+    .catch(error => {
+      console.error("Error en la obtención de datos:", error);
+    });
 }
 
 // EVENTOS

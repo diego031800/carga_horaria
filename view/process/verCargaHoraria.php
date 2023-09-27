@@ -44,6 +44,8 @@ if (!isset($_SESSION['login'])) {
     </head>
 
     <body>
+        <input type="hidden" id="txtSemestre" value="<?php echo empty($_GET['sem_id'])?'':$_GET['sem_id'] ?>">
+        <input type="hidden" id="txtUnidad" value="<?php echo empty($_GET['sec_id'])?'':$_GET['sec_id'] ?>">
         <div class="page-container">
             <!-- START SIDE BAR -->
             <?php require_once('../left_sidebar.php') ?>
@@ -56,8 +58,12 @@ if (!isset($_SESSION['login'])) {
                 <!-- END NAV BAR -->
                 <div class="main-content-inner">
                     <div class="card shadow p-3 mb-5 bg-body-tertiary rounded mt-5" style="min-height: 620px;">
-                        <div class="card-header bg-transparent">
+                        <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+                            <button class="btn btn-primary" type="button" id="btnAtras">
+                                <i class="fa fa-arrow-left"></i>
+                            </button>
                             <h3 class="card-title m-3">Carga horaria</h3>
+                            <div style="color: white;">&nbsp;</div>
                         </div>
                         <div class="card-body">
                             <div class="row mb-2 d-flex justify-content-center">

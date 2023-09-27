@@ -7,10 +7,16 @@
 
     // Definir los enlaces y sus URLs correspondientes
     $menuItems = array(
-        'Mis cargas horarias' => '/carga_horaria/view/process/misCargasHorarias.php',   // Ruta relativa
-        // 'Nueva carga horaria' => '/carga_horaria/view/process/registrarCargaHoraria.php', // Ruta relativa
-        // 'Ver carga horaria general' => '/carga_horaria/view/process/verCargaHoraria.php',   // Ruta relativa
-        'Ver carga horaria' => '/carga_horaria/view/process/verCargaHoraria.php'   // Ruta relativa
+        [
+            'name' => 'Mis cargas horarias',
+            'url' => '/carga_horaria/view/process/misCargasHorarias.php', 
+            'parent_id' => '1'
+        ],
+        [ 
+            'name' => 'Enviar credenciales',
+            'url' => '/carga_horaria/view/process/envioCredenciales.php', 
+            'parent_id' => '2'
+        ],
     );
 
     ?>
@@ -26,14 +32,30 @@
          <div class="menu-inner">
              <nav>
                  <ul class="metismenu" id="menu">
-                     <li <?php if (isParentActive($menuItems, $currentUrl)) echo 'class="active"'; ?>>
+                     <li <?php if (isParentActive($menuItems, $currentUrl, 1)) echo 'class="active"'; ?>>
                          <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-table"></i><span>Carga horaria</span></a>
                          <ul class="collapse">
-                             <?php foreach ($menuItems as $itemName => $itemUrl) { ?>
-                                 <li <?php if ($currentUrl === $itemUrl) echo 'class="active"'; ?>>
-                                     <a href="<?php echo $itemUrl; ?>"><?php echo $itemName; ?></a>
+                             <?php foreach ($menuItems as $item) { 
+                                if ($item['parent_id'] == 1) { ?>
+                                 <li <?php if ($currentUrl === $item['url']) echo 'class="active"'; ?>>
+                                     <a href="<?php echo $item['url']; ?>"><?php echo $item['name']; ?></a>
                                  </li>
-                             <?php } ?>
+                             <?php 
+                                  }
+                                } ?>
+                         </ul>
+                     </li>
+                     <li <?php if (isParentActive($menuItems, $currentUrl, 2)) echo 'class="active"'; ?>>
+                         <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-user"></i><span> Acciones docentes</span></a>
+                         <ul class="collapse">
+                             <?php foreach ($menuItems as $item) { 
+                                if ($item['parent_id'] == 2) { ?>
+                                 <li <?php if ($currentUrl === $item['url']) echo 'class="active"'; ?>>
+                                     <a href="<?php echo $item['url']; ?>"><?php echo $item['name']; ?></a>
+                                 </li>
+                             <?php 
+                                  }
+                                } ?>
                          </ul>
                      </li>
                  </ul>
@@ -44,11 +66,13 @@
  <!-- sidebar menu area end -->
 
  <?php
-    function isParentActive($menuItems, $currentUrl)
+    function isParentActive($menuItems, $currentUrl, $parent_id)
     {
-        foreach ($menuItems as $itemUrl) {
-            if ($currentUrl === $itemUrl) {
-                return true;
+        foreach ($menuItems as $item) {
+            if ($parent_id == $item['parent_id']) {
+                if ($currentUrl === $item['url']) {
+                    return true;
+                }
             }
         }
         return false;

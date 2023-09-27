@@ -100,6 +100,12 @@ function buscar() {
   });
 }
 
+/* FUNCION AGREGAR */
+function nuevaCarga() {
+  let url = 'registrarCargaHoraria.php';
+  location.href = url;
+}
+
 /* FUNCION EDITAR */
 function editar(sem_id, sec_id) {
   location.href = 'detalleCargaHoraria?sem_id='+sem_id+'&sec_id='+sec_id;
@@ -110,6 +116,11 @@ function editar(sem_id, sec_id) {
   location.href = 'detalleCargaHoraria?sem_id='+sem_id+'&sec_id='+sec_id;
 }
 
+/* FUNCION VER PDF */
+function verPdf(sem_id, sec_id) {
+  location.href = 'verCargaHoraria?sem_id='+sem_id+'&sec_id='+sec_id;
+}
+
 /* FUNCION ELIMINAR */
 
 /* FUNCION AL CARGAR EL DOCUMENTO */
@@ -118,6 +129,7 @@ function load_document() {
   get_cbo_semestres();
   buscar();
   btnBuscar.addEventListener("click", buscar);
+  btnNuevaCarga.addEventListener("click", buscar);
 }
 
 // EVENTOS
