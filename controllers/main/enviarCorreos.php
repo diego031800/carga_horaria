@@ -8,7 +8,6 @@ require '../../vendor/phpmailer/phpmailer/src/SMTP.php';
 
 $parametros = array();
 $parametros['sec_id'] = '';
-$parametros['prg_id'] = '';
 
 $mail = new PHPMailer;
 $mail->isSMTP();
