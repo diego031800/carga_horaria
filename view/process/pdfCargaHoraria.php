@@ -474,4 +474,5 @@ function get_nro_total_filas($limite, $id, $sem_id, $sec_id)
   // Output a PDF file directly to the browser with a specific filename
   $mpdf->Output($nombreArchivo, \Mpdf\Output\Destination::INLINE);
 
+  
 ?>
