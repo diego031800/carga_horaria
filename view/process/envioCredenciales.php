@@ -2,9 +2,12 @@
 include_once '../../controllers/main/enviarCorreos.php';
 require_once '../../vendor/autoload.php';
 
+
+session_start();
+
 $destinatarios = array(
     array('correo' => 'gayalam@unitru.edu.pe', 'nombre' => 'Gerald'),
-    array('correo' => 'jdazabaches@unitru.edu.pe', 'nombre' => 'Jose')
+    array('correo' => 'geraldayala87@gmail.com', 'nombre' => 'Eduardo')
     // Agrega más objetos/anotaciones según sea necesario
 );
 

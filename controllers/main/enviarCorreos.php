@@ -1,14 +1,17 @@
 <?php
+require '../../vendor/phpmailer/phpmailer/src/Exception.php';
+require '../../vendor/phpmailer/phpmailer/src/PHPMailer.php';
+require '../../vendor/phpmailer/phpmailer/src/SMTP.php';
+include_once '../../models/main/datosEnvio.php';
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
-require '../../vendor/autoload.php';
 
 class CorreoCargaHoraria
 {
     private $mail;
 
-    public function __construct()
+     public function __construct()
     {
         $this->mail = new PHPMailer;
         $this->configurarSMTP();
@@ -21,9 +24,9 @@ class CorreoCargaHoraria
         $this->mail->Port = 465;
         $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $this->mail->SMTPAuth = true;
-        $this->mail->Username = 'upg_utic@unitru.edu.pe';
-        $this->mail->Password = 'ojvg gftu qpbd urtr';
-        $this->mail->setFrom('upg_utic@unitru.edu.pe', 'UTIC POSGRADO');
+        $this->mail->Username = 'abyzuss5@gmail.com';
+        $this->mail->Password = 'ufly sryj hxeg skxp';
+        $this->mail->setFrom('abyzuss5@gmail.com', 'UTIC POSGRADO');
         $this->mail->CharSet = 'UTF-8'; 
     }
 
@@ -45,34 +48,41 @@ class CorreoCargaHoraria
 
     public function enviarCredenciales($datos)
     {
-        $total = count($datos);
+        $datosEnvio = new datosEnvio();
+        $itemsEnviados = array();
+        try {
+            $total = count($datos);
         $this->mail->Subject = 'Envío de credenciales';
         $rutaImagenAdjunta = 'assets/images/documentos/img_upg.png';
         $this->mail->addEmbeddedImage($rutaImagenAdjunta, 'NOMBRE');
         $enviosCorrectos = 0;
-        $itemsEnviados = array();
         foreach ($datos as $item) {
             $this->mail->isHTML(true);
             $this->mail->Body = $this->generarMensajeCorreo($item['nombre']);
             $this->mail->addAddress($item['correo'],$item['nombre']);
             $itemEnviado = array(
                 'nombre' => $item['nombre'],
-                'correcto' => '',
-                'error' => '',
-                'fechahora' => ''
+                'correo' => $item['correo'],
+                'envio' => 0,
+                'fechahora' => '',
+                'error' => ''
             );
             if ($this->mail->send()) {
                 $enviosCorrectos +=1;
-                $itemEnviado['correcto'] = 'Sí';
+                $itemEnviado['envio'] = 1;
             } else {
-                $itemEnviado['correcto'] = 'No';
+                $itemEnviado['envio'] = 0;
                 $error = $this->mail->ErrorInfo;
                 $itemEnviado['error'] = $error;
             }
             $itemEnviado['fechahora'] = date('Y-m-d H:i:s');
-            array_push($itemsEnviados, $itemEnviado);
+            $itemsEnviados[] = $itemEnviado;
             $this->mail->clearAllRecipients(); 
         }
+        } catch (Exception $ex) {
+            die("Error: " . $ex);
+        }
+        $datosEnvio->save_reporte($itemsEnviados);
         return $itemsEnviados;
     }
 

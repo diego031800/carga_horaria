@@ -5,7 +5,7 @@
     class connection
     {
         private $con_mysql;
-        private $con_sqlsrv;
+        private $con_sqlsrv; 
 
         public function __construct()
         {

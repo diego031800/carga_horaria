@@ -62,6 +62,29 @@
                 die("Error: " . $ex);
             }
         }
+
+        public function save_reporte($datosGuardar){
+            try{
+                $this->con->close_open_connection_mysql();
+                foreach ($datosGuardar as $item) {
+                    $sql = "INSERT into carga_horaria_envio_credenciales (
+                        chec_doc_nombre, chec_doc_correo,chec_envio,chec_envio_fecha,chec_envio_error
+                        ,fechahora,usuario, dispositivo) values(";
+                    $sql .= "'".$item['nombre']."',";
+                    $sql .= "'".$item['correo']."',";
+                    $sql .= "".$item['envio'].",";
+                    $sql .= "'".$item['fechahora']."',";
+                    $sql .= "'".$item['error']."',";
+                    $sql .= "'".date('Y-m-d H:i:s')."', ";
+                    $sql .= "'".$_SESSION['usu_id']."', "; // p_usuario
+                    $sql .= "'".$_SESSION['usu_ip']."');"; // p_dispositivo
+                    $this->con->simple_query_mysql($sql);
+                    echo $sql;
+                }
+            }catch (Exception $ex) {
+                die("Error: " . $this->con->error_mysql(). $ex);
+            }
+        }
     }
 
 ?>
