@@ -2,7 +2,7 @@
 
     include_once '../../models/conexion.php';
 
-    class MisCargasHorarias
+    class AsignacionDocentes
     {
         private $parametros = array();
         private $con;
@@ -16,8 +16,8 @@
         {
             $this->parametros = $parametros;
             switch ($this->parametros['opcion']) {
-                case 'get_cargas_horarias_by_sem':
-                    echo $this->get_cargas_horarias_by_sem();
+                case 'get_asignaciones_docentes':
+                    echo $this->get_asignaciones_docentes();
                     break;
                 case 'get_cargas_horarias':
                     echo $this->get_cargas_horarias();
@@ -28,14 +28,13 @@
             }
         }
 
-        private function get_cargas_horarias_by_sem()
+        private function get_asignaciones_docentes()
         {
             try {
-                $sql = "CALL sp_GetMisCargasHorariasBySem(";
+                $sql = "CALL sp_GetAsignacionDocenteByPrograma(";
                 $sql .= "'".$this->parametros['p_sem_id']."', "; // p_sem_id
                 $sql .= "'".$this->parametros['p_sec_id']."', "; // p_sec_id
-                $sql .= "'".$_SESSION['usu_id']."', "; // p_usuario
-                $sql .= "'".json_encode($this->get_unidades_asignadas($_SESSION['usu_id']))."'); "; // p_unidades_usuario
+                $sql .= "'".$this->parametros['p_prg_id']."'); "; // p_prg_id
                 // return $sql;
                 $datos = $this->con->return_query_mysql($sql);
                 // return json_encode($datos);

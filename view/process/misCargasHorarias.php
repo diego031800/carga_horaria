@@ -57,20 +57,16 @@ if (!isset($_SESSION['login'])) {
                 <div class="main-content-inner">
                     <div class="card shadow p-3 mb-5 bg-body-tertiary rounded mt-5" style="min-height: 620px;">
                         <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+                            &nbsp;
                             <h3 class="card-title m-3">Mis Cargas Horarias</h3>
+                            <button class="btn btn-primary" type="button" id="btnNuevaCarga">
+                                <i class="fa fa-plus-square"></i> &nbsp;&nbsp; Carga Horaria
+                            </button>
                         </div>
                         <div class="card-body">
                             <div class="card" style="color: #ffffff; background-color:rgba(135, 135, 135, 0.09); border-radius: 18px;">
                                 <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-lg-2 col-6">
-                                            <input class="form-control" type="date" id="txtFechaInicio">
-                                            <small style="color: #666666;"><b>Filtar</b> desde</small>
-                                        </div>
-                                        <div class="col-lg-2 col-6">
-                                            <input class="form-control" type="date" id="txtFechaFin">
-                                            <small style="color: #666666;"><b>Filtar</b> hasta</small>
-                                        </div>
+                                    <div class="row d-flex justify-content-center">
                                         <div class="col-lg-2 col-6">
                                             <select class="form-select" id="cboSemestre">
                                             </select>
@@ -81,9 +77,9 @@ if (!isset($_SESSION['login'])) {
                                             </select>
                                             <small style="color: #666666;"><b>Filtar</b> por Unidad</small>
                                         </div>
-                                        <div class="col-lg-2 col-md-4 col-6 d-grid mx-auto align-items-center">
+                                        <div class="col-lg-1 col-md-4 col-6 align-items-center">
                                             <button class="btn btn-primary" type="button" id="btnBuscar">
-                                                <i class="fa fa-search"></i> &nbsp;&nbsp; Buscar
+                                                <i class="fa fa-search"></i>
                                             </button>
                                         </div>
                                     </div>
@@ -100,13 +96,12 @@ if (!isset($_SESSION['login'])) {
                                                 <th class="text-center">CÓDIGO</th>
                                                 <th class="text-center">SEMESTRE</th>
                                                 <th class="text-center">UNIDAD</th>
-                                                <th class="text-center">CREADO</th>
-                                                <th class="text-center">EDITADO</th>
                                                 <th class="text-center">USUARIO</th>
                                             </tr>
                                         </thead>
                                         <tbody id="cuerpo_ch"></tbody>
                                     </table>
+                                    <div id="tbl_spinner"></div>
                                 </div>
                             </div>
                         </div>
