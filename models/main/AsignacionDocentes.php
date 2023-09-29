@@ -47,29 +47,23 @@
                     while ($row = mysqli_fetch_array($datos)) {
                         $index ++;
                         $data['nro'] = $index; 
-                        $data['acciones'] = '<button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">Acciones</button>
-                                            <div  class="dropdown-menu">
-                                                <button class="dropdown-item btn-sm" onclick="editar('.$row['sem_id'].', '.$row['sec_id'].')">
-                                                    <i class="fa fa-plus-circle text-primary"></i>&nbsp;&nbsp;
-                                                    Ver detalle
-                                                </button>
-                                                <button class="dropdown-item btn-sm" onclick="verPdf('.$row['sem_id'].', '.$row['sec_id'].')">
-                                                    <i class="fa fa-file-pdf-o text-danger"></i>&nbsp;&nbsp;
-                                                    Ver pdf
-                                                </button>
-                                                <button class="dropdown-item btn-sm" onclick="enviar('.$row['sem_id'].', '.$row['sec_id'].')">
-                                                    <i class="fa fa-send-o text-warning"></i>&nbsp;&nbsp;
-                                                    Enviar
-                                                </button>
+                        $data['acciones'] = '<div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="1" id="envio_'.$row['cgd_id'].'" checked>
+                                                <label class="form-check-label" for="envio_'.$row['cgd_id'].'">
+                                                    Enviar correo
+                                                </label>
                                             </div>'; 
-                        $data['estado'] = '<h6><span class="badge text-bg-'.$row['color'].'">
-                                                '.$row['estado']. '
-                                            </span></h6>';
-                        $data['codigo'] = $row['codigo'];
-                        $data['semestre'] = $row['semestre'];
-                        $data['unidad'] = $row['unidad'];
-                        $data['usuario'] = $this->get_nombres_usuario($row['usuario']);
-                        // $data['p_unidades'] = $row['p_unidades'];
+                        $data['ciclo'] = $row['ciclo'];
+                        $data['curso'] = $row['cur_descripcion'];
+                        $data['grupo'] = $row['grupo'];
+                        $data['docente'] = $row['doc_nombres'];
+                        $data['correo'] = $row['doc_email'];
+                        $data['fecha_inicio'] = $row['fecha_inicio'];
+                        $data['fecha_fin'] = $row['fecha_fin'];
+                        $data['sem_codigo'] = $row['sem_codigo'];
+                        $data['doc_documento'] = $row['doc_documento'];
+                        $data['doc_codigo'] = $row['doc_codigo'];
+                        $data['doc_email'] = $row['doc_email'];
                         array_push($data_table, $data);
                     }
                     return json_encode($data_table);

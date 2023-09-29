@@ -38,6 +38,7 @@ if (!isset($_SESSION['login'])) {
         <link rel="stylesheet" href="../../assets/css/select2/select2.css">
         <!-- DATA TABLE -->
         <link rel="stylesheet" href="../../assets/css/data_table/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="../css/styles.css">
         <!-- ESTILOS PROPIOS -->
         <link rel="stylesheet" href="/carga_horaria/view/css/styles.css">
         <title>ENVIO CREDENCIALES</title>
