@@ -121,6 +121,7 @@ function buscar() {
         ],
         responsive: false,
         select: true,
+        lengthMenu: [5, 10, 15, 20, 25],
         columnDefs: [
           {
               targets: -1,
