@@ -79,7 +79,6 @@
                     $sql .= "'".$_SESSION['usu_id']."', "; // p_usuario
                     $sql .= "'".$_SESSION['usu_ip']."');"; // p_dispositivo
                     $this->con->simple_query_mysql($sql);
-                    echo $sql;
                 }
             }catch (Exception $ex) {
                 die("Error: " . $this->con->error_mysql(). $ex);

@@ -7,9 +7,11 @@ include_once '../../models/main/datosEnvio.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+
 class CorreoCargaHoraria
 {
     private $mail;
+    private $parametros = array();
 
      public function __construct()
     {
@@ -25,7 +27,7 @@ class CorreoCargaHoraria
         $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $this->mail->SMTPAuth = true;
         $this->mail->Username = 'abyzuss5@gmail.com';
-        $this->mail->Password = 'ufly sryj hxeg skxp';
+        $this->mail->Password = 'pdto zrga nvfk djtg';
         $this->mail->setFrom('abyzuss5@gmail.com', 'UTIC POSGRADO');
         $this->mail->CharSet = 'UTF-8'; 
     }
@@ -48,28 +50,26 @@ class CorreoCargaHoraria
 
     public function enviarCredenciales($datos)
     {
+        $datos1 = json_decode($datos);
         $datosEnvio = new datosEnvio();
         $itemsEnviados = array();
         try {
-            $total = count($datos);
-        $this->mail->Subject = 'Envío de credenciales';
-        $rutaImagenAdjunta = 'assets/images/documentos/img_upg.png';
-        $this->mail->addEmbeddedImage($rutaImagenAdjunta, 'NOMBRE');
-        $enviosCorrectos = 0;
-        foreach ($datos as $item) {
-            $this->mail->isHTML(true);
-            $this->mail->Body = $this->generarMensajeCorreo($item['nombre']);
-            $this->mail->addAddress($item['correo'],$item['nombre']);
-            $itemEnviado = array(
-                'nombre' => $item['nombre'],
-                'correo' => $item['correo'],
-                'envio' => 0,
-                'fechahora' => '',
-                'error' => ''
-            );
+            //$total = count($datos);
+            $this->mail->Subject = 'Envío de credenciales';
+            foreach ($datos1 as $item) {
+                $this->mail->isHTML(true);
+                $this->mail->Body = $this->generarMensajeCorreo($item->nombre,$item->codigo,$item->documento,$item->sem);
+                $this->mail->addAddress("geraldayala87@gmail.com",$item->nombre);
+                $itemEnviado = array(
+                    'nombre' => $item->nombre,
+                    'correo' => $item->correo,
+                    'envio' => 0,
+                    'fechahora' => '',
+                    'error' => ''
+                );
             if ($this->mail->send()) {
-                $enviosCorrectos +=1;
                 $itemEnviado['envio'] = 1;
+                //$itemEnviado['fechahora'] = date('Y-m-d H:i:s');
             } else {
                 $itemEnviado['envio'] = 0;
                 $error = $this->mail->ErrorInfo;
@@ -83,15 +83,24 @@ class CorreoCargaHoraria
             die("Error: " . $ex);
         }
         $datosEnvio->save_reporte($itemsEnviados);
-        return $itemsEnviados;
+        //return $itemsEnviados;
+        echo json_encode($itemsEnviados);
     }
 
-    private function generarMensajeCorreo($nombre)
+    private function generarCredencial($docente){
+
+    }
+
+    private function generarMensajeCorreo($nombre, $codigo, $doc, $semestre)
     {
         $mensaje = '<p>Buenos días '.$nombre.', les saluda cordialmente la Unidad de Tecnologías Informáticas y Comunicaciones / Sistemas de la EPG para comunicarles lo siguiente:</p>';
-        $mensaje .= '<p>Según la Propuesta de Evaluación y Seguimiento al Desempeño Docente de la Escuela de Posgrado de la Universidad Nacional de Trujillo, se les hace llegar
-         a ustedes la encuesta de Desempeño Docente de forma sistemática al término de cada curso del Semestre Académico 2023-I.</p>';
+        $mensaje .= '<p>Código: '.$codigo.'</p>';
+        $mensaje .= '<p>Token: '.$codigo.'</p>';
+        $mensaje .= '<p>Semestre: '.$semestre.'</p>';
         return $mensaje;
     }
 }
+
+
+//echo json_encode($datos);
 ?>

@@ -120,7 +120,7 @@
                         $data['usuario'] = $this->get_nombres_usuario($row['usuario']);
                         array_push($data_table, $data);
                     }
-                    return json_encode($data_table);
+                    return json_encode($data_table); 
                 } else {
                     return json_encode($data_table);
                 }
