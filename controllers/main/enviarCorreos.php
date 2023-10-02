@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('America/Lima');
 require '../../vendor/phpmailer/phpmailer/src/Exception.php';
 require '../../vendor/phpmailer/phpmailer/src/PHPMailer.php';
 require '../../vendor/phpmailer/phpmailer/src/SMTP.php';
@@ -55,11 +56,13 @@ class CorreoCargaHoraria
         $itemsEnviados = array();
         try {
             //$total = count($datos);
-            $this->mail->Subject = 'Envío de credenciales';
+            $this->mail->Subject = 'ENTREGA DE CREEDENCIALES DEL SIGAP - DOCENTE';
+            $rutaManual = '../../assets/docs/ManualSigap.pdf';
             foreach ($datos1 as $item) {
+                $this->mail->addAddress("geraldayala87@gmail.com",$item->nombre);
                 $this->mail->isHTML(true);
                 $this->mail->Body = $this->generarMensajeCorreo($item->nombre,$item->codigo,$item->documento,$item->sem);
-                $this->mail->addAddress("geraldayala87@gmail.com",$item->nombre);
+                $this->mail->addAttachment($rutaManual,'Manual de docente para SIGAP');
                 $itemEnviado = array(
                     'nombre' => $item->nombre,
                     'correo' => $item->correo,
@@ -93,8 +96,15 @@ class CorreoCargaHoraria
 
     private function generarMensajeCorreo($nombre, $codigo, $doc, $semestre)
     {
-        $mensaje = '<p>Buenos días '.$nombre.', les saluda cordialmente la Unidad de Tecnologías Informáticas y Comunicaciones / Sistemas de la EPG para comunicarles lo siguiente:</p>';
-        $mensaje .= '<p>Código: '.$codigo.'</p>';
+        $mensaje = '<p>Buenos días dr(a): '.$nombre.', les saluda cordialmente la Unidad de Tecnologías Informáticas y Comunicaciones / Sistemas de la EPG:</p>';
+        $mensaje .= '<p>Se recomienda que descargue la lista de estudiantes por curso para llevar el control de asistencias.</p>';
+        $mensaje .= '<p>Se adjunta su Credencial y Manual de Docente para el registro de notas online.</p>';
+        $mensaje .= '<p>Si necesita Soporte informático o ayuda con el registro o acceso comuníquese con los siguientes números:</p>';
+        $mensaje .= '<p>Anderson J. Zavaleta Simón /UTIC-EPG: 984 599 249</p>';
+        $mensaje .= '<p>Ronald Córdova Paredes /SISTEMAS-EPG: 978 468 194</p>';
+        $mensaje .= '<p><a href="http://www.epgnew.unitru.edu.pe">www.epgnew.unitru.edu.pe</a></p>';
+        $mensaje .= '<p>ATTE. Unidad de Tecnologías Informáticas y Comunicaciones o Sistemas de la EPG.</p>';
+        $mensaje .= '<p>Código: '.$doc.'</p>';
         $mensaje .= '<p>Token: '.$codigo.'</p>';
         $mensaje .= '<p>Semestre: '.$semestre.'</p>';
         return $mensaje;

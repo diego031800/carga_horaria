@@ -9,6 +9,11 @@ let btnVerPdf = document.getElementById('btnVerPdf');
 let btnEnviar = document.getElementById('enviarDatos');
 let docentes_array = [];
 
+// Datos del semestre, unidad y programa;
+let sem_txt = '';
+let sec_txt = '';
+let prg_txt = '';
+
 // FUNCIONES
 // INICIO OBTENER COMBOS
 function get_cbo_semestres() {
@@ -61,52 +66,13 @@ function get_cbo_programas() {
 }
 
 /* FUNCION ENVIAR CREDENCIALES */
-function enviarCredenciales() {
-  var filasSeleccionadas = [];
-  var filas = document.querySelectorAll("#table_ch tbody tr");
-
-  filas.forEach(function (fila, index) {
-    var checkbox = fila.querySelector(".form-check-input");
-    if (checkbox.checked) {
-      // La fila está seleccionada
-      var nombre = fila.cells[5].textContent;
-      var correo = fila.cells[6].textContent;
-      var idx = docentes_array.findIndex((item) => item.docente == nombre);
-      var codigo = docentes_array[idx].doc_codigo;
-      var documento = docentes_array[idx].doc_documento;
-      var sem_codigo = docentes_array[idx].sem_codigo;
-      // Agrega los datos al arreglo de filas seleccionadas
-      filasSeleccionadas.push({ nombre: nombre, correo: correo, codigo: codigo, documento: documento, sem: sem_codigo });
-    }
-  });
-  let docentes = JSON.stringify(filasSeleccionadas);
-  console.log(docentes);
-  $.ajax({
-    type: "POST",
-    url: "../../controllers/main/CorreosController.php",
-    data: "docentes=" +
-      docentes,
-    beforeSend: function () {
-      btnEnviar.disabled = true;
-    },
-    success: function (data) {
-      objeto = JSON.parse(data);
-      console.log(objeto);
-      toastr["success"]("Nose", "Registro exitoso");
-      resolve();
-    },
-    error: function (data) {
-      btnBuscar.disabled = false;
-      toastr["error"]("Nose", "Algo ocurrió");
-      reject("Error al mostrar");
-    },
-  })
-}
 
 function enviarCredenciales() {
   var filasSeleccionadas = [];
   var filas = document.querySelectorAll("#table_ch tbody tr");
-
+  sem_txt = cboSemestre.options[cboSemestre.selectedIndex].text;
+  sec_txt = cboUnidad.options[cboUnidad.selectedIndex].text;
+  prg_txt = cboPrograma.options[cboPrograma.selectedIndex].text;
   filas.forEach(function (fila, index) {
     var checkbox = fila.querySelector(".form-check-input");
     if (checkbox.checked) {
@@ -150,21 +116,51 @@ function enviarCredenciales() {
     });
   });
 }
+/*
+function prueba(){
+  let url = 'pdfEnvio.php?semTxt='+sem_txt+'&secTxt='+ sec_txt+'&prgTxt='+ prg_txt;
+  window.open(url, '_blank');
+}*/
 
 async function promesaEnviar() {
-  // Uso de la función enviarCredenciales
   try {
-    // Realiza la llamada asincrónica a enviarCredenciales()
     const response = await enviarCredenciales();
-
-    // El código que deseas ejecutar después de recibir la respuesta exitosa
-    console.log(response);
-    // Puedes realizar otras acciones después del éxito aquí
+    reportEnvioPDF(response);
   } catch (error) {
-    // El código que deseas ejecutar en caso de error
     console.error("Error: " + error);
-    // Puedes realizar otras acciones en caso de error aquí
   }
+}
+
+function reportEnvioPDF(response){
+  let responseJson = JSON.stringify(response);
+  $.ajax({
+    type: "POST",
+    url: "pdfEnvio.php", // Reemplaza esto con la URL de tu servidor
+    data: {
+      semTxt: sem_txt,
+      secTxt: sec_txt,
+      prgTxt: prg_txt,
+      docs: responseJson
+    },xhrFields: {
+        responseType: 'blob'
+    },
+    success: function (response, status, xhr) {
+      try {
+        //Obtenemos la respuesta para convertirla a blob
+        var blob = new Blob([response], { type: 'application/pdf' });
+        var URL = window.URL || window.webkitURL;
+        //Creamos objeto URL
+        var downloadUrl = URL.createObjectURL(blob);
+        //Abrir en una nueva pestaña
+        window.open(downloadUrl);
+    } catch (ex) {
+        console.log(ex);
+    }
+    },
+    error: function (error) {
+      console.error("Error en la solicitud AJAX:", error);
+    }
+  });
 }
 
 /* FUNCION PARA IR ATRAS */

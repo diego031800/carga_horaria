@@ -123,7 +123,7 @@ if (!isset($_SESSION['login'])) {
             <!-- START FOOTER -->
             <?php require_once('../footer.php') ?>
             <!-- END FOOTER -->
-
+ 
         </div>
 
         <!-- SCRIPTS -->
