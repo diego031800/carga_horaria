@@ -4,6 +4,7 @@ require '../../vendor/phpmailer/phpmailer/src/Exception.php';
 require '../../vendor/phpmailer/phpmailer/src/PHPMailer.php';
 require '../../vendor/phpmailer/phpmailer/src/SMTP.php';
 include_once '../../models/main/datosEnvio.php';
+include_once '../../controllers/main/pdfCredencial.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -12,11 +13,12 @@ use PHPMailer\PHPMailer\Exception;
 class CorreoCargaHoraria
 {
     private $mail;
-    private $parametros = array();
+    private $pdf;
 
      public function __construct()
     {
         $this->mail = new PHPMailer;
+        $this->pdf = new CredencialDocente();
         $this->configurarSMTP();
     }
 
@@ -59,10 +61,14 @@ class CorreoCargaHoraria
             $this->mail->Subject = 'ENTREGA DE CREEDENCIALES DEL SIGAP - DOCENTE';
             $rutaManual = '../../assets/docs/ManualSigap.pdf';
             foreach ($datos1 as $item) {
+                $rutaPdf ='';
                 $this->mail->addAddress("geraldayala87@gmail.com",$item->nombre);
                 $this->mail->isHTML(true);
                 $this->mail->Body = $this->generarMensajeCorreo($item->nombre,$item->codigo,$item->documento,$item->sem);
+                $rutaPdf = $this->pdf->generarCredencial($item->nombre,$item->codigo,$item->documento,$item->sem);
+                error_log($rutaPdf);
                 $this->mail->addAttachment($rutaManual,'Manual de docente para SIGAP');
+                $this->mail->addAttachment($rutaPdf, $item->nombre);
                 $itemEnviado = array(
                     'nombre' => $item->nombre,
                     'correo' => $item->correo,
@@ -70,18 +76,19 @@ class CorreoCargaHoraria
                     'fechahora' => '',
                     'error' => ''
                 );
-            if ($this->mail->send()) {
-                $itemEnviado['envio'] = 1;
-                //$itemEnviado['fechahora'] = date('Y-m-d H:i:s');
-            } else {
-                $itemEnviado['envio'] = 0;
-                $error = $this->mail->ErrorInfo;
-                $itemEnviado['error'] = $error;
+                if ($this->mail->send()) {
+                    $itemEnviado['envio'] = 1;
+                    //$itemEnviado['fechahora'] = date('Y-m-d H:i:s');
+                } else {
+                    $itemEnviado['envio'] = 0;
+                    $error = $this->mail->ErrorInfo;
+                    $itemEnviado['error'] = $error;
+                }
+                //unlink($rutaPdf);
+                $itemEnviado['fechahora'] = date('Y-m-d H:i:s');
+                $itemsEnviados[] = $itemEnviado;
+                $this->mail->clearAllRecipients(); 
             }
-            $itemEnviado['fechahora'] = date('Y-m-d H:i:s');
-            $itemsEnviados[] = $itemEnviado;
-            $this->mail->clearAllRecipients(); 
-        }
         } catch (Exception $ex) {
             die("Error: " . $ex);
         }
@@ -90,8 +97,10 @@ class CorreoCargaHoraria
         echo json_encode($itemsEnviados);
     }
 
-    private function generarCredencial($docente){
-
+    private function eliminarCredencial($ruta){
+        if (file_exists($ruta)) {
+            unlink($ruta);
+        }
     }
 
     private function generarMensajeCorreo($nombre, $codigo, $doc, $semestre)
@@ -111,6 +120,4 @@ class CorreoCargaHoraria
     }
 }
 
-
-//echo json_encode($datos);
 ?>
