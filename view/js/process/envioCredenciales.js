@@ -97,18 +97,19 @@ function buscar() {
       $('#table_ch').DataTable({
         data: datos,
         columns: [
-          { data: 'nro', className: 'dt-center' },
-          { data: 'acciones', className: 'dt-center' },
-          { data: 'ciclo', className: 'dt-center' },
-          { data: 'curso', className: 'dt-center' },
-          { data: 'grupo', className: 'dt-center' },
-          { data: 'docente', className: 'dt-center' },
-          { data: 'correo', className: 'dt-center' },
-          { data: 'fecha_inicio', className: 'dt-center' },
-          { data: 'fecha_fin', className: 'dt-center' }
+          { data: 'nro', className: 'dt-center align-middle' },
+          { data: 'acciones', className: 'dt-center align-middle' },
+          { data: 'ciclo', className: 'dt-center align-middle' },
+          { data: 'curso', className: 'dt-center align-middle' },
+          { data: 'grupo', className: 'dt-center align-middle' },
+          { data: 'docente', className: 'dt-center align-middle' },
+          { data: 'correo', className: 'dt-center align-middle' },
+          { data: 'fecha_inicio', className: 'dt-center align-middle' },
+          { data: 'fecha_fin', className: 'dt-center align-middle' }
         ],
         responsive: false,
         select: true,
+        lengthMenu: [5, 10, 15, 20, 25],
         columnDefs: [
           {
               targets: -1,
@@ -126,6 +127,7 @@ function buscar() {
           },
           info: "Mostrando _START_ de _END_ de un total de _TOTAL_ Registros",
         },
+        dom: '<"row"<"col-md-6"l><"col-md-6"f>>tp',
         createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
             if (colIndex === 4) {
                 $(cell).css('background-color', '#ffcc00');
