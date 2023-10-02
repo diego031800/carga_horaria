@@ -404,7 +404,7 @@
             try {
                 $tabla_carga = "";
                 $carga_horaria = $this->buscar_carga_horaria();
-                // return json_encode($carga_horaria);
+                return json_encode($carga_horaria);
                 $total_filas = $this->get_nro_total_filas('', '');
                 if (count($carga_horaria) > 0) {
                     $tabla_carga .= "<table class='table table-bordered rounded'>
@@ -547,24 +547,122 @@
                 $sql .= "'".$this->parametros['p_sec_id']."');"; // p_sec_id
                 // return $sql;
                 $datos = $this->con->return_query_mysql($sql);
-                $resp = array();
+                $data = array();
+                $carga_horaria = array();
+                $programas = array();
+                $ciclos = array();
+                $cursos = array();
+                $grupos = array();
+                $docentes = array();
+                $fechas = array();
                 $error = $this->con->error_mysql();
                 if (empty($error)) {
-                    while ($row = mysqli_fetch_array($datos)) {
-                        $carga_horaria = [];
-                        $carga_horaria['cgh_id'] = $row['cgh_id'];
-                        $carga_horaria['codigoCH'] = $row['codigoCH'];
-                        $carga_horaria['sem_id'] = $row['sem_id'];
-                        $carga_horaria['codSemestre'] = $row['codSemestre'];
-                        $carga_horaria['semestre'] = $row['semestre'];
-                        $carga_horaria['sec_id'] = $row['sec_id'];
-                        $carga_horaria['unidad'] = $row['unidad'];
-                        $carga_horaria['prg_id'] = $row['prg_id'];
-                        $carga_horaria['mencion'] = $row['mencion'];
-                        $carga_horaria['estado'] = $row['estado'];
-                        array_push($resp, $carga_horaria);
+                    while ($row = mysqli_fetch_assoc($datos)) {
+                        array_push($data, $row);
                     }
-                    return $resp;
+                    
+                    $sem_id = $data[0]['sem_id'];
+                    if (!isset($carga_horaria[$sem_id])) {
+                        $carga_horaria[$sem_id] = array(
+                            'sem_id' => $data[0]['sem_id'],
+                            'codSemestre' => $data[0]['codSemestre'],
+                            'semestre' => $data[0]['semestre'],
+                            'sec_id' => $data[0]['sec_id'],
+                            'unidad' => $data[0]['unidad']
+                        );
+                        $carga_horaria[$sem_id]['programas'] = array();
+                    }
+
+                    foreach ($data as $fila) {
+                        $prg_id = $fila['prg_id'];
+                        
+                        if (!isset($programas[$prg_id])) {
+                            $programas[$prg_id] = [
+                                'sem_id' => $fila['sem_id'],
+                                'prg_id' => $fila['prg_id'],
+                                'mencion' => $fila['mencion'],
+                                'ciclos' => array()
+                            ];
+                            // return $programas[$prg_id];
+                            $carga_horaria[$sem_id]['programas'][$prg_id] = $programas[$prg_id];
+                        }
+
+                        $cgc_id = $fila['cgc_id'];
+                        
+                        if (!isset($ciclos[$cgc_id])) {
+                            $ciclos[$cgc_id] = array(
+                                'prg_id' => $fila['prg_id'],
+                                'cgc_id' => $fila['cgc_id'],
+                                'ciclo' => $fila['ciclo'],
+                                'cursos' => array()
+                            );
+                            if ($ciclos[$cgc_id]['prg_id'] == $carga_horaria[$sem_id]['programas'][$prg_id]['prg_id']) {
+                                $carga_horaria[$sem_id]['programas'][$prg_id]['ciclos'][$cgc_id] = $ciclos[$cgc_id];
+                            }
+                        }
+
+                        $chc_id = $fila['chc_id'];
+
+                        if (!isset($cursos[$chc_id])) {
+                            $cursos[$chc_id] = array(
+                                'cgc_id' => $fila['cgc_id'],
+                                'chc_id' => $fila['chc_id'],
+                                'curso' => $fila['curso'],
+                                'cur_tipo' => $fila['cur_tipo'],
+                                'tipo_curso' => $fila['tipo_curso'],
+                                'cur_calidad' => $fila['cur_calidad'],
+                                'calidad_curso' => $fila['calidad_curso'],
+                                'cur_creditos' => $fila['cur_creditos'],
+                                'chc_horas' => $fila['chc_horas'],
+                                'grupos' => array()
+                            );
+
+                            if ($cursos[$chc_id]['cgc_id'] == $carga_horaria[$sem_id]['programas'][$prg_id]['ciclos'][$cgc_id]['cgc_id']) {
+                                $carga_horaria[$sem_id]['programas'][$prg_id]['ciclos'][$cgc_id]['cursos'][$chc_id] = $cursos[$chc_id];
+                            }
+                        }
+
+                        $ccg_id = $fila['ccg_id'];
+
+                        if (!isset($grupos[$ccg_id])) {
+                            $grupos[$ccg_id] = array(
+                                'chc_id' => $fila['chc_id'],
+                                'ccg_id' => $fila['ccg_id'],
+                                'grupo' => $fila['grupo'],
+                                'docentes' => array(),
+                                'fechas' => array()
+                            );
+
+                            if ($grupos[$ccg_id]['chc_id'] == $carga_horaria[$sem_id]['programas'][$prg_id]['ciclos'][$cgc_id]['cursos'][$chc_id]['chc_id']) {
+                                $carga_horaria[$sem_id]['programas'][$prg_id]['ciclos'][$cgc_id]['cursos'][$chc_id]['grupos'][$ccg_id] = $cursos[$chc_id];
+                            }
+                        }
+
+                        $cgd_id = $fila['cgd_id'];
+
+                        if (!isset($docentes[$cgd_id])) {
+                            $docentes[$cgd_id] = array(
+                                'ccg_id' => $fila['ccg_id'],
+                                'cgd_id' => $fila['cgd_id'],
+                                'titular' => $fila['titular'],
+                                'doc_condicion' => $fila['doc_condicion'],
+                                'doc_documento' => $fila['doc_documento'],
+                                'doc_nombres' => $fila['doc_nombres'],
+                            );
+                        }
+
+                        $cgf_id = $fila['cgf_id'];
+                        
+                        if (!isset($fechas[$cgf_id])) {
+                            $fechas[$cgf_id] = array(
+                                'ccg_id' => $fila['ccg_id'],
+                                'cgf_id' => $fila['cgf_id'],
+                                'fecha' => $fila['fecha'],
+                            );
+                        }
+                    }
+
+                    return $carga_horaria;
                 } else {
                     return ['respuesta' => 0, 'mensaje' => 'Error en la consulta.'.$error];
                 }
