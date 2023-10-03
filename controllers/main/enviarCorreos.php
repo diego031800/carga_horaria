@@ -83,13 +83,7 @@ class CorreoCargaHoraria
         return $itemEnviado;
         //echo json_encode($itemsEnviados);
     }
-
-    private function eliminarCredencial($ruta){
-        if (file_exists($ruta)) {
-            unlink($ruta);
-        }
-    }
-
+    
     private function generarMensajeCorreo($nombre, $codigo, $doc, $semestre)
     {
         $mensaje = '<p>Buenos días dr(a): '.$nombre.', les saluda cordialmente la Unidad de Tecnologías Informáticas y Comunicaciones / Sistemas de la EPG:</p>';

@@ -241,9 +241,9 @@ if (!isset($_SESSION['login'])) {
                                     <div class="col-6 mb-3">
                                         <label for="" class="form-label">Grado:</label><br />
                                         <select name="grado-docente" class="form-select" id="grado-docente">
-                                            <option value="dr">Doctor</option>
-                                            <option value="dra">Doctora</option>
-                                            <option value="ms">Maestro</option>
+                                            <option value="0001">Magister</option>
+                                            <option value="0002">Doctor</option>
+                                            <option value="0003">Doctora</option>
                                         </select>
                                     </div>
                                     <div class="col-6 mb-3">

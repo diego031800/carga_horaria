@@ -752,7 +752,8 @@ async function setDatosUnidadSem(data){
   await get_cbo_programasPromesa();
   $("#cboPrograma").val(data[0].prg_id).trigger("change");
   $("#cboCiclo").val(data[0].ciclo).trigger("change");
-  llenarListaCursos(data);
+  console.log(data);
+  //llenarListaCursos(data);
   camposUnidad(true);
   camposCursos(false);
 }
