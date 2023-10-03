@@ -1,9 +1,15 @@
 // Elementos HTML
 let btnAtras = document.getElementById('btnAtras');
+
 //   Unidades
 let cboSemestre = document.getElementById("cboSemestre");
 let cboUnidad = document.getElementById("cboUnidad");
 let cboPrograma = document.getElementById("cboPrograma");
+
+// Variables $_GET[]
+let txtCgh_Id = document.getElementById("txtCgh_Id");
+let txtCgc_Id = document.getElementById("txtCgc_Id");
+
 //   Curso
 let cboCiclo = document.getElementById("cboCiclo");
 let cboCurso = document.getElementById("cboCurso");
@@ -52,6 +58,26 @@ function back() {
 }
 
 // INICIO OBTENER COMBOS
+function get_carga_horaria_by_id() {
+  let opcion = "get_carga_horaria_by_id";
+  let p_cgh_id = txtCgh_Id.value;
+  let p_cgc_id = txtCgc_Id.value;
+  $.ajax({
+    type: "POST",
+    url: "../../controllers/main/CargaHorariaController.php",
+    data: "opcion=" + opcion +
+          "&p_cgh_id=" + p_cgh_id +
+          "&p_cgc_id=" + p_cgc_id,
+    success: function (data) {
+      let opciones = JSON.parse(data);
+      console.log(opciones);
+    },
+    error: function (data) {
+      alert("Error al mostrar: " + data);
+    },
+  });
+}
+
 function get_cbo_semestres() {
   let opcion = "get_cbo_semestres";
   $.ajax({
@@ -862,9 +888,12 @@ function validarCursos() {
   }
   return true;
 }
-
+ 
 /* FUNCION AL CARGAR EL DOCUMENTO */
 function load_document() {
+  if (txtCgh_Id.value !== null && txtCgh_Id.value !== '' && txtCgc_Id.value !== null && txtCgc_Id.value !== '') {
+    get_carga_horaria_by_id();
+  }
   get_cbo_unidades();
   get_cbo_semestres();
   change_cbo_ciclo();

@@ -54,7 +54,7 @@ function nuevaCarga() {
   let url = 'registrarCargaHoraria.php?sem_id=' + cboSemestre.value + '&sec_id=' + cboUnidad.value;
   location.href = url;
 }
-
+ 
 /* FUNCION PARA EDITAR */
 function editar(cgh_id, cgc_id) {
   let url = 'registrarCargaHoraria.php?cgh_id=' + cgh_id + '&cgc_id=' + cgc_id;

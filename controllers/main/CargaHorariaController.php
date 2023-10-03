@@ -9,9 +9,10 @@
   $parametros['sec_id'] = '';
   $parametros['prg_id'] = '';
   $parametros['ciclo'] = '';
-
+  
   // ENVIAR DATOS PARA GUARDAR
   $parametros['p_cgh_id'] = '';
+  $parametros['p_cgc_id'] = '';
   $parametros['p_cgh_codigo'] = '';
   $parametros['p_sem_id'] = '';
   $parametros['p_sem_codigo'] = '';
@@ -51,6 +52,10 @@
   if (isset($_POST['p_cgh_id'])) 
   {
     $parametros['p_cgh_id'] = $_POST['p_cgh_id'];
+  }
+  if (isset($_POST['p_cgc_id'])) 
+  {
+    $parametros['p_cgc_id'] = $_POST['p_cgc_id'];
   }
   if (isset($_POST['p_cgh_codigo'])) 
   {

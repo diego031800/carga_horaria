@@ -6,89 +6,94 @@ if (!isset($_SESSION['login'])) {
 } else {
     date_default_timezone_set('America/Lima');
 ?>
-    <!DOCTYPE html>
-    <html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- ICONO DE LA PAG WEB -->
-        <link rel="icon" href="../../assets/images/untr.ico">
-        <!-- BOOTSTRAP -->
-        <link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
-        <!-- <link rel="stylesheet" href="../../assets/css/bootstrap-theme.min.css"> -->
-        <link rel="stylesheet" href="../../assets/css/bootstrap-datepicker3.min.css">
-        <link rel="stylesheet" href="../../assets/css/bootstrapValidator.min.css">
-        <!-- TEMPLATE -->
-        <link rel="stylesheet" href="../../assets/css/font-awesome.min.css">
-        <link rel="stylesheet" href="../../assets/css/themify-icons.css">
-        <link rel="stylesheet" href="../../assets/css/metisMenu.css">
-        <link rel="stylesheet" href="../../assets/css/owl.carousel.min.css">
-        <link rel="stylesheet" href="../../assets/css/slicknav.min.css">
-        <!-- amchart css -->
-        <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
-        <!-- others css -->
-        <link rel="stylesheet" href="../../assets/css/typography.css">
-        <link rel="stylesheet" href="../../assets/css/default-css.css">
-        <link rel="stylesheet" href="../../assets/css/styles.css">
-        <link rel="stylesheet" href="../../assets/css/responsive.css">
-        <link rel="stylesheet" href="../../assets/css/css_toastr.min.css">
-        <!-- modernizr css -->
-        <script src="../../assets/js/vendor/modernizr-2.8.3.min.js"></script>
-        <!-- SELECT 2 -->
-        <link rel="stylesheet" href="../../assets/css/select2/select2.css">
-        <!-- ESTILOS PROPIOS -->
-        <link rel="stylesheet" href="/carga_horaria/view/css/styles.css">
-        <title>CARGA HORARIA</title>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ICONO DE LA PAG WEB -->
+    <link rel="icon" href="../../assets/images/untr.ico">
+    <!-- BOOTSTRAP -->
+    <link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="../../assets/css/bootstrap-theme.min.css"> -->
+    <link rel="stylesheet" href="../../assets/css/bootstrap-datepicker3.min.css">
+    <link rel="stylesheet" href="../../assets/css/bootstrapValidator.min.css">
+    <!-- TEMPLATE -->
+    <link rel="stylesheet" href="../../assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../assets/css/themify-icons.css">
+    <link rel="stylesheet" href="../../assets/css/metisMenu.css">
+    <link rel="stylesheet" href="../../assets/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="../../assets/css/slicknav.min.css">
+    <!-- amchart css -->
+    <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css"
+        media="all" />
+    <!-- others css -->
+    <link rel="stylesheet" href="../../assets/css/typography.css">
+    <link rel="stylesheet" href="../../assets/css/default-css.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/responsive.css">
+    <link rel="stylesheet" href="../../assets/css/css_toastr.min.css">
+    <!-- modernizr css -->
+    <script src="../../assets/js/vendor/modernizr-2.8.3.min.js"></script>
+    <!-- SELECT 2 -->
+    <link rel="stylesheet" href="../../assets/css/select2/select2.css">
+    <!-- ESTILOS PROPIOS -->
+    <link rel="stylesheet" href="/carga_horaria/view/css/styles.css">
+    <title>CARGA HORARIA</title>
+</head>
 
-    <body>
-        <div class="page-container">
-            <!-- START SIDE BAR -->
-            <?php require_once('../left_sidebar.php') ?>
-            <!-- END SIDE BAR -->
+<body>
+    <div class="page-container">
+        <!-- START SIDE BAR -->
+        <?php require_once('../left_sidebar.php') ?>
+        <!-- END SIDE BAR -->
 
-            <!-- main content area start -->
-            <div class="main-content" style="height: 100%;">
-                <!-- START NAV BAR -->
-                <?php require_once('../navbar.php') ?>
-                <!-- END NAV BAR -->
-                <div class="main-content-inner">
-                    <div class="card shadow p-3 mb-5 bg-body-tertiary rounded mt-5" style="min-height: 620px;">
-                        <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
-                            <button class="btn btn-primary" type="button" id="btnAtras">
-                                <i class="fa fa-arrow-left"></i>
-                            </button>
-                            <h3 class="card-title m-3">Registro de la carga horaria</h3>
-                            &nbsp;&nbsp;&nbsp;
-                        </div>
-                        <div class="card-body">
-                            <div class="card"
+        <input type="hidden" id="txtCgh_Id" value="<?php if (isset($_GET['cgh_id'])) { echo $_GET['cgh_id'];} else{ echo '0';} ?>">
+        <input type="hidden" id="txtCgc_Id" value="<?php if (isset($_GET['cgc_id'])) { echo $_GET['cgc_id'];} else{ echo '0';} ?>">
+
+        <!-- main content area start -->
+        <div class="main-content" style="height: 100%;">
+            <!-- START NAV BAR -->
+            <?php require_once('../navbar.php') ?>
+            <!-- END NAV BAR -->
+            <div class="main-content-inner">
+                <div class="card shadow p-3 mb-5 bg-body-tertiary rounded mt-5" style="min-height: 620px;">
+                    <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+                        <button class="btn btn-primary" type="button" id="btnAtras">
+                            <i class="fa fa-arrow-left"></i>
+                        </button>
+                        <h3 class="card-title m-3">Registro de la carga horaria</h3>
+                        &nbsp;&nbsp;&nbsp;
+                    </div>
+                    <div class="card-body">
+                        <div class="card"
                             style="color: #ffffff; background-color:rgba(135, 135, 135, 0.09); border-radius: 18px;">
-                                <div class="card-body row mb-2">
-                                    <div class="col-lg-2 col-6 mb-3">
-                                        <label for="" class="form-label">Semestre</label>
-                                        <select class="form-select" id="cboSemestre">
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-3 col-6 mb-3">
-                                        <label for="cboUnidad" class="form-label">Unidad</label>
-                                        <select class="form-select" id="cboUnidad">
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-5 col-6 mb-3">
-                                        <label class="form-label" for="cboPrograma">Programa</label>
-                                        <select class="form-select" id="cboPrograma" disabled>
-                                            <option value="SD">Antes selecciona una unidad ...</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-2 col-6 mb-3">
-                                        <label class="form-label" for="cboCiclo">Ciclo</label>
-                                        <select name="ciclo" class="form-select" id="cboCiclo">
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-2 col-6 mb-3">
-                                        <button class="btn btn-outline-success" id="btneditarCargaHoraria" onClick="editarCarga();" disabled><i class="fa fa-check-circle"></i>
+                            <div class="card-body row mb-2">
+                                <div class="col-lg-2 col-6 mb-3">
+                                    <label for="" class="form-label">Semestre</label>
+                                    <select class="form-select" id="cboSemestre">
+                                    </select>
+                                </div>
+                                <div class="col-lg-3 col-6 mb-3">
+                                    <label for="cboUnidad" class="form-label">Unidad</label>
+                                    <select class="form-select" id="cboUnidad">
+                                    </select>
+                                </div>
+                                <div class="col-lg-5 col-6 mb-3">
+                                    <label class="form-label" for="cboPrograma">Programa</label>
+                                    <select class="form-select" id="cboPrograma" disabled>
+                                        <option value="SD">Antes selecciona una unidad ...</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-2 col-6 mb-3">
+                                    <label class="form-label" for="cboCiclo">Ciclo</label>
+                                    <select name="ciclo" class="form-select" id="cboCiclo">
+                                    </select>
+                                </div>
+                                <div class="col-lg-2 col-6 mb-3">
+                                    <button class="btn btn-outline-success" id="btneditarCargaHoraria"
+                                        onClick="editarCarga();" disabled><i class="fa fa-check-circle"></i>
                                         Confirmar</button>
                                     <button class="btn btn-danger" type="button" id="btnCancelar"
                                         onClick="cancelarEditarCarga();">
@@ -104,28 +109,29 @@ if (!isset($_SESSION['login'])) {
                                         </svg>
                                         &nbsp; Cancelar
                                     </button>
-                                    </div>
                                 </div>
                             </div>
-                            <div>
-                                <br>
-                            </div>
-                            <div class="card"
+                        </div>
+                        <div>
+                            <br>
+                        </div>
+                        <div class="card"
                             style="color: #ffffff; background-color:rgba(135, 135, 135, 0.09); border-radius: 18px;">
-                                <div class="card-body row">
-                                    <div class="col-lg-12 col-6 mb-3">
-                                        <button class="btn btn-success" onClick="abrirAgregarCurso();" id="btnAgregarCurso">
-                                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
-                                                <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                                                <style>
-                                                    svg {
-                                                        fill: #ffffff
-                                                    }
-                                                </style>
-                                                <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-                                            </svg>
-                                            &nbsp; Agregar curso
-                                        </button>
+                            <div class="card-body row">
+                                <div class="col-lg-12 col-6 mb-3">
+                                    <button class="btn btn-success" onClick="abrirAgregarCurso();" id="btnAgregarCurso">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
+                                            <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                                            <style>
+                                            svg {
+                                                fill: #ffffff
+                                            }
+                                            </style>
+                                            <path
+                                                d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+                                        </svg>
+                                        &nbsp; Agregar curso
+                                    </button>
 
                                 </div>
                                 <div class="col-12">
@@ -164,7 +170,8 @@ if (!isset($_SESSION['login'])) {
                                 </svg>
                                 &nbsp; Guardar
                             </button>
-                            <a class="btn btn-danger" type="button" id="btnCancelarTotal" href="/carga_horaria/view/process/misCargasHorarias.php"
+                            <a class="btn btn-danger" type="button" id="btnCancelarTotal"
+                                href="/carga_horaria/view/process/misCargasHorarias.php"
                                 onClick="cancelarEditarCarga();">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512">
                                     <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
@@ -357,108 +364,108 @@ if (!isset($_SESSION['login'])) {
                 </div>
             </div>
 
-            </div>
-            <!-- main content area end -->
-
-            <!-- START FOOTER -->
-            <?php require_once('../footer.php') ?>
-            <!-- END FOOTER -->
-
         </div>
+        <!-- main content area end -->
 
-        <!-- SCRIPTS -->
+        <!-- START FOOTER -->
+        <?php require_once('../footer.php') ?>
+        <!-- END FOOTER -->
 
-        <!-- JQUERY -->
-        <script src="../../assets/js/jquery-3.7.0.min.js"></script>
-        <!-- BOOTSTRAP -->
-        <script src="../../assets/js/popper.min.js"></script>
-        <script src="../../assets/js/bootstrap.min.js"></script>
-        <script src="../../assets/js/datepicker/bootstrap-datepicker.min.js"></script>
-        <script src="../../assets/js/datepicker/bootstrap-datepicker.es.min.js"></script>
-        <script src="../../assets/js/datepicker/bootstrapValidator.min.js"></script>
-        <script src="../../assets/js/owl.carousel.min.js"></script>
-        <script src="../../assets/js/metisMenu.min.js"></script>
-        <script src="../../assets/js/jquery.slimscroll.min.js"></script>
-        <script src="../../assets/js/jquery.slicknav.min.js"></script>
-        <!-- DATE PICKER -->
-        <script src="../../assets/js/datepicker/es_ES.min.js"></script>
-        <!-- SELECT 2 -->
-        <script src="../../assets/js/select2/select2.js"></script>
-        <!-- others plugins -->
-        <script src="../../assets/js/plugins.js"></script>
-        <script src="../../assets/js/scripts.js"></script>
-        <!-- SCRIPT TOASTR -->
-        <script src="../../assets/js/js_toastr.min.js"></script>
-        <!-- SCRIPT DESPACHO -->
-        <script src="../../view/js/index.js"></script>
-        <!-- SCRIPT PROPIO INICIO -->
-        <script>
-            $(document).ready(function() {
-                toastr.options = {
-                    "closeButton": false,
-                    "debug": false,
-                    "newestOnTop": true,
-                    "progressBar": true,
-                    "positionClass": "toast-top-right",
-                    "preventDuplicates": false,
-                    "onclick": null,
-                    "showDuration": "300",
-                    "hideDuration": "1000",
-                    "timeOut": "5000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut"
-                }
+    </div>
 
-                $('#cboCurso').select2({
-                    dropdownCssClass: "limitar-opciones",
-                    placeholder: 'Selecciona un curso ...'
-                });
+    <!-- SCRIPTS -->
 
-                $('#cboPrograma').select2({
-                    dropdownCssClass: "limitar-opciones",
-                    placeholder: 'Selecciona un programa ...'
-                });
+    <!-- JQUERY -->
+    <script src="../../assets/js/jquery-3.7.0.min.js"></script>
+    <!-- BOOTSTRAP -->
+    <script src="../../assets/js/popper.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/datepicker/bootstrap-datepicker.min.js"></script>
+    <script src="../../assets/js/datepicker/bootstrap-datepicker.es.min.js"></script>
+    <script src="../../assets/js/datepicker/bootstrapValidator.min.js"></script>
+    <script src="../../assets/js/owl.carousel.min.js"></script>
+    <script src="../../assets/js/metisMenu.min.js"></script>
+    <script src="../../assets/js/jquery.slimscroll.min.js"></script>
+    <script src="../../assets/js/jquery.slicknav.min.js"></script>
+    <!-- DATE PICKER -->
+    <script src="../../assets/js/datepicker/es_ES.min.js"></script>
+    <!-- SELECT 2 -->
+    <script src="../../assets/js/select2/select2.js"></script>
+    <!-- others plugins -->
+    <script src="../../assets/js/plugins.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+    <!-- SCRIPT TOASTR -->
+    <script src="../../assets/js/js_toastr.min.js"></script>
+    <!-- SCRIPT DESPACHO -->
+    <script src="../../view/js/index.js"></script>
+    <!-- SCRIPT PROPIO INICIO -->
+    <script>
+    $(document).ready(function() {
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
 
-                $(".registerFormFcMv").bootstrapValidator({
-                    live: "enabled",
-                    fields: {
-                        newinputTratFechaIni: {
-                            validators: {
-                                date: {
-                                    format: "DD/MM/YYYY",
-                                    message: "ESTE VALOR NO COINCIDE CON UNA FECHA",
-                                },
-                                stringLength: {
-                                    min: 10,
-                                    max: 10,
-                                    message: "LA LONGITUD MÁXIMA ES DE 10 INCLUYENDO /",
-                                },
-                                regexp: {
-                                    regexp: /^[0-9-/]+$/,
-                                    message: "LA FECHA SOLO PUEDE TENER NÚMEROS Y /",
-                                },
-                            },
+        $('#cboCurso').select2({
+            dropdownCssClass: "limitar-opciones",
+            placeholder: 'Selecciona un curso ...'
+        });
+
+        $('#cboPrograma').select2({
+            dropdownCssClass: "limitar-opciones",
+            placeholder: 'Selecciona un programa ...'
+        });
+
+        $(".registerFormFcMv").bootstrapValidator({
+            live: "enabled",
+            fields: {
+                newinputTratFechaIni: {
+                    validators: {
+                        date: {
+                            format: "DD/MM/YYYY",
+                            message: "ESTE VALOR NO COINCIDE CON UNA FECHA",
+                        },
+                        stringLength: {
+                            min: 10,
+                            max: 10,
+                            message: "LA LONGITUD MÁXIMA ES DE 10 INCLUYENDO /",
+                        },
+                        regexp: {
+                            regexp: /^[0-9-/]+$/,
+                            message: "LA FECHA SOLO PUEDE TENER NÚMEROS Y /",
                         },
                     },
-                });
+                },
+            },
+        });
 
-                $(".datepicker3").datepicker({
-                    container: ".container-calendar",
-                    autoclose: false,
-                    todayHighlight: true,
-                    calendarWeeks: true,
-                    format: "dd/mm/yyyy",
-                    language: "es",
-                    multidate: true,
-                });
-            });
-        </script>
-    </body>
+        $(".datepicker3").datepicker({
+            container: ".container-calendar",
+            autoclose: false,
+            todayHighlight: true,
+            calendarWeeks: true,
+            format: "dd/mm/yyyy",
+            language: "es",
+            multidate: true,
+        });
+    });
+    </script>
+</body>
 
-    </html>
+</html>
 
 
 <?php } ?>
