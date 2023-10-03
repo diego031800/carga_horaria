@@ -7,7 +7,7 @@ if (!isset($_SESSION['login'])) {
     date_default_timezone_set('America/Lima');
 ?>
     <!DOCTYPE html>
-    <html lang="en">
+    <html lang="es">
 
     <head>
         <meta charset="UTF-8">
@@ -48,8 +48,8 @@ if (!isset($_SESSION['login'])) {
             <?php require_once('../left_sidebar.php') ?>
             <!-- END SIDE BAR -->
 
-            <input type="hidden" id="txtCgh_Id" value="<?php echo $_GET['cgh_id']; ?>">
-            <input type="hidden" id="txtCgc_Id" value="<?php echo $_GET['cgc_id']; ?>">
+            <input type="hidden" id="txtCgh_Id" value="<?php echo empty($_GET['cgh_id'])?'': $_GET['cgh_id']; ?>">
+            <input type="hidden" id="txtCgc_Id" value="<?php echo empty($_GET['cgc_id'])?'': $_GET['cgc_id']; ?>">
 
             <!-- main content area start -->
             <div class="main-content" style="height: 100%;">
