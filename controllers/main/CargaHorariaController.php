@@ -109,7 +109,7 @@
   {
     $parametros['p_cursos'] = $_POST['p_cursos'];
   }
-
+ 
   $CargaHoraria = new CargaHoraria();
   echo $CargaHoraria->opciones($parametros);
 

@@ -460,3 +460,4 @@ $nombreArchivo = 'CARGA_HORARIA_' . $carga_horaria[0]['unidad'] . '_' . $carga_h
 
 // Output a PDF file directly to the browser with a specific filename
 $mpdf->Output($nombreArchivo, \Mpdf\Output\Destination::INLINE);
+?>

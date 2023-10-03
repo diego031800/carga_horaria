@@ -42,7 +42,7 @@ let btnGuardar = document.getElementById("btnGuardar");
 let btnCancelar = document.getElementById("btnCancelar");
 
 // VARIABLES
-
+let edit= 0;
 let cgh_id = 0;
 let chu_id = 0;
 let chp_id = 0;
@@ -69,8 +69,9 @@ function get_carga_horaria_by_id() {
           "&p_cgh_id=" + p_cgh_id +
           "&p_cgc_id=" + p_cgc_id,
     success: function (data) {
-      let opciones = data;
-      console.log(data);
+      let respuesta = JSON.parse(data);
+      console.log(respuesta);
+      setDatosUnidadSem(respuesta);
     },
     error: function (data) {
       alert("Error al mostrar: " + data);
@@ -129,6 +130,32 @@ function get_cbo_programas() {
     error: function (data) {
       alert("Error al mostrar");
     },
+  });
+}
+
+function get_cbo_programasPromesa() {
+  return new Promise(function (resolve, reject) {
+    let opcion = "get_cbo_programas";
+    let sec_id = cboUnidad.value;
+
+    $.ajax({
+      type: "POST",
+      url: "../../controllers/main/CargaHorariaController.php",
+      data: "opcion=" + opcion + "&sec_id=" + sec_id,
+      success: function (data) {
+        objeto = JSON.parse(data);
+        let opciones = objeto.programas;
+        cboPrograma.disabled = false;
+        if (objeto.has_data == 0) {
+          cboPrograma.disabled = true;
+        }
+        $("#cboPrograma").html(opciones);
+        resolve(); // Resuelve la promesa cuando los datos estén disponibles
+      },
+      error: function (data) {
+        reject("Error al mostrar"); // Rechaza la promesa en caso de error
+      },
+    });
   });
 }
 
@@ -364,7 +391,6 @@ function abrir_grupo_modal(idCurso) {
   let curso = listacursos.find((cursoI) => cursoI.index === idCurso);
   txtTituloModalGrupo.textContent = "REGISTRAR GRUPOS PARA EL CURSO: "+ curso.curso;
   $("#myModal-grupo").fadeIn();
-  //let grupos = listacursos.find((cursoI) => cursoI.index === idCurso).grupos;
   if (curso.grupos.length == 1) {
     $("#btn-addGrupo").show();
     $("#btn-deleteGrupo").hide();
@@ -718,8 +744,80 @@ function abrir_docente_modal(index) {
   actualizarDatosDocenteGrupo();
 }
 
-// Funcionalidades
+/* Cargar datos al entrar como "Editar" */
 
+async function setDatosUnidadSem(data){
+  $("#cboSemestre").val(data[0].sem_id).trigger("change");
+  $("#cboUnidad").val(data[0].sec_id).trigger("change");
+  await get_cbo_programasPromesa();
+  $("#cboPrograma").val(data[0].prg_id).trigger("change");
+  $("#cboCiclo").val(data[0].ciclo).trigger("change");
+  console.log(data);
+  //llenarListaCursos(data);
+  camposUnidad(true);
+  camposCursos(false);
+}
+
+function llenarListaCursos(data){
+  let conversorCursos = Object.values(data[0].cursos);
+  console.log(conversorCursos);
+  conversorCursos.forEach(element => {
+    let arrayG =[]
+    let conversorGrupos = Object.values(element.grupos);
+    //Convertir los grupos para los cursos
+    conversorGrupos.forEach( elementG =>{
+      let arrayF =[]
+      let conversorFechas = Object.values(elementG.fechas);
+      let arrayD =[]
+      let conversorDocentes = Object.values(elementG.fechas);
+      // Convertir las fechas para los grupos
+      conversorFechas.forEach(elementF => {
+        fecha = {
+          index : parseInt(elementF.cgf_id),
+          ccg_id : parseInt(elementF.ccg_id),
+          fecha: convertirFecha(elementF.fecha)
+        };
+        arrayF.push(fecha);
+      });
+      // Convertir los docentes para los grupos
+      conversorDocentes.forEach(elementD => {
+        docente ={
+          ccg_id : parseInt(elementD.ccg_id),
+          
+        }
+      });
+      itemGNuevo = {
+        ccg_id : parseInt(elementG.ccg_id),
+      };
+    }
+    );
+    itemNuevo = {
+      chc_id: parseInt(element.chc_id),
+      cur_calidad: element.cur_calidad,
+      //cur_codigo: element.cur_codigo,
+      cur_creditos: element.cur_creditos,
+      cur_tipo: element.cur_calidad,
+      curso: element.curso,
+
+    };
+  });
+  llenarTabla();
+}
+
+// Funcionalidades
+function convertirFecha(fechaString) {
+  // Dividir la cadena de fecha en partes
+  const partes = fechaString.split("-");
+
+  // Obtener el día, mes y año
+  const año = partes[0];
+  const mes = partes[1];
+  const día = partes[2];
+
+  // Crear la nueva cadena de fecha en el formato deseado
+  const nuevaFecha = `${día}/${mes}/${año}`;
+  return nuevaFecha;
+}
 
 /* Habilitar o deshabilitar los campos de la unidad */
 function camposUnidad(bol) {
@@ -888,16 +986,16 @@ function validarCursos() {
   }
   return true;
 }
-
+ 
 /* FUNCION AL CARGAR EL DOCUMENTO */
 function load_document() {
-  if (txtCgh_Id.value !== null && txtCgh_Id.value !== '' && txtCgc_Id.value !== null && txtCgc_Id.value !== '') {
-    get_carga_horaria_by_id();
-  }
   get_cbo_unidades();
   get_cbo_semestres();
   change_cbo_ciclo();
   get_docentes();
+  if (txtCgh_Id.value !== null && txtCgh_Id.value !== '' && txtCgc_Id.value !== null && txtCgc_Id.value !== '') {
+    get_carga_horaria_by_id();
+  }
   camposCursos(true, 1);
   btnGuardar.disabled = true;
   //cboCiclo.disabled = true;

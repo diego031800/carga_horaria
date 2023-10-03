@@ -32,6 +32,7 @@ if (!isset($_SESSION['login'])) {
         <link rel="stylesheet" href="../../assets/css/default-css.css">
         <link rel="stylesheet" href="../../assets/css/styles.css">
         <link rel="stylesheet" href="../../assets/css/responsive.css">
+        <link rel="stylesheet" href="../../assets/css/css_toastr.min.css">
         <!-- modernizr css -->
         <script src="../../assets/js/vendor/modernizr-2.8.3.min.js"></script>
         <!-- SELECT 2 -->
@@ -110,6 +111,9 @@ if (!isset($_SESSION['login'])) {
                                     <div id="tbl_spinner"></div>
                                 </div>
                             </div>
+                            <div>
+                                <button class="btn btn-info" id="enviarDatos"><i class="fa fa-send-o text-info"></i> Enviar Correos</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -119,7 +123,7 @@ if (!isset($_SESSION['login'])) {
             <!-- START FOOTER -->
             <?php require_once('../footer.php') ?>
             <!-- END FOOTER -->
-
+ 
         </div>
 
         <!-- SCRIPTS -->
@@ -147,12 +151,35 @@ if (!isset($_SESSION['login'])) {
         <script src="../../assets/js/data_table/jquery.dataTables.min.js"></script>
         <!-- SCRIPT DESPACHO -->
         <script src="../../view/js/process/envioCredenciales.js"></script>
+        <!-- SCRIPT TOASTR -->
+        <script src="../../assets/js/js_toastr.min.js"></script>
         <!-- SCRIPT PROPIO INICIO -->
         <script>
+            $(document).ready(function() {
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": true,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+            });
         </script>
     </body>
 
     </html>
 
 
-<?php } ?>
+<?php 
+} 
+?>
