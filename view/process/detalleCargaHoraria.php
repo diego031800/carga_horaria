@@ -38,6 +38,7 @@ if (!isset($_SESSION['login'])) {
         <link rel="stylesheet" href="../../assets/css/select2/select2.css">
         <!-- DATA TABLE -->
         <link rel="stylesheet" href="../../assets/css/data_table/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="../../assets/css/data_table/responsive.dataTables.min.css">
         <!-- ESTILOS PROPIOS -->
         <link rel="stylesheet" href="/carga_horaria/view/css/styles.css">
         <title>CARGA HORARIA</title>
@@ -152,6 +153,7 @@ if (!isset($_SESSION['login'])) {
         <script src="../../assets/js/scripts.js"></script>
         <!-- DATA TABLE -->
         <script src="../../assets/js/data_table/jquery.dataTables.min.js"></script>
+        <script src="../../assets/js/data_table/dataTables.responsive.min.js"></script>
         <!-- SCRIPT DESPACHO -->
         <script src="../../view/js/process/detalleCargaHoraria.js"></script>
         <!-- SCRIPT PROPIO INICIO -->

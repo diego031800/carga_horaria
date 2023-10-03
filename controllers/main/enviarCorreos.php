@@ -62,7 +62,7 @@ class CorreoCargaHoraria
             );
             $this->mail->Subject = 'ENTREGA DE CREEDENCIALES DEL SIGAP - DOCENTE';
             $rutaManual = '../../assets/docs/ManualSigap.pdf';
-            $this->mail->addAddress("gayalam@unitru.edu.pe",$item->nombre);
+            $this->mail->addAddress("aspirojose@gmail.com",$item->nombre);
             $this->mail->isHTML(true);
             $this->mail->Body = $this->generarMensajeCorreo($item->nombre,$item->codigo,$item->documento,$item->sem);
             $this->mail->addAttachment($rutaManual,'Manual de docente para SIGAP');

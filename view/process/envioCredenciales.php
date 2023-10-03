@@ -39,6 +39,7 @@ if (!isset($_SESSION['login'])) {
         <link rel="stylesheet" href="../../assets/css/select2/select2.css">
         <!-- DATA TABLE -->
         <link rel="stylesheet" href="../../assets/css/data_table/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="../../assets/css/data_table/responsive.dataTables.min.css">
         <link rel="stylesheet" href="../css/styles.css">
         <!-- ESTILOS PROPIOS -->
         <link rel="stylesheet" href="/carga_horaria/view/css/styles.css">
@@ -66,7 +67,7 @@ if (!isset($_SESSION['login'])) {
                         <div class="card-body">
                             <div class="card" style="color: #ffffff; background-color:rgba(135, 135, 135, 0.09); border-radius: 18px;">
                                 <div class="card-body">
-                                    <div class="row d-flex justify-content-center">
+                                    <div class="row d-flex justify-content-center align-items-center">
                                         <div class="col-lg-2 col-6">
                                             <select class="form-select" id="cboSemestre">
                                             </select>
@@ -82,10 +83,17 @@ if (!isset($_SESSION['login'])) {
                                             </select>
                                             <small style="color: #666666;"><b>Filtar</b> por Programa</small>
                                         </div>
-                                        <div class="col-lg-2 col-md-4 col-6 align-items-center">
-                                            <button class="btn btn-primary" type="button" id="btnBuscar">
+                                        <div class="col-lg-1 col-md-2 col-6 d-flex align-items-center h-100 border border-start-0 border-bottom-0 border-top-0 border-dark-subtle" style="height: 80px!important;">
+                                            <button class="btn btn-primary align-middle" type="button" id="btnBuscar">
                                                 <i class="fa fa-search"></i>
                                             </button>
+                                        </div>
+                                        <div class="col-lg-2 col-md-2">
+                                            <button class="btn btn-warning text-light m-4" id="btnEnviando" disabled style="display: none;">
+                                                <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                                                <span role="status">&nbsp;&nbsp; Enviando ...</span>
+                                            </button>
+                                            <button class="btn btn-warning text-light m-4" id="btnEnviar" disabled><i class="fa fa-send-o"></i>&nbsp;&nbsp; Enviar credenciales</button>
                                         </div>
                                     </div>
                                 </div>
@@ -112,7 +120,6 @@ if (!isset($_SESSION['login'])) {
                                 </div>
                             </div>
                             <div>
-                                <button class="btn btn-info" id="enviarDatos"><i class="fa fa-send-o text-info"></i> Enviar Correos</button>
                             </div>
                         </div>
                     </div>
@@ -149,6 +156,7 @@ if (!isset($_SESSION['login'])) {
         <script src="../../assets/js/scripts.js"></script>
         <!-- DATA TABLE -->
         <script src="../../assets/js/data_table/jquery.dataTables.min.js"></script>
+        <script src="../../assets/js/data_table/dataTables.responsive.min.js"></script>
         <!-- SCRIPT DESPACHO -->
         <script src="../../view/js/process/envioCredenciales.js"></script>
         <!-- SCRIPT TOASTR -->

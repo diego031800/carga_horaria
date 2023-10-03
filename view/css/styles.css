@@ -86,3 +86,9 @@
 .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
     color: black !important;
 }
+
+.vertical-line {
+    border-left: 2px solid #b3b3b3; /* Color y grosor de la línea vertical */
+    height: 100%; /* Altura de la línea vertical */
+    /* margin-left: 50px; Margen izquierdo para ajustar la posición */
+}
