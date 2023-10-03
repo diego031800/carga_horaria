@@ -370,8 +370,9 @@ class CargaHoraria
             $sql .= "'" . $ccg_id . "', "; // p_ccg_id
             $sql .= "" . $docente->titular . ", "; // p_cgd_titular
             $sql .= "NULL, "; // p_cgd_horas
-            $sql .= "NULL, "; // p_cgd_fecha_fin
             $sql .= "NULL, "; // p_cgd_fecha_inicio
+            $sql .= "NULL, "; // p_cgd_fecha_fin
+            $sql .= "'" . $docente->grado . "', "; // p_doc_grado
             $sql .= "'" . $docente->condicion . "', "; // p_doc_condicion
             $sql .= "'" . $docente->doc_id . "', "; // p_doc_id
             $sql .= "'" . $docente->codigo . "', "; // p_doc_codigo
@@ -652,8 +653,12 @@ class CargaHoraria
                             'cgd_id' => $fila['cgd_id'],
                             'titular' => $fila['titular'],
                             'doc_condicion' => $fila['doc_condicion'],
+                            'doc_id' => $fila['doc_id'],
                             'doc_documento' => $fila['doc_documento'],
+                            'doc_codigo' => $fila['doc_codigo'],
                             'doc_nombres' => $fila['doc_nombres'],
+                            'doc_celular' => $fila['doc_celular'],
+                            'doc_email' => $fila['doc_email'],
                         );
 
                         if ($docentes[$cgd_id]['ccg_id'] == $carga_horaria[0]['programas'][$prg_id]['ciclos'][$cgc_id]['cursos'][$chc_id]['grupos'][$ccg_id]['ccg_id']) {
@@ -727,6 +732,7 @@ class CargaHoraria
                         $cursos[$chc_id] = array(
                             'chc_id' => $fila['chc_id'],
                             'cur_id' => $fila['cur_id'],
+                            'cur_codigo' => $fila['cur_codigo'],
                             'curso' => $fila['curso'],
                             'cur_tipo' => $fila['cur_tipo'],
                             'tipo_curso' => $fila['tipo_curso'],
@@ -765,6 +771,7 @@ class CargaHoraria
                             'titular' => $fila['titular'],
                             'doc_condicion' => $fila['doc_condicion'],
                             'doc_documento' => $fila['doc_documento'],
+                            'doc_codigo' => $fila['doc_codigo'],
                             'doc_nombres' => $fila['doc_nombres'],
                         );
 
