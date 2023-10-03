@@ -792,6 +792,7 @@ async function setDatosUnidadSem(data){
   llenarListaCursos(data);
   camposUnidad(true);
   camposCursos(false);
+  btnGuardar.disabled = false;
 }
 
 function llenarListaCursos(data){
