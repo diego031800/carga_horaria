@@ -48,6 +48,9 @@ if (!isset($_SESSION['login'])) {
             <?php require_once('../left_sidebar.php') ?>
             <!-- END SIDE BAR -->
 
+            <input type="hidden" id="txtCgh_Id" value="<?php echo $_GET['cgh_id']; ?>">
+            <input type="hidden" id="txtCgc_Id" value="<?php echo $_GET['cgc_id']; ?>">
+
             <!-- main content area start -->
             <div class="main-content" style="height: 100%;">
                 <!-- START NAV BAR -->
