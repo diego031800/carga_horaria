@@ -65,16 +65,17 @@ function buscar() {
       $('#table_ch').DataTable({
         data: datos,
         columns: [
-          { data: 'nro', className: 'dt-center' },
-          { data: 'acciones', className: 'dt-center' },
-          { data: 'estado', className: 'dt-center' },
-          { data: 'codigo', className: 'dt-center' },
-          { data: 'semestre', className: 'dt-center' },
-          { data: 'unidad', className: 'dt-center' },
-          { data: 'usuario', className: 'dt-center' },
+          { data: 'nro', className: 'dt-center align-middle' },
+          { data: 'acciones', className: 'dt-center align-middle' },
+          { data: 'estado', className: 'dt-center align-middle' },
+          { data: 'codigo', className: 'dt-center align-middle' },
+          { data: 'semestre', className: 'dt-center align-middle' },
+          { data: 'unidad', className: 'dt-center align-middle' },
+          { data: 'usuario', className: 'dt-center align-middle' },
         ],
         responsive: true,
         select: true,
+        lengthMenu: [5, 10, 15, 20, 25],
         columnDefs: [
           {
               targets: -1,
@@ -92,6 +93,12 @@ function buscar() {
           },
           info: "Mostrando _START_ de _END_ de un total de _TOTAL_ Registros",
         },
+        dom: '<"row"<"col-md-6"l><"col-md-6"f>>tp',
+        createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+          if (colIndex === 4) {
+            $(cell).css('background-color', '#ffcc00');
+          }
+        }
       });
     },
     error: function (data) {

@@ -50,7 +50,7 @@
                         $data['acciones'] = '<div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="1" id="envio_'.$row['cgd_id'].'" checked>
                                                 <label class="form-check-label" for="envio_'.$row['cgd_id'].'">
-                                                    Enviar correo
+                                                    Enviar credenciales
                                                 </label>
                                             </div>'; 
                         $data['ciclo'] = $row['ciclo'];
@@ -64,6 +64,7 @@
                         $data['doc_documento'] = $row['doc_documento'];
                         $data['doc_codigo'] = $row['doc_codigo'];
                         $data['doc_email'] = $row['doc_email'];
+                        $data['cgd_id'] = $row['cgd_id'];
                         array_push($data_table, $data);
                     }
                     return json_encode($data_table);

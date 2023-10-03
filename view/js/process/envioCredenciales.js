@@ -6,7 +6,8 @@ let btnNuevaCarga = document.getElementById('btnNuevaCarga');
 let btnAtras = document.getElementById('btnAtras');
 let lblTitulo = document.getElementById('lblTitulo');
 let btnVerPdf = document.getElementById('btnVerPdf');
-let btnEnviar = document.getElementById('enviarDatos');
+let btnEnviar = document.getElementById('btnEnviar');
+let btnEnviando = document.getElementById('btnEnviando');
 let docentes_array = [];
 
 // Datos del semestre, unidad y programa;
@@ -83,6 +84,7 @@ function enviarCredenciales() {
       var codigo = docentes_array[idx].doc_codigo;
       var documento = docentes_array[idx].doc_documento;
       var sem_codigo = docentes_array[idx].sem_codigo;
+      let cgd_id = docentes_array[idx].cgd_id;
       // Agrega los datos al arreglo de filas seleccionadas
       filasSeleccionadas.push({
         nombre: nombre,
@@ -90,6 +92,7 @@ function enviarCredenciales() {
         codigo: codigo,
         documento: documento,
         sem: sem_codigo,
+        cgd_id: cgd_id,
       });
     }
   });
@@ -102,9 +105,13 @@ function enviarCredenciales() {
       data: "docentes=" + docentes,
       beforeSend: function () {
         btnEnviar.disabled = true;
+        $('#btnEnviando').show();
+        $('#btnEnviar').hide();
       },
       success: function (data) { // Habilitar el botón nuevamente
         toastr["success"]("Nose", "Registro exitoso");
+        $('#btnEnviar').show();
+        $('#btnEnviando').hide();
         btnEnviar.disabled = false;
         resolve(JSON.parse(data)); // Resolvemos la promesa
       },
@@ -189,6 +196,9 @@ function buscar() {
     },
     success: function (data) {
       let datos = JSON.parse(data);
+      if (datos.length > 0) {
+        btnEnviar.disabled = false;
+      }
       docentes_array = datos;
       btnBuscar.disabled = false;
       $('#cuerpo_asignacion').html('');
@@ -207,7 +217,7 @@ function buscar() {
           { data: 'fecha_inicio', className: 'dt-center align-middle' },
           { data: 'fecha_fin', className: 'dt-center align-middle' }
         ],
-        responsive: false,
+        responsive: true,
         select: true,
         lengthMenu: [5, 10, 15, 20, 25],
         columnDefs: [

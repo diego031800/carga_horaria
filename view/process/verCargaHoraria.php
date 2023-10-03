@@ -94,7 +94,7 @@ if (!isset($_SESSION['login'])) {
                                         </button>
                                     </div>
                                 </div>
-                                <div class="col-3" style="display: none;">
+                                <div class="col-3" >
                                     <div class="d-grid">
                                         <button class="btn btn-success" id="btnDescargarExc" type="button" disabled>
                                             <i class="fa fa-file-excel-o"></i>

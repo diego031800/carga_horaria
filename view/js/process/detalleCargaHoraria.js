@@ -119,7 +119,7 @@ function buscar() {
           { data: 'editado', className: 'dt-center' },
           { data: 'usuario', className: 'dt-center' },
         ],
-        responsive: false,
+        responsive: true,
         select: true,
         lengthMenu: [5, 10, 15, 20, 25],
         columnDefs: [
