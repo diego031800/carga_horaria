@@ -989,7 +989,6 @@ function validarCursos() {
  
 /* FUNCION AL CARGAR EL DOCUMENTO */
 function load_document() {
- 
   get_cbo_unidades();
   get_cbo_semestres();
   change_cbo_ciclo();
