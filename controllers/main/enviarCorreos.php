@@ -13,12 +13,11 @@ use PHPMailer\PHPMailer\Exception;
 class CorreoCargaHoraria
 {
     private $mail;
-    private $pdf;
+    //private $pdf;
 
      public function __construct()
     {
         $this->mail = new PHPMailer;
-        $this->pdf = new CredencialDocente();
         $this->configurarSMTP();
     }
 
@@ -51,50 +50,38 @@ class CorreoCargaHoraria
         }
     }
 
-    public function enviarCredenciales($datos)
+    public function enviarCredencial($item,$rutaPdf)
     {
-        $datos1 = json_decode($datos);
-        $datosEnvio = new datosEnvio();
-        $itemsEnviados = array();
         try {
-            //$total = count($datos);
+            $itemEnviado = array(
+                'nombre' => $item->nombre,
+                'correo' => $item->correo,
+                'envio' => 0,
+                'fechahora' => '',
+                'error' => ''
+            );
             $this->mail->Subject = 'ENTREGA DE CREEDENCIALES DEL SIGAP - DOCENTE';
             $rutaManual = '../../assets/docs/ManualSigap.pdf';
-            foreach ($datos1 as $item) {
-                $rutaPdf ='';
-                $this->mail->addAddress("geraldayala87@gmail.com",$item->nombre);
-                $this->mail->isHTML(true);
-                $this->mail->Body = $this->generarMensajeCorreo($item->nombre,$item->codigo,$item->documento,$item->sem);
-                $rutaPdf = $this->pdf->generarCredencial($item->nombre,$item->codigo,$item->documento,$item->sem);
-                error_log($rutaPdf);
-                $this->mail->addAttachment($rutaManual,'Manual de docente para SIGAP');
-                $this->mail->addAttachment($rutaPdf, $item->nombre);
-                $itemEnviado = array(
-                    'nombre' => $item->nombre,
-                    'correo' => $item->correo,
-                    'envio' => 0,
-                    'fechahora' => '',
-                    'error' => ''
-                );
-                if ($this->mail->send()) {
-                    $itemEnviado['envio'] = 1;
-                    //$itemEnviado['fechahora'] = date('Y-m-d H:i:s');
-                } else {
-                    $itemEnviado['envio'] = 0;
-                    $error = $this->mail->ErrorInfo;
-                    $itemEnviado['error'] = $error;
-                }
-                //unlink($rutaPdf);
-                $itemEnviado['fechahora'] = date('Y-m-d H:i:s');
-                $itemsEnviados[] = $itemEnviado;
-                $this->mail->clearAllRecipients(); 
+            $this->mail->addAddress("gayalam@unitru.edu.pe",$item->nombre);
+            $this->mail->isHTML(true);
+            $this->mail->Body = $this->generarMensajeCorreo($item->nombre,$item->codigo,$item->documento,$item->sem);
+            $this->mail->addAttachment($rutaManual,'Manual de docente para SIGAP');
+            $this->mail->addAttachment($rutaPdf, $item->nombre);
+            if ($this->mail->send()) {
+                $itemEnviado['envio'] = 1;
+                //$itemEnviado['fechahora'] = date('Y-m-d H:i:s');
+            } else {
+                $itemEnviado['envio'] = 0;
+                $error = $this->mail->ErrorInfo;
+                $itemEnviado['error'] = $error;
             }
+            //unlink($rutaPdf);
+            $itemEnviado['fechahora'] = date('Y-m-d H:i:s');
         } catch (Exception $ex) {
             die("Error: " . $ex);
         }
-        $datosEnvio->save_reporte($itemsEnviados);
-        //return $itemsEnviados;
-        echo json_encode($itemsEnviados);
+        return $itemEnviado;
+        //echo json_encode($itemsEnviados);
     }
 
     private function eliminarCredencial($ruta){
@@ -111,11 +98,12 @@ class CorreoCargaHoraria
         $mensaje .= '<p>Si necesita Soporte informático o ayuda con el registro o acceso comuníquese con los siguientes números:</p>';
         $mensaje .= '<p>Anderson J. Zavaleta Simón /UTIC-EPG: 984 599 249</p>';
         $mensaje .= '<p>Ronald Córdova Paredes /SISTEMAS-EPG: 978 468 194</p>';
+        $mensaje .= '<p>Documento Docente: '.$doc.'</p>';
+        $mensaje .= '<p>Token Docente: '.$codigo.'</p>';
+        $mensaje .= '<p>Código del semestre: '.$semestre.'</p>';
         $mensaje .= '<p><a href="http://www.epgnew.unitru.edu.pe">www.epgnew.unitru.edu.pe</a></p>';
+        $mensaje .= '<p>Si en algún momento llega a recibir credenciales o datos que no son suyos, comuniquese con la unidad.</p>';
         $mensaje .= '<p>ATTE. Unidad de Tecnologías Informáticas y Comunicaciones o Sistemas de la EPG.</p>';
-        $mensaje .= '<p>Código: '.$doc.'</p>';
-        $mensaje .= '<p>Token: '.$codigo.'</p>';
-        $mensaje .= '<p>Semestre: '.$semestre.'</p>';
         return $mensaje;
     }
 }

@@ -26,9 +26,9 @@ class CredencialDocente{
         </div>
         <div style='text-align: center; margin-bottom: 10px;'>
         <p style='font-size: 18px; font-family:Calibri;'><span style='color: #FF0000;'>Nombre del docente: </span>".$nombre."</p>
-        <p style='font-size: 18px; font-family:Calibri;'><span style='color: #FF0000;'>Documento: </span>".$doc."</p>
-        <p style='font-size: 18px; font-family:Calibri;'><span style='color: #FF0000;'>Token: </span>".$token."</p>
-        <p style='font-size: 18px; font-family:Calibri;'><span style='color: #FF0000;'>Contraseña / código del semestre: </span>".$sem."</p>
+        <p style='font-size: 18px; font-family:Calibri;'><span style='color: #FF0000;'>Documento Docente: </span>".$doc."</p>
+        <p style='font-size: 18px; font-family:Calibri;'><span style='color: #FF0000;'>Token Docente: </span>".$token."</p>
+        <p style='font-size: 18px; font-family:Calibri;'><span style='color: #FF0000;'>Código del semestre: </span>".$sem."</p>
         <p style='font-size: 18px; font-family:Calibri;'><span style='color: #FF0000;'>
         LINK DE ACCESO:</span> <a href='http://www.epgnew.unitru.edu.pe'>www.epgnew.unitru.edu.pe</a></p>
         </div>";
