@@ -7,7 +7,7 @@ if (!isset($_SESSION['login'])) {
     date_default_timezone_set('America/Lima');
 ?>
     <!DOCTYPE html>
-    <html lang="en">
+    <html lang="es">
 
     <head>
         <meta charset="UTF-8">
