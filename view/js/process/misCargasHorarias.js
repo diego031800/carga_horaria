@@ -129,7 +129,7 @@ function load_document() {
   get_cbo_semestres();
   buscar();
   btnBuscar.addEventListener("click", buscar);
-  btnNuevaCarga.addEventListener("click", buscar);
+  btnNuevaCarga.addEventListener("click", nuevaCarga);
 }
 
 // EVENTOS
