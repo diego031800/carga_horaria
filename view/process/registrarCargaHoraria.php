@@ -51,7 +51,8 @@ if (!isset($_SESSION['login'])) {
 
             <input type="hidden" id="txtCgh_Id" value="<?php echo empty($_GET['cgh_id'])?'': $_GET['cgh_id']; ?>">
             <input type="hidden" id="txtCgc_Id" value="<?php echo empty($_GET['cgc_id'])?'': $_GET['cgc_id']; ?>">
-
+            <input type="hidden" id="txtSem_id" value="<?php echo empty($_GET['sem_id'])?'': $_GET['sem_id']; ?>">
+            <input type="hidden" id="txtSec_Id" value="<?php echo empty($_GET['sec_id'])?'': $_GET['sec_id']; ?>">
         <!-- main content area start -->
         <div class="main-content" style="height: 100%;">
             <!-- START NAV BAR -->

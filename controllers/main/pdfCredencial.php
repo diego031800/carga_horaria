@@ -34,7 +34,8 @@ class CredencialDocente{
         </div>";
     }
 
-    private function generarFooter(){
+    private function generarFooter($sem){
+        $year = substr($sem, -4);
         $this->footer = '<footer style="border-top: solid black 1px; text-align: left; font-size: 10px; position: fixed; bottom: 0; font-weight: bold;">  
                         </footer>
                         <div style="text-align: right; margin-top: 20px;">
@@ -42,7 +43,7 @@ class CredencialDocente{
                         </div>
                         <div style="text-align: center">
                         <p style="font-size: 19px;color: #00517E;"><b>Perú - Trujillo</b></p>
-                        <p style="font-size: 19px;color: #00517E;"><strong>2023</strong><p>
+                        <p style="font-size: 19px;color: #00517E;"><strong>'.$year.'</strong><p>
                         </div>
                       </body>';
     }
@@ -52,7 +53,7 @@ class CredencialDocente{
         $this->html ='';
         $this->footer='';
         $this->generarBodyCredencial($nombre,$doc,$token,$sem);
-        $this->generarFooter();
+        $this->generarFooter($sem);
         // Configurar el pie de página
         $this->mpdf->SetFooter($this->footer);
         //Imagen de fondo
