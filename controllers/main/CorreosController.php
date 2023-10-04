@@ -25,7 +25,7 @@ try {
         $itemsEnviados[] = $itemEnviado;
         unlink($rutaPdf);
     }
-    $datosEnvio->save_reporte($itemsEnviados);
+    $datosEnvio->save_reporte($itemsEnviados); 
 } catch (Exception $ex) {
     die("Error: " . $ex);
 }

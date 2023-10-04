@@ -58,11 +58,14 @@ class CorreoCargaHoraria
                 'correo' => $item->correo,
                 'envio' => 0,
                 'fechahora' => '',
-                'error' => ''
+                'error' => '',
+                'sem_id' => '',
+                'sec_id' => '',
+                'prg_id' => ''
             );
             $this->mail->Subject = 'ENTREGA DE CREEDENCIALES DEL SIGAP - DOCENTE';
             $rutaManual = '../../assets/docs/ManualSigap.pdf';
-            $this->mail->addAddress("aspirojose@gmail.com",$item->nombre);
+            $this->mail->addAddress("geraldayala87@gmail.com",$item->nombre);
             $this->mail->isHTML(true);
             $this->mail->Body = $this->generarMensajeCorreo($item->nombre,$item->codigo,$item->documento,$item->sem);
             $this->mail->addAttachment($rutaManual,'Manual de docente para SIGAP');
@@ -75,6 +78,9 @@ class CorreoCargaHoraria
                 $error = $this->mail->ErrorInfo;
                 $itemEnviado['error'] = $error;
             }
+            $itemEnviado['sem_id'] = intval($item->sem_id);
+            $itemEnviado['sec_id'] = intval($item->sec_id);
+            $itemEnviado['prg_id'] = intval($item->prg_id);
             //unlink($rutaPdf);
             $itemEnviado['fechahora'] = date('Y-m-d H:i:s');
         } catch (Exception $ex) {

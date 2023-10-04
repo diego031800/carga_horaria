@@ -6,6 +6,7 @@ let btnNuevaCarga = document.getElementById('btnNuevaCarga');
 let btnAtras = document.getElementById('btnAtras');
 let lblTitulo = document.getElementById('lblTitulo');
 let btnVerPdf = document.getElementById('btnVerPdf');
+let btnReporte = document.getElementById('btnReporte');
 let btnEnviar = document.getElementById('btnEnviar');
 let btnEnviando = document.getElementById('btnEnviando');
 let docentes_array = [];
@@ -72,8 +73,11 @@ function enviarCredenciales() {
   var filasSeleccionadas = [];
   var filas = document.querySelectorAll("#table_ch tbody tr");
   sem_txt = cboSemestre.options[cboSemestre.selectedIndex].text;
+  sem_idCbo = cboSemestre.value;
   sec_txt = cboUnidad.options[cboUnidad.selectedIndex].text;
+  sec_idCbo = cboUnidad.value;
   prg_txt = cboPrograma.options[cboPrograma.selectedIndex].text;
+  prg_idCbo = cboPrograma.value;
   filas.forEach(function (fila, index) {
     var checkbox = fila.querySelector(".form-check-input");
     if (checkbox.checked) {
@@ -84,7 +88,6 @@ function enviarCredenciales() {
       var codigo = docentes_array[idx].doc_codigo;
       var documento = docentes_array[idx].doc_documento;
       var sem_codigo = docentes_array[idx].sem_codigo;
-      let cgd_id = docentes_array[idx].cgd_id;
       // Agrega los datos al arreglo de filas seleccionadas
       filasSeleccionadas.push({
         nombre: nombre,
@@ -92,11 +95,14 @@ function enviarCredenciales() {
         codigo: codigo,
         documento: documento,
         sem: sem_codigo,
-        cgd_id: cgd_id,
+        sem_id: sem_idCbo,
+        sec_id: sec_idCbo,
+        prg_id: prg_idCbo,
       });
     }
   });
   let docentes = JSON.stringify(filasSeleccionadas);
+  console.log(docentes);
   // Retornamos una promesa
   return new Promise(function (resolve, reject) {
     $.ajax({
@@ -109,7 +115,7 @@ function enviarCredenciales() {
         $('#btnEnviar').hide();
       },
       success: function (data) { // Habilitar el botón nuevamente
-        toastr["success"]("Nose", "Registro exitoso");
+        toastr["success"]("Envío de correo", "Envío exitoso");
         $('#btnEnviar').show();
         $('#btnEnviando').hide();
         btnEnviar.disabled = false;
@@ -117,7 +123,7 @@ function enviarCredenciales() {
       },
       error: function (data) {
         btnEnviar.disabled = false; // Habilitar el botón nuevamente
-        toastr["error"]("Nose", "Algo ocurrió");
+        toastr["error"]("Envío de correo", "Hubo un error en el envío");
         reject("Error al mostrar"); // Rechazamos la promesa en caso de error
       },
     });
@@ -147,7 +153,48 @@ function reportEnvioPDF(response){
       semTxt: sem_txt,
       secTxt: sec_txt,
       prgTxt: prg_txt,
+      reporte: 0,
       docs: responseJson
+    },xhrFields: {
+        responseType: 'blob'
+    },
+    success: function (response, status, xhr) {
+      try {
+        //Obtenemos la respuesta para convertirla a blob
+        var blob = new Blob([response], { type: 'application/pdf' });
+        var URL = window.URL || window.webkitURL;
+        //Creamos objeto URL
+        var downloadUrl = URL.createObjectURL(blob);
+        //Abrir en una nueva pestaña
+        window.open(downloadUrl);
+    } catch (ex) {
+        console.log(ex);
+    }
+    },
+    error: function (error) {
+      console.error("Error en la solicitud AJAX:", error);
+    }
+  });
+}
+
+function reportGeneralPdf(){
+  sem_txt = cboSemestre.options[cboSemestre.selectedIndex].text;
+  sem_idCbo = cboSemestre.value;
+  sec_txt = cboUnidad.options[cboUnidad.selectedIndex].text;
+  sec_idCbo = cboUnidad.value;
+  prg_txt = cboPrograma.options[cboPrograma.selectedIndex].text;
+  prg_idCbo = cboPrograma.value;
+  $.ajax({
+    type: "POST",
+    url: "pdfEnvio.php", // Reemplaza esto con la URL de tu servidor
+    data: {
+      semTxt: sem_txt,
+      secTxt: sec_txt,
+      prgTxt: prg_txt,
+      reporte: 1,
+      sem_id: sem_idCbo,
+      sec_id: sec_idCbo,
+      prg_id: prg_idCbo,
     },xhrFields: {
         responseType: 'blob'
     },
@@ -198,6 +245,7 @@ function buscar() {
       let datos = JSON.parse(data);
       if (datos.length > 0) {
         btnEnviar.disabled = false;
+        btnReporte.disabled = false;
       }
       docentes_array = datos;
       btnBuscar.disabled = false;
@@ -260,6 +308,7 @@ function load_document() {
   cboUnidad.addEventListener("change", get_cbo_programas);
   btnBuscar.addEventListener("click", buscar);
   btnEnviar.addEventListener("click", promesaEnviar);
+  btnReporte.addEventListener("click", reportGeneralPdf);
 }
 
 // EVENTOS

@@ -1,6 +1,7 @@
 <?php 
 
 require_once '../../vendor/autoload.php';
+include_once '../../models/main/datosEnvio.php';
 
 date_default_timezone_set('America/Lima');
 
@@ -9,13 +10,32 @@ session_start();
 $sem = '';
 $sec = '';
 $pro = '';
+$sem_id = '';
+$sec_id = '';
+$pro_id = '';
+$report = 0;
 $datosDoc = array();
 
-if (isset($_POST['semTxt']) && isset($_POST['secTxt']) && isset($_POST['prgTxt'])&& isset($_POST['docs'])) {
+if (isset($_POST['semTxt']) && isset($_POST['secTxt']) && isset($_POST['prgTxt']) && isset($_POST['reporte'])) {
     $sem = $_POST['semTxt'];
     $sec = $_POST['secTxt'];
     $pro = $_POST['prgTxt'];
-    $datosDoc = json_decode($_POST['docs']);
+    $report = intval($_POST['reporte']);
+    if($report == 0){
+        error_log("NO pasó");
+        if(isset($_POST['docs'])){
+            $datosDoc = json_decode($_POST['docs']);
+        }
+    }else{
+        error_log($sem);
+        if(isset($_POST['sem_id']) && isset($_POST['sec_id']) && isset($_POST['prg_id'])){
+            $sem_id = $_POST['sem_id'];
+            $sec_id = $_POST['sec_id'];
+            $pro_id = $_POST['prg_id'];
+        }
+        $datosEnvio = new datosEnvio();
+        $datosDoc = $datosEnvio->get_ReporteEnvios(intval($sem_id), intval($sec_id), intval($pro_id));
+    }
 }
 
 $html = "<header>
