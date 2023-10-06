@@ -25,6 +25,9 @@
                 case 'get_programas':
                     echo $this->get_programas();
                     break;
+                case 'send_carga_horaria':
+                    echo $this->send_carga_horaria();
+                    break;
             }
         }
 
@@ -135,6 +138,15 @@
                 die("Error: " . $ex);
             }
 		}
+
+        private function send_carga_horaria()
+        {
+            try {
+                $sql = "";
+            } catch (Exception $ex) {
+                die("Error: ".$ex);
+            }
+        }
 
         private function get_programas()
         {

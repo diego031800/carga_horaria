@@ -124,8 +124,8 @@ function buscar() {
         lengthMenu: [5, 10, 15, 20, 25],
         columnDefs: [
           {
-              targets: -1,
-              className: 'dt-center'
+            targets: -1,
+            className: 'dt-center'
           }
         ],
         language: {
