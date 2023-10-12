@@ -87,7 +87,6 @@ class CorreoCargaHoraria
             die("Error: " . $ex);
         }
         return $itemEnviado;
-        //echo json_encode($itemsEnviados);
     }
     
     private function generarMensajeCorreo($nombre, $codigo, $doc, $semestre)
@@ -105,6 +104,10 @@ class CorreoCargaHoraria
         $mensaje .= '<p>Si en algún momento llega a recibir credenciales o datos que no son suyos, comuniquese con la unidad.</p>';
         $mensaje .= '<p>ATTE. Unidad de Tecnologías Informáticas y Comunicaciones o Sistemas de la EPG.</p>';
         return $mensaje;
+    }
+
+    public function cerrarConexion(){
+        $this->mail->smtpClose();
     }
 }
 

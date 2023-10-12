@@ -49,8 +49,8 @@ BEGIN
     INNER JOIN CARGA_HORARIA_CURSO_GRUPO CCG ON CCG.chc_id = CHC.chc_id
     INNER JOIN CARGA_HORARIA_CURSO_GRUPO_DOCENTE CGD ON CGD.ccg_id = CCG.ccg_id
     INNER JOIN CARGA_HORARIA_CURSO_GRUPO_FECHA CGF ON CGF.ccg_id = CCG.ccg_id
-    WHERE CH.cgh_id = 2 -- p_cgh_id
-		AND CGC.cgc_id= 4 -- p_cgc_id
+    WHERE CH.cgh_id = p_cgh_id
+		AND CGC.cgc_id= p_cgc_id
         AND CH.cgh_estado = '0001'
 	ORDER BY CH.sec_descripcion ASC, CH.prg_mencion ASC, CGC.cgh_ciclo ASC, CHC.cur_descripcion ASC,
 		CCG.ccg_grupo ASC, CGD.cgd_titular DESC, CGF.cgf_id ASC;
