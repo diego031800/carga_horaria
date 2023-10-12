@@ -75,6 +75,7 @@ function get_carga_horaria_by_id() {
       "&p_cgc_id=" + p_cgc_id,
     success: function (data) {
       let respuesta = JSON.parse(data);
+      console.log(respuesta);
       setDatosUnidadSem(respuesta);
     },
     error: function (data) {
@@ -902,7 +903,7 @@ function llenarListaCursos(data) {
     itemNuevo = {
       chc_id: parseInt(element.chc_id),
       cur_calidad: element.cur_calidad,
-      cur_ciclo: element.cur_ciclo,
+      cur_ciclo: data[0].ciclo,
       cur_codigo: element.cur_codigo,
       cur_creditos: element.cur_creditos,
       cur_tipo: element.cur_calidad,
