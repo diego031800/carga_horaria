@@ -21,9 +21,10 @@ try {
         $correo = new CorreoCargaHoraria();
         $pdf = new CredencialDocente();
         $rutaPdf = $pdf->generarCredencial($item->nombre,$item->codigo,$item->documento,$item->sem);
-        $itemEnviado = $correo->enviarCredencial($item,$rutaPdf);
+        $itemEnviado = $correo->enviarCredencial($item,$rutaPdf); 
         $itemsEnviados[] = $itemEnviado;
         unlink($rutaPdf);
+        $correo->cerrarConexion();
     }
     $datosEnvio->save_reporte($itemsEnviados); 
 } catch (Exception $ex) {

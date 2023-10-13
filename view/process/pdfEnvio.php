@@ -22,12 +22,10 @@ if (isset($_POST['semTxt']) && isset($_POST['secTxt']) && isset($_POST['prgTxt']
     $pro = $_POST['prgTxt'];
     $report = intval($_POST['reporte']);
     if($report == 0){
-        error_log("NO pasó");
         if(isset($_POST['docs'])){
             $datosDoc = json_decode($_POST['docs']);
         }
     }else{
-        error_log($sem);
         if(isset($_POST['sem_id']) && isset($_POST['sec_id']) && isset($_POST['prg_id'])){
             $sem_id = $_POST['sem_id'];
             $sec_id = $_POST['sec_id'];
