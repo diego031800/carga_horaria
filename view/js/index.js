@@ -377,7 +377,7 @@ function guardarDatosGrupo() {
     return;
   }
   let fechasagregar = agregarFechas(fechas);
-  if (stdEditarCarga = 0) {
+  if (stdEditarCarga == 0) {
     listacursos[indxC].grupos[indxGrupoCurso].fechas = fechasagregar;
   } else {
     if (listacursos[indxC].grupos.ccg_id != 0) {
@@ -417,6 +417,7 @@ function alternarDatosGrupo() {
     $(".datepicker3").datepicker("clearDates");
   }
 }
+
 /* Guarda los nuevos datos de un curso en el array */
 function guardar() {
   let index = parseInt(txtIdCursoEditar.value);
@@ -1048,6 +1049,8 @@ function saveCargaHoraria() {
       },
       error: function (data) {
         btnBuscar.disabled = false;
+        btnGuardar.disabled = false;
+        console.log(data);
         toastr["error"](data, "Algo ocurrió");
       },
     });
