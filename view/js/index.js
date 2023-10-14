@@ -819,8 +819,9 @@ function abrir_docente_modal(index) {
   let curso = listacursos.find((cursoI) => cursoI.index === index);
   txtTituloModalDocente.textContent = "ASIGNANDO DOCENTES PARA LOS GRUPOS DEL CURSO: " + curso.curso;
   let docente = listacursos.find((item) => item.index == index).grupos[0].docentes[0];
+  console.log(docente);
   if (docente != null || docente != undefined) {
-    $("#nombre-docente").val(docente.doc_id);
+    $("#nombre-docente").val(docente.doc_id).trigger("change");
     $("#condicion-docente").val(docente.condicion);
     $("#grado-docente").val(docente.grado);
     $("#codigo-docente").val(docente.codigo);
@@ -830,8 +831,8 @@ function abrir_docente_modal(index) {
     txtDocEmail.value=docente.correo;
   } else {
     limpiarInputsModal();
-    $("#id-curso-docente").val(index);
   }
+  $("#id-curso-docente").val(index);
   $("#nombre-docente").select2({
     dropdownCssClass: "limitar-opciones",
     dropdownParent: $("#myModal-docente"),
