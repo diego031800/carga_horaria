@@ -797,8 +797,8 @@ function seleccionar_datos_docente() {
   $("#telefono-docente").val(doc_celular);
 }
 function seleccionar_datos_docente_Guardado(docente) {
-  $("#condicion-docente").val(docente.condicion);
-  $("#grado-docente").val(docente.grado);
+  $("#condicion-docente").val(docente.condicion).trigger("change");
+  $("#grado-docente").val(docente.grado).trigger("change");
   $("#codigo-docente").val(docente.codigo);
   $("#doc-docente").val(docente.dni);
   $("#email-docente").val(docente.correo);
@@ -832,8 +832,6 @@ function abrir_docente_modal(index) {
     limpiarInputsModal();
     $("#id-curso-docente").val(index);
   }
-  actualizarCboGrupoDoc(index);
-  actualizarDatosDocenteGrupo();
   $("#nombre-docente").select2({
     dropdownCssClass: "limitar-opciones",
     dropdownParent: $("#myModal-docente"),
@@ -846,7 +844,9 @@ function abrir_docente_modal(index) {
     'Para ver y/o agregar los datos del docente suplente, active la opcion que dice: "Agregar docente suplente" ',
     "Asignar docente"
   );
-  $("#myModal-docente").fadeIn(); 
+  $("#myModal-docente").fadeIn();
+  actualizarCboGrupoDoc(index);
+  actualizarDatosDocenteGrupo(); 
 }
 
 /* Cargar datos al entrar como "Editar" */
