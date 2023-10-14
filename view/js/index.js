@@ -641,11 +641,9 @@ function actualizarDatosDocenteGrupo() {
     $("#nombre-docente").val(null).trigger("change");
     $("#nombre-docente").val(codDG).trigger("change");
     seleccionar_datos_docente_Guardado(docente);
-    console.log("Pasó guardado actualizarDatosDocenteGrupo")
   } else {
     $("#nombre-docente").val(null).trigger("change");
     seleccionar_datos_docente();
-    console.log("NO Pasó guardado actualizarDatosDocenteGrupo")
   }
 }
 
@@ -765,9 +763,7 @@ function alternarDatosDoc() {
     $("#nombre-docente").val(null).trigger("change");
     $("#nombre-docente").val(codDG).trigger("change");
     seleccionar_datos_docente_Guardado(docente);
-    console.log("Pasó guardado alternarDatosDoc")
   } else {
-    console.log("NO Pasó guardado alternarDatosDoc")
     $("#nombre-docente").val(null).trigger("change");
     seleccionar_datos_docente();
   }
@@ -823,8 +819,6 @@ function abrir_docente_modal(index) {
   let curso = listacursos.find((cursoI) => cursoI.index === index);
   txtTituloModalDocente.textContent = "ASIGNANDO DOCENTES PARA LOS GRUPOS DEL CURSO: " + curso.curso;
   let docente = listacursos.find((item) => item.index == index).grupos[0].docentes[0];
-  //let grupos = listacursos.find((item) => item.index == index).grupos;
-  console.log(docente);
   if (docente != null || docente != undefined) {
     $("#nombre-docente").val(docente.doc_id);
     $("#condicion-docente").val(docente.condicion);
@@ -834,11 +828,9 @@ function abrir_docente_modal(index) {
     //$("#email-docente").val(docente.correo);
     $("#telefono-docente").val(docente.telefono);
     txtDocEmail.value=docente.correo;
-    console.log("Pasó guardado abrir_docente_modal")
   } else {
     limpiarInputsModal();
     $("#id-curso-docente").val(index);
-    console.log("NO Pasó guardado abrir_docente_modal")
   }
   actualizarCboGrupoDoc(index);
   actualizarDatosDocenteGrupo();
