@@ -797,8 +797,8 @@ function seleccionar_datos_docente() {
   $("#telefono-docente").val(doc_celular);
 }
 function seleccionar_datos_docente_Guardado(docente) {
-  $("#condicion-docente").val(docente.condicion);
-  $("#grado-docente").val(docente.grado);
+  $("#condicion-docente").val(docente.condicion).trigger("change");
+  $("#grado-docente").val(docente.grado).trigger("change");
   $("#codigo-docente").val(docente.codigo);
   $("#doc-docente").val(docente.dni);
   $("#email-docente").val(docente.correo);
@@ -819,8 +819,9 @@ function abrir_docente_modal(index) {
   let curso = listacursos.find((cursoI) => cursoI.index === index);
   txtTituloModalDocente.textContent = "ASIGNANDO DOCENTES PARA LOS GRUPOS DEL CURSO: " + curso.curso;
   let docente = listacursos.find((item) => item.index == index).grupos[0].docentes[0];
+  console.log(docente);
   if (docente != null || docente != undefined) {
-    $("#nombre-docente").val(docente.doc_id);
+    $("#nombre-docente").val(docente.doc_id).trigger("change");
     $("#condicion-docente").val(docente.condicion);
     $("#grado-docente").val(docente.grado);
     $("#codigo-docente").val(docente.codigo);
@@ -830,10 +831,8 @@ function abrir_docente_modal(index) {
     txtDocEmail.value=docente.correo;
   } else {
     limpiarInputsModal();
-    $("#id-curso-docente").val(index);
   }
-  actualizarCboGrupoDoc(index);
-  actualizarDatosDocenteGrupo();
+  $("#id-curso-docente").val(index);
   $("#nombre-docente").select2({
     dropdownCssClass: "limitar-opciones",
     dropdownParent: $("#myModal-docente"),
@@ -846,7 +845,9 @@ function abrir_docente_modal(index) {
     'Para ver y/o agregar los datos del docente suplente, active la opcion que dice: "Agregar docente suplente" ',
     "Asignar docente"
   );
-  $("#myModal-docente").fadeIn(); 
+  $("#myModal-docente").fadeIn();
+  actualizarCboGrupoDoc(index);
+  actualizarDatosDocenteGrupo(); 
 }
 
 /* Cargar datos al entrar como "Editar" */
