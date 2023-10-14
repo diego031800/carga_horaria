@@ -192,6 +192,7 @@ class CargaHoraria
                                 /* GUARDAR DOCENTES POR CURSO */
                                 $docentes = $grupo->docentes;
                                 foreach ($docentes as $docente) {
+                                    error_log($docente);
                                     $respDocenteByGrupo = $this->saveDocenteByGrupo($ccg_id, $docente);
                                     if ($respDocenteByGrupo['respuesta'] != 1) {
                                         $this->con->rollback_mysql();

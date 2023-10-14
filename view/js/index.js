@@ -377,7 +377,7 @@ function guardarDatosGrupo() {
     return;
   }
   let fechasagregar = agregarFechas(fechas);
-  if (stdEditarCarga = 0) {
+  if (stdEditarCarga == 0) {
     listacursos[indxC].grupos[indxGrupoCurso].fechas = fechasagregar;
   } else {
     if (listacursos[indxC].grupos.ccg_id != 0) {
@@ -417,6 +417,7 @@ function alternarDatosGrupo() {
     $(".datepicker3").datepicker("clearDates");
   }
 }
+
 /* Guarda los nuevos datos de un curso en el array */
 function guardar() {
   let index = parseInt(txtIdCursoEditar.value);
@@ -636,12 +637,14 @@ function actualizarDatosDocenteGrupo() {
     let codDG = listacursos[indxCurso].grupos[indxGrupoCurso].docentes.find(
       (item) => item.titular == 1
     ).doc_id;
+    let docente = listacursos[indxCurso].grupos[indxGrupoCurso].docentes[0];
     $("#nombre-docente").val(null).trigger("change");
     $("#nombre-docente").val(codDG).trigger("change");
+    seleccionar_datos_docente_Guardado(docente);
   } else {
     $("#nombre-docente").val(null).trigger("change");
+    seleccionar_datos_docente();
   }
-  seleccionar_datos_docente();
 }
 
 function guardar_docente() {
@@ -756,12 +759,14 @@ function alternarDatosDoc() {
     let codDG = listacursos[indxCurso].grupos[indxGrupoCurso].docentes.find(
       (item) => item.titular == pos
     ).doc_id;
+    let docente = listacursos[indxCurso].grupos[indxGrupoCurso].docentes[0];
     $("#nombre-docente").val(null).trigger("change");
     $("#nombre-docente").val(codDG).trigger("change");
+    seleccionar_datos_docente_Guardado(docente);
   } else {
     $("#nombre-docente").val(null).trigger("change");
+    seleccionar_datos_docente();
   }
-  seleccionar_datos_docente();
 }
 
 function comprobarDocenteAsignado(idRegistro, idGrupo, puesto) {
@@ -791,6 +796,14 @@ function seleccionar_datos_docente() {
   $("#codigo-docente").val(doc_codigo);
   $("#telefono-docente").val(doc_celular);
 }
+function seleccionar_datos_docente_Guardado(docente) {
+  $("#condicion-docente").val(docente.condicion);
+  $("#grado-docente").val(docente.grado);
+  $("#codigo-docente").val(docente.codigo);
+  $("#doc-docente").val(docente.dni);
+  $("#email-docente").val(docente.correo);
+  $("#telefono-docente").val(docente.telefono);;
+}
 
 //[{ index: 0, id :0, docente: "Profesor 1", condicion:"Invitado Nacional",grado:"dr", codigo:"64", dni:"74",correo:"gggg", telefono:"9"}]
 function limpiarInputsModal() {
@@ -805,22 +818,22 @@ function limpiarInputsModal() {
 function abrir_docente_modal(index) {
   let curso = listacursos.find((cursoI) => cursoI.index === index);
   txtTituloModalDocente.textContent = "ASIGNANDO DOCENTES PARA LOS GRUPOS DEL CURSO: " + curso.curso;
-  let docente = listacursos.find((item) => item.index == index).grupos[0]
-    .docentes[0];
-  //let grupos = listacursos.find((item) => item.index == index).grupos;
-  $("#myModal-docente").fadeIn();
-  if (docente != null && docente !== undefined) {
+  let docente = listacursos.find((item) => item.index == index).grupos[0].docentes[0];
+  if (docente != null || docente != undefined) {
     $("#nombre-docente").val(docente.doc_id);
     $("#condicion-docente").val(docente.condicion);
     $("#grado-docente").val(docente.grado);
     $("#codigo-docente").val(docente.codigo);
     $("#doc-docente").val(docente.dni);
-    $("#email-docente").val(docente.correo);
+    //$("#email-docente").val(docente.correo);
     $("#telefono-docente").val(docente.telefono);
+    txtDocEmail.value=docente.correo;
   } else {
     limpiarInputsModal();
+    $("#id-curso-docente").val(index);
   }
-  $("#id-curso-docente").val(index);
+  actualizarCboGrupoDoc(index);
+  actualizarDatosDocenteGrupo();
   $("#nombre-docente").select2({
     dropdownCssClass: "limitar-opciones",
     dropdownParent: $("#myModal-docente"),
@@ -833,8 +846,7 @@ function abrir_docente_modal(index) {
     'Para ver y/o agregar los datos del docente suplente, active la opcion que dice: "Agregar docente suplente" ',
     "Asignar docente"
   );
-  actualizarCboGrupoDoc(index);
-  actualizarDatosDocenteGrupo();
+  $("#myModal-docente").fadeIn(); 
 }
 
 /* Cargar datos al entrar como "Editar" */
@@ -888,7 +900,7 @@ function llenarListaCursos(data) {
           titular: elementD.titular
         }
         arrayD.push(docente);
-      });
+      }); 
       nombreG = elementG.grupo == 1 ? 'Grupo A' : 'Grupo B';
       itemGNuevo = {
         ccg_id: parseInt(elementG.ccg_id),
@@ -1048,6 +1060,8 @@ function saveCargaHoraria() {
       },
       error: function (data) {
         btnBuscar.disabled = false;
+        btnGuardar.disabled = false;
+        console.log(data);
         toastr["error"](data, "Algo ocurrió");
       },
     });
