@@ -889,7 +889,7 @@ function llenarListaCursos(data) {
           titular: elementD.titular
         }
         arrayD.push(docente);
-      });
+      }); 
       nombreG = elementG.grupo == 1 ? 'Grupo A' : 'Grupo B';
       itemGNuevo = {
         ccg_id: parseInt(elementG.ccg_id),
