@@ -40,7 +40,7 @@ if (!isset($_SESSION['login'])) {
         <link rel="stylesheet" href="../../assets/css/data_table/jquery.dataTables.min.css">
         <link rel="stylesheet" href="../../assets/css/data_table/responsive.dataTables.min.css">
         <!-- ESTILOS PROPIOS -->
-        <link rel="stylesheet" href="/carga_horaria/view/css/styles.css">
+        <link rel="stylesheet" href="../css/styles.css">
         <title>CARGA HORARIA</title>
     </head>
 

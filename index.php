@@ -42,7 +42,15 @@
                                 <input class="form-check-input" type="checkbox" value="" id="form1Example3" />
                                 <label class="form-check-label" for="form1Example3"> Remember password </label>
                             </div> -->
-                        <button class="btn btn-primary btn-lg btn-block" type="submit" id="btnAcceso">Iniciar Sesión</button>
+                        <div class="col-12 d-flex justify-content-center align-items-center">
+                            <button class="btn btn-primary btn-lg btn-block d-flex justify-content-center align-items-center" type="submit" id="btnAcceso">
+                                <div class="spinner-border text-light" style="display: none;" role="status" id="spnLoading">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <div id="txtLoading" style="display: none;">&nbsp;&nbsp;&nbsp; Iniciando ...</div>
+                                <div id="txtNoLoading">Iniciar Sesión</div>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -39,13 +39,13 @@ if (!isset($_SESSION['login'])) {
         <!-- SELECT 2 -->
         <link rel="stylesheet" href="../../assets/css/select2/select2.css">
         <!-- ESTILOS PROPIOS -->
-        <link rel="stylesheet" href="/carga_horaria/view/css/styles.css">
+        <link rel="stylesheet" href="../css/styles.css">
         <title>CARGA HORARIA</title>
     </head>
 
     <body>
-        <input type="hidden" id="txtSemestre" value="<?php echo empty($_GET['sem_id'])?'':$_GET['sem_id'] ?>">
-        <input type="hidden" id="txtUnidad" value="<?php echo empty($_GET['sec_id'])?'':$_GET['sec_id'] ?>">
+        <input type="hidden" id="txtSemestre" value="<?php echo empty($_GET['sem_id']) ? '' : $_GET['sem_id'] ?>">
+        <input type="hidden" id="txtUnidad" value="<?php echo empty($_GET['sec_id']) ? '' : $_GET['sec_id'] ?>">
         <div class="page-container">
             <!-- START SIDE BAR -->
             <?php require_once('../left_sidebar.php') ?>
@@ -94,7 +94,7 @@ if (!isset($_SESSION['login'])) {
                                         </button>
                                     </div>
                                 </div>
-                                <div class="col-3" >
+                                <div class="col-3">
                                     <div class="d-grid">
                                         <button class="btn btn-success" id="btnDescargarExc" type="button" disabled>
                                             <i class="fa fa-file-excel-o"></i>

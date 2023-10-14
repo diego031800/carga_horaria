@@ -9,12 +9,12 @@
     $menuItems = array(
         [
             'name' => 'Mis cargas horarias',
-            'url' => '/carga_horaria/view/process/misCargasHorarias.php', 
+            'url' => '/view/process/misCargasHorarias.php', 
             'parent_id' => '1'
         ],
         [ 
             'name' => 'Enviar credenciales',
-            'url' => '/carga_horaria/view/process/envioCredenciales.php', 
+            'url' => '/view/process/envioCredenciales.php', 
             'parent_id' => '2'
         ],
     );

@@ -21,8 +21,14 @@ function login()
     url: "controllers/security/LoginController.php",
     beforeSend: function () {
       btnAcceso.disabled = true;
+      $('#spnLoading').show();
+      $('#txtLoading').show();
+      $('#txtNoLoading').hide();
     },
     success: function (data) {
+      $('#spnLoading').hide();
+      $('#txtLoading').hide();
+      $('#txtNoLoading').show();
       btnAcceso.disabled = false;
       let objeto = JSON.parse(data);
       if (objeto.respuesta=='Acceso permitido') {
@@ -32,6 +38,9 @@ function login()
       }
     },
     error: function(data) {
+      $('#spnLoading').hide();
+      $('#txtLoading').hide();
+      $('#txtNoLoading').show();
       alert("Error: "+data);
     }
   });

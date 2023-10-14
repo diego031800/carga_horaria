@@ -39,7 +39,7 @@ if (!isset($_SESSION['login'])) {
     <!-- SELECT 2 -->
     <link rel="stylesheet" href="../../assets/css/select2/select2.css">
     <!-- ESTILOS PROPIOS -->
-    <link rel="stylesheet" href="/carga_horaria/view/css/styles.css">
+    <link rel="stylesheet" href="../css/styles.css">
     <title>CARGA HORARIA</title>
 </head>
 
