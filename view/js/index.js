@@ -1115,6 +1115,14 @@ function validarCursos() {
   return true;
 }
 
+function cancelar() {
+  if (txtSem_id.value !== null && txtSem_id.value !== '' && txtSec_id.value !== null && txtSec_id.value !== '') {
+    location.href = '../process/detalleCargaHoraria.php?sem_id='+sem_id+'&sec_id='+sec_id;
+  } else {
+    location.href = '../process/misCargasHorarias.php';
+  }
+}
+
 /* FUNCION AL CARGAR EL DOCUMENTO */
 async function load_document() {
   await get_cbo_semestres();

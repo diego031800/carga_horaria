@@ -172,8 +172,7 @@ if (!isset($_SESSION['login'])) {
                                 &nbsp; Guardar
                             </button>
                             <a class="btn btn-danger" type="button" id="btnCancelarTotal"
-                                href="/carga_horaria/view/process/misCargasHorarias.php"
-                                onClick="cancelarEditarCarga();">
+                                onClick="cancelar();">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512">
                                     <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                                     <style>
