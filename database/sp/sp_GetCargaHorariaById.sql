@@ -33,6 +33,7 @@ BEGIN
         CGD.cgd_id,
         CGD.cgd_titular as titular,
         CGD.doc_condicion,
+        CGD.doc_grado,
         CGD.doc_id,
         CGD.doc_codigo,
         CGD.doc_documento,

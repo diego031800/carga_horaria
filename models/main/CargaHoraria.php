@@ -192,7 +192,6 @@ class CargaHoraria
                                 /* GUARDAR DOCENTES POR CURSO */
                                 $docentes = $grupo->docentes;
                                 foreach ($docentes as $docente) {
-                                    error_log($docente);
                                     $respDocenteByGrupo = $this->saveDocenteByGrupo($ccg_id, $docente);
                                     if ($respDocenteByGrupo['respuesta'] != 1) {
                                         $this->con->rollback_mysql();
@@ -236,6 +235,7 @@ class CargaHoraria
             $sql .= "'" . $this->parametros['p_sec_descripcion'] . "', "; // p_sec_descripcion
             $sql .= "'" . $this->parametros['p_prg_id'] . "', "; // p_prg_id
             $sql .= "'" . $this->parametros['p_prg_mencion'] . "', "; // p_prg_mencion
+            $sql .= "'" . $this->parametros['p_cgc_id'] . "', "; // p_cgc_ciclo
             $sql .= "'" . $this->parametros['p_cgh_ciclo'] . "', "; // p_cgc_ciclo
             $sql .= "'" . $this->parametros['p_cgh_estado'] . "', "; // p_cgh_estado
             $sql .= "'" . $_SESSION['usu_id'] . "',"; // p_usuario
@@ -771,6 +771,7 @@ class CargaHoraria
                             'cgd_id' => $fila['cgd_id'],
                             'titular' => $fila['titular'],
                             'doc_condicion' => $fila['doc_condicion'],
+                            'doc_grado' => $fila['doc_grado'],
                             'doc_id' => $fila['doc_id'],
                             'doc_documento' => $fila['doc_documento'],
                             'doc_codigo' => $fila['doc_codigo'],

@@ -36,9 +36,12 @@ BEGIN
     ELSE
         -- Actualizar registro existente
         UPDATE CARGA_HORARIA_CURSO SET
-            cgh_id = p_cgh_id,
+            cgc_id = p_cgc_id,
             cur_id = p_cur_id,
+            cur_codigo = p_cur_codigo,
             cur_descripcion = p_cur_descripcion,
+            cur_tipo = p_cur_tipo,
+            cur_calidad = p_cur_calidad,
             cur_ciclo = p_cur_ciclo,
             cur_creditos = p_cur_creditos,
             chc_horas = p_chc_horas,

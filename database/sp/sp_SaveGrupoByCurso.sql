@@ -37,9 +37,9 @@ BEGIN
             usuario_modificacion = p_usuario,
             fechahora_modificacion = NOW(),
             dispositivo_modificacion = p_dispositivo
-        WHERE chf_id = p_chf_id;
+        WHERE ccg_id = p_ccg_id;
         
-        SELECT 1 as respuesta, 'Se actualizó correctamente el grupo.' as mensaje, p_chf_id as ccg_id;
+        SELECT 1 as respuesta, 'Se actualizó correctamente el grupo.' as mensaje, p_ccg_id as ccg_id;
     END IF;
 END$$
 

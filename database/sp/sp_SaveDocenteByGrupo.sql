@@ -46,6 +46,7 @@ BEGIN
             cgd_fecha_inicio = p_cgd_fecha_inicio,
             cgd_fecha_fin = p_cgd_fecha_fin,
             doc_condicion = p_doc_condicion,
+            doc_grado = p_doc_grado,
             doc_id = p_doc_id,
             doc_documento = p_doc_documento,
             doc_codigo = p_doc_codigo,

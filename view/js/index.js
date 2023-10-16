@@ -45,6 +45,7 @@ let btnCancelar = document.getElementById("btnCancelar");
 
 // VARIABLES
 let cgh_id = 0;
+let cgc_id = 0;
 let chu_id = 0;
 let chp_id = 0;
 let cgh_codigo = "";
@@ -75,7 +76,6 @@ function get_carga_horaria_by_id() {
       "&p_cgc_id=" + p_cgc_id,
     success: function (data) {
       let respuesta = JSON.parse(data);
-      console.log(respuesta);
       setDatosUnidadSem(respuesta);
     },
     error: function (data) {
@@ -860,6 +860,7 @@ async function setDatosUnidadSem(data) {
   $("#cboCiclo").val(data[0].ciclo).trigger("change");
   await buscar_cursosPromesa();
   cgh_id = data[0].cgh_id;
+  cgc_id = data[0].cgc_id;
   llenarListaCursos(data);
   camposUnidad(true);
   camposCursos(false);
@@ -1004,6 +1005,7 @@ function saveCargaHoraria() {
     let prg_option = $("#cboPrograma option:selected");
     let p_prg_id = cboPrograma.value;
     let p_prg_mencion = prg_option.text();
+    let p_cgc_id = cgc_id;
     let p_cgh_ciclo = cboCiclo.value;
     let p_cgh_estado = "0001";
 
@@ -1038,6 +1040,8 @@ function saveCargaHoraria() {
         p_prg_id +
         "&p_prg_mencion=" +
         p_prg_mencion +
+        "&p_cgc_id=" +
+        p_cgc_id +
         "&p_cgh_ciclo=" +
         p_cgh_ciclo +
         "&p_cgh_estado=" +
@@ -1053,8 +1057,8 @@ function saveCargaHoraria() {
           toastr["success"](objeto.mensaje, "Registro exitoso");
           setTimeout(() => {
             btnGuardar.disabled = false;
-            location.href = "verCargaHoraria.php";
-          }, 1000);
+            location.href = "../process/detalleCargaHoraria.php?sem_id="+p_sem_id+"&sec_id="+p_sec_id;
+          }, 800);
         } else {
           toastr["error"](objeto.mensaje, "Algo ocurrió");
         }
@@ -1062,7 +1066,6 @@ function saveCargaHoraria() {
       error: function (data) {
         btnBuscar.disabled = false;
         btnGuardar.disabled = false;
-        console.log(data);
         toastr["error"](data, "Algo ocurrió");
       },
     });

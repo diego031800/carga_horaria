@@ -11,6 +11,7 @@ CREATE PROCEDURE sp_SaveCargaHoraria (
     IN p_sec_descripcion VARCHAR(100),
     IN p_prg_id INT, 
     IN p_prg_mencion VARCHAR(100),
+    IN p_cgc_id INT, 
     IN p_cgc_ciclo INT, 
     IN p_cgh_estado VARCHAR(4), 
     IN p_usuario INT, 
@@ -29,7 +30,7 @@ BEGIN
                             AND CH.cgh_estado = '0001'
                         ORDER BY CH.cgh_id DESC 
                         LIMIT 1);
-        -- IF @cgh_id IS NULL OR @cgh_id = 0 THEN
+        IF @cgh_id IS NULL OR @cgh_id = 0 THEN
         
 			SET @cgh_id = (SELECT CH.cgh_id FROM CARGA_HORARIA CH 
 							WHERE CH.sem_id = p_sem_id AND CH.sec_id = p_sec_id 
@@ -63,9 +64,9 @@ BEGIN
             SET @cgc_id = last_insert_id();
 			
 			SELECT 1 as respuesta, 'Se registro correctamente.' as mensaje, @cgc_id as cgc_id;
-        -- ELSE
-			-- SELECT 0 as respuesta, 'Ya existe una carga horaria para esa mención y ciclo.' as mensaje, @cgh_id as cgh_id;
-        -- END IF;
+        ELSE
+			SELECT 0 as respuesta, 'Ya existe una carga horaria para esa mención y ciclo.' as mensaje, @cgh_id as cgh_id;
+        END IF;
     ELSE
         -- Actualizar registro existente
         UPDATE CARGA_HORARIA SET
@@ -77,14 +78,21 @@ BEGIN
             sec_descripcion = p_sec_descripcion,
             prg_id = p_prg_id,
             prg_mencion = p_prg_mencion,
-            cgh_ciclo = p_cgh_ciclo,
             cgh_estado = p_cgh_estado,
             usuario_modificacion = p_usuario,
             fechahora_modificacion = NOW(),
             dispositivo_modificacion = p_dispositivo
         WHERE cgh_id = p_cgh_id;
         
-        SELECT 1 as respuesta, p_cgh_id as cgh_id; 
+        UPDATE CARGA_HORARIA_CICLO SET
+			cgh_id = p_cgh_id,
+            cgh_ciclo = p_cgc_ciclo,
+            usuario_modificacion = p_usuario,
+            fechahora_modificacion = NOW(),
+            dispositivo_modificacion = p_dispositivo
+		WHERE cgc_id = p_cgc_id;
+        
+        SELECT 1 as respuesta, 'Se actualizaron los registros exitosamente.' as mensaje, p_cgc_id as cgc_id; 
     END IF;
 END$$
 DELIMITER ;
