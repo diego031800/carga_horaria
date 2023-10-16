@@ -1123,7 +1123,7 @@ function validarCursos() {
 
 function cancelar() {
   if (txtSem_id.value !== null && txtSem_id.value !== '' && txtSec_id.value !== null && txtSec_id.value !== '') {
-    location.href = '../process/detalleCargaHoraria.php?sem_id='+sem_id+'&sec_id='+sec_id;
+    location.href = '../process/detalleCargaHoraria.php?sem_id='+txtSem_id.value+'&sec_id='+txtSec_id.value;
   } else {
     location.href = '../process/misCargasHorarias.php';
   }

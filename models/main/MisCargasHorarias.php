@@ -28,6 +28,9 @@
                 case 'send_carga_horaria':
                     echo $this->send_carga_horaria();
                     break;
+                case 'delete_carga_horaria':
+                    echo $this->delete_carga_horaria();
+                    break;
             }
         }
 
@@ -207,6 +210,29 @@
                     array_push($unidades, $unidad);
                 }
                 return $unidades;
+            } catch (Exception $ex) {
+                die("Error: " . $ex);
+            }
+        }
+
+        private function delete_carga_horaria()
+        {
+            try
+            {
+                $sql = "CALL sp_deleteCargaHoraria(";
+                $sql .= "'".$this->parametros['p_cgh_id']."', "; // p_cgh_id
+                $sql .= "'".$this->parametros['p_cgc_id']."', "; // p_cgc_id
+                $sql .= "'".$_SESSION['usu_id'].", "; // p_usuario
+                $sql .= "'".$_SESSION['REMOTE_ADDR']."');"; // p_dispositivo
+                // return $sql;
+                $datos = $this->con->return_query_mysql($sql);
+                $error = $this->con->error_mysql();
+                if (empty($error)) {
+                    while ($row = mysqli_fetch_array($datos)) {
+                        return json_encode(['respuesta' => $row['respuesta'], 'mensaje' => $row['mensaje']]);
+                    }
+                }
+                return json_encode(['respuesta' => 0, 'mensaje' => 'Algo ocurrió mientras se eliminaba ' + $error]);
             } catch (Exception $ex) {
                 die("Error: " . $ex);
             }

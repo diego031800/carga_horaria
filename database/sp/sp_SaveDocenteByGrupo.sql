@@ -39,7 +39,7 @@ BEGIN
         SELECT 1 as respuesta, 'El docente se guardo exitosamente.' as mensaje, @cgd_id as cgd_id;
     ELSE
         -- Actualizar registro existente
-        UPDATE CARGA_HORARIA_CURSOS_DOCENTES SET
+        UPDATE CARGA_HORARIA_CURSO_GRUPO_DOCENTE SET
             ccg_id = p_ccg_id,
             cgd_titular = p_cgd_titular,
             cgd_horas = p_cgd_horas,

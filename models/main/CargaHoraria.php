@@ -113,8 +113,9 @@ class CargaHoraria
 	                    CUR.cur_calidad,
                         UPPER(CUR.cur_descripcion) AS curso
                     FROM ADMISION.CURSO CUR
-                    WHERE CUR.cur_ciclo = '" . $this->parametros['ciclo'] . "' AND CUR.cur_estado = 1
+                    WHERE CUR.cur_estado = 1
                     ORDER BY CUR.cur_descripcion ASC";
+                    // CUR.cur_ciclo = '" . $this->parametros['ciclo'] . "' AND 
         $datos = $this->con->return_query_sqlsrv($sql);
         $cursos = "";
         $has_data = 0;
