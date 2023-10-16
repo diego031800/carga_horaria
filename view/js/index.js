@@ -77,6 +77,7 @@ function get_carga_horaria_by_id() {
     success: function (data) {
       let respuesta = JSON.parse(data);
       setDatosUnidadSem(respuesta);
+      console.log(respuesta);
     },
     error: function (data) {
       alert("Error al mostrar: " + data);
@@ -870,13 +871,13 @@ async function setDatosUnidadSem(data) {
 function llenarListaCursos(data) {
   let conversorCursos = Object.values(data[0].cursos);
   conversorCursos.forEach(element => {
-    let arrayG = []
+    let arrayG = [];
     let conversorGrupos = Object.values(element.grupos);
     //Convertir los grupos para los cursos
     conversorGrupos.forEach(elementG => {
-      let arrayF = []
+      let arrayF = [];
       let conversorFechas = Object.values(elementG.fechas);
-      let arrayD = []
+      let arrayD = [];
       let conversorDocentes = Object.values(elementG.docentes);
       // Convertir las fechas para los grupos
       conversorFechas.forEach(elementF => {
@@ -892,7 +893,9 @@ function llenarListaCursos(data) {
       conversorDocentes.forEach(elementD => {
         docente = {
           ccg_id: parseInt(elementD.ccg_id),
+          cgd_id: parseInt(elementD.cgd_id),
           codigo: elementD.doc_codigo,
+          grado: elementD.doc_grado,
           condicion: elementD.doc_condicion,
           correo: elementD.doc_email,
           dni: elementD.doc_documento,
