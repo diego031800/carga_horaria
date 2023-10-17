@@ -308,6 +308,7 @@ function agregar() {
     cur_creditos: txtCursoCreditos,
     cur_tipo: ("0000" + txtCursoTipo).slice(-4),
     cur_calidad: ("0000" + txtCursoCalidad).slice(-4),
+    chc_estado : "0001",
     horas: cursohoras,
     grupos: [{ ccg_id: 0, id: 1, nombre: "Grupo A", docentes: [], fechas: [] }],
   });
@@ -484,7 +485,8 @@ function cursoAgregado(index, accion, indexnuevo) {
   if (accion == 0) {
     if (
       listacursos.find((cursoI) => cursoI.index === index) != null &&
-      listacursos.find((cursoI) => cursoI.index === index) != undefined
+      listacursos.find((cursoI) => cursoI.index === index) != undefined &&
+      listacursos.find((cursoI) => cursoI.index === index ).chc_estado == '0001'
     ) {
       toastr["warning"]("Ya has agregador el curso", "Agregar curso");
       return true;
@@ -497,7 +499,8 @@ function cursoAgregado(index, accion, indexnuevo) {
     } else {
       if (
         listacursos.find((cursoI) => cursoI.index === indexnuevo) != null &&
-        listacursos.find((cursoI) => cursoI.index === indexnuevo) != undefined
+        listacursos.find((cursoI) => cursoI.index === indexnuevo) != undefined&&
+        listacursos.find((cursoI) => cursoI.index === index ).chc_estado == '0001'
       ) {
         toastr["warning"]("Ya has agregador el curso", "Agregar curso");
         return true;
@@ -574,7 +577,8 @@ function eliminar(index) {
         arrayEliminadoC.push(curso);
       }
     }
-    listacursos = listacursos.filter((item) => item.index != index);
+    listacursos.find((item) => item.index == index).chc_estado == "0002";
+    //listacursos = listacursos.filter((item) => item.index != index);
     llenarTabla();
     toastr["warning"]("El curso se ha eliminado con éxito", "Eliminar curso");
   }
@@ -591,25 +595,26 @@ function llenarTabla() {
     return;
   }
   listacursos.forEach((elementC) => {
-    let stringG = elementC.grupos.length;
-    let acciones = menuAcciones(elementC.index);
-    fila =
-      '<tr><td scope="row">' +
-      acciones +
-      '</td><td>' +
-      elementC.curso +
-      "</td><td>" +
-      stringG +
-      '</td><td>' +
-      '<button class="btn btn-dark" data-bs-toggle="tooltip" title="Asignar docentes a los grupos" onClick="abrir_docente_modal(' +
-      elementC.index +
-      ');"><i class="fa fa-user"></i> Abrir</button>' +
-      '</td><td>' +
-      '<button class="btn btn-secondary" data-bs-toggle="tooltip" title="Registrar fechas y agregar grupo" onClick="abrir_grupo_modal(' +
-      elementC.index +
-      ');"><i class="fa fa-group"></i> Abrir</button>' +
-      '</td></tr>';
-    $("#cursosTabla tbody").append(fila);
+    if(elementC.chc_estado == "0001"){let stringG = elementC.grupos.length;
+      let acciones = menuAcciones(elementC.index);
+      fila =
+        '<tr><td scope="row">' +
+        acciones +
+        '</td><td>' +
+        elementC.curso +
+        "</td><td>" +
+        stringG +
+        '</td><td>' +
+        '<button class="btn btn-dark" data-bs-toggle="tooltip" title="Asignar docentes a los grupos" onClick="abrir_docente_modal(' +
+        elementC.index +
+        ');"><i class="fa fa-user"></i> Abrir</button>' +
+        '</td><td>' +
+        '<button class="btn btn-secondary" data-bs-toggle="tooltip" title="Registrar fechas y agregar grupo" onClick="abrir_grupo_modal(' +
+        elementC.index +
+        ');"><i class="fa fa-group"></i> Abrir</button>' +
+        '</td></tr>';
+      $("#cursosTabla tbody").append(fila);
+    }
   });
   $('[data-bs-toggle="tooltip"]').tooltip();
 }
@@ -925,6 +930,7 @@ function llenarListaCursos(data) {
       cur_creditos: element.cur_creditos,
       cur_tipo: element.cur_calidad,
       curso: element.curso,
+      //chc_estado: element
       grupos: arrayG,
       horas: parseInt(element.chc_horas),
       index: parseInt(element.cur_id)
