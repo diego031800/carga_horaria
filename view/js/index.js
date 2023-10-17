@@ -310,7 +310,7 @@ function agregar() {
     cur_calidad: ("0000" + txtCursoCalidad).slice(-4),
     chc_estado : "0001",
     horas: cursohoras,
-    grupos: [{ ccg_id: 0, id: 1, nombre: "Grupo A", docentes: [], fechas: [] }],
+    grupos: [{ ccg_id: 0, id: 1, nombre: "Grupo A", docentes: [], fechas: [], ccg_estado:"0001" }],
   });
   llenarTabla();
   limpiarInputs();
@@ -322,9 +322,11 @@ function actualizarCboGrupoCurso(ind) {
   $("#cbo-grupo").empty();
   let opciones = listacursos.find((cursoI) => cursoI.index == ind).grupos;
   opciones.forEach((element) => {
-    $("#cbo-grupo").append(
-      '<option value="' + element.id + '">' + element.nombre + "</option>"
-    );
+    if(element.ccg_estado == "0001"){
+      $("#cbo-grupo").append(
+        '<option value="' + element.id + '">' + element.nombre + "</option>"
+      );
+    }
   });
 }
 
@@ -339,6 +341,7 @@ function agregarGrupo() {
       docentes: [],
       fechas: [],
       horas: 0,
+      ccg_estado: "0001"
     });
   actualizarCboGrupoCurso(id_curso_modal);
   toastr["success"]("El grupo se ha agregado con éxito", "Agregar grupo");
@@ -353,10 +356,13 @@ function eliminarGrupo() {
     if (stdEditarCarga == 1) {
       grupo = listacursos.find((cursoI) => cursoI.index == id_curso_modal).grupos[1];
       if (grupo.ccg_id != 0) {
-        arrayEliminadoG.push(grupo);
+        listacursos.find((cursoI) => cursoI.index == id_curso_modal).grupos[1].ccg_estado = "0002";
+      }else{
+        listacursos.find((cursoI) => cursoI.index == id_curso_modal).grupos.pop();
       }
+    }else{
+      listacursos.find((cursoI) => cursoI.index == id_curso_modal).grupos.pop();
     }
-    listacursos.find((cursoI) => cursoI.index == id_curso_modal).grupos.pop();
     actualizarCboGrupoCurso(id_curso_modal);
     alternarDatosGrupo();
     $("#btn-addGrupo").show();
@@ -372,8 +378,9 @@ function guardarDatosGrupo() {
   let indxC = listacursos.findIndex((item) => item.index == id);
   let id_grupo_docente = cboGrupoCurso.value;
   let indxGrupoCurso = listacursos[indxC].grupos.findIndex(
-    (item) => item.id == id_grupo_docente
+    (item) => item.id == id_grupo_docente && item.ccg_estado == "0001"
   );
+  console.log(indxGrupoCurso);
   if (fechas == "") {
     toastr["error"]("No deben haber campos vacíos", "Guardar datos grupo");
     return;
@@ -382,25 +389,14 @@ function guardarDatosGrupo() {
   if (stdEditarCarga == 0) {
     listacursos[indxC].grupos[indxGrupoCurso].fechas = fechasagregar;
   } else {
-    if (listacursos[indxC].grupos.ccg_id != 0) {
-      if (listacursos[indxC].grupos[indxGrupoCurso].fechas != null || listacursos[indxC].grupos[indxGrupoCurso].fechas != undefined) {
-        if (listacursos[indxC].grupos[indxGrupoCurso].fechas[0].cgf_id != 0) {
-          fechasEdicion = comprobarfechas(fechasagregar, listacursos[indxC].grupos[indxGrupoCurso].fechas, listacursos[indxC].grupos[indxGrupoCurso].ccg_id);
-          listacursos[indxC].grupos[indxGrupoCurso].fechas = fechasEdicion;
-        } else {
-          listacursos[indxC].grupos[indxGrupoCurso].fechas = fechasagregar;
-        }
-      } else {
-        listacursos[indxC].grupos[indxGrupoCurso].fechas = fechasagregar;
-      }
-    } else {
-      listacursos[indxC].grupos[indxGrupoCurso].fechas = fechasagregar;
-    }
+    listacursos[indxC].grupos[indxGrupoCurso].fechas = comprobarfechas(fechasagregar, listacursos[indxC].grupos[indxGrupoCurso].fechas,
+       listacursos[indxC].grupos[indxGrupoCurso].ccg_id);
   }
   toastr["success"](
     "Datos del grupo guardados con éxito",
     "Guardar datos grupo"
   );
+  alternarDatosGrupo();
 }
 
 function alternarDatosGrupo() {
@@ -411,8 +407,10 @@ function alternarDatosGrupo() {
     .grupos.find((it) => it.id == idGrupo);
   if (grupo.fechas.length != 0) {
     var fechasMostrar = grupo.fechas.map(function (fecha) {
-      var partes = fecha.fecha.split("/");
-      return new Date(partes[2], partes[1] - 1, partes[0]);
+      if(fecha.cgf_estado =="0001"){
+        var partes = fecha.fecha.split("/");
+        return new Date(partes[2], partes[1] - 1, partes[0]);
+      }
     });
     $(".datepicker3").datepicker("setDates", fechasMostrar);
   } else {
@@ -484,9 +482,8 @@ si se edita, evita que no se guarde un curso ya guardado y que si es el mismo no
 function cursoAgregado(index, accion, indexnuevo) {
   if (accion == 0) {
     if (
-      listacursos.find((cursoI) => cursoI.index === index) != null &&
-      listacursos.find((cursoI) => cursoI.index === index) != undefined &&
-      listacursos.find((cursoI) => cursoI.index === index ).chc_estado == '0001'
+      listacursos.find((cursoI) => cursoI.index === index && cursoI.chc_estado == "0001") != null &&
+      listacursos.find((cursoI) => cursoI.index === index && cursoI.chc_estado == "0001" ) != undefined
     ) {
       toastr["warning"]("Ya has agregador el curso", "Agregar curso");
       return true;
@@ -498,9 +495,8 @@ function cursoAgregado(index, accion, indexnuevo) {
       return false;
     } else {
       if (
-        listacursos.find((cursoI) => cursoI.index === indexnuevo) != null &&
-        listacursos.find((cursoI) => cursoI.index === indexnuevo) != undefined&&
-        listacursos.find((cursoI) => cursoI.index === index ).chc_estado == '0001'
+        listacursos.find((cursoI) => cursoI.index === index && cursoI.chc_estado == "0001") != null &&
+        listacursos.find((cursoI) => cursoI.index === index && cursoI.chc_estado == "0001" ) != undefined
       ) {
         toastr["warning"]("Ya has agregador el curso", "Agregar curso");
         return true;
@@ -543,24 +539,46 @@ function agregarFechas(fechas) {
       cgf_id: 0,
       index: i,
       fecha: element,
-      ccg_id: 0
+      ccg_id: 0,
+      cgf_estado : "0001"
     });
+  });
+   // Ordenar el array por la propiedad "fecha" de forma ascendente
+   fechasdevolver.sort((a, b) => {
+    const fechaA = new Date(a.fecha.split('/').reverse().join('/'));
+    const fechaB = new Date(b.fecha.split('/').reverse().join('/'));
+    return fechaA - fechaB;
   });
   return fechasdevolver;
 }
 
 function comprobarfechas(fechasNuevas, fechasGuardadas, ccg) {
-  fechasGuardadas.forEach(element => {
-    if (fechasNuevas.findIndex((item) => item.fecha === element.fecha) == -1) {
-      element.fecha = '';
+  let lengthFechasGuardadas = fechasGuardadas.length;
+  let lengthFechasNuevas = fechasNuevas.length;
+  if(lengthFechasGuardadas<lengthFechasNuevas){
+    for (let index = 0; index < fechasNuevas.length; index++) {
+      if(index<lengthFechasGuardadas){
+        fechasGuardadas[index].fecha = fechasNuevas[index].fecha;
+        fechasGuardadas[index].cgf_estado = "0001";
+      }else{
+        fechasNuevas[index].ccg_id = ccg;
+        fechasGuardadas.push(fechasNuevas[index]);
+      }
     }
-  });
-  fechasNuevas.forEach(element => {
-    if (fechasGuardadas.findIndex((item) => item.fecha === element.fecha) == -1) {
-      element.ccg_id = ccg;
-      fechasGuardadas.push(element);
+  }else{
+    for (let index = 0; index < fechasGuardadas.length; index++) {
+      if(index<lengthFechasNuevas){
+        fechasGuardadas[index].fecha = fechasNuevas[index].fecha;
+        fechasGuardadas[index].cgf_estado = "0001";
+      }else{
+        if(fechasGuardadas[index].cgf_id !=0){
+          fechasGuardadas[index].cgf_estado = "0002";
+        }else{
+          fechasGuardadas.splice(index, lengthFechasGuardadas-index);
+        }
+      }
     }
-  });
+  }
   return fechasGuardadas;
 }
 
@@ -572,13 +590,15 @@ function limpiarInputs() {
 function eliminar(index) {
   if (confirm('¿Está seguro que quiere borrar este curso?')) {
     if (stdEditarCarga == 1) {
-      curso = listacursos.find((item) => item.index == index);
+      curso = listacursos.find((item) => item.index == index && item.chc_estado == "0001");
       if(curso.chc_id != 0){
-        arrayEliminadoC.push(curso);
+        listacursos.find((item) => item.index == index).chc_estado = "0002";
+      }else{
+        listacursos = listacursos.filter((item) => item.index != index || item.chc_id != 0);
       }
+    }else{
+      listacursos = listacursos.filter((item) => item.index != index || item.chc_id != 0);
     }
-    listacursos.find((item) => item.index == index).chc_estado == "0002";
-    //listacursos = listacursos.filter((item) => item.index != index);
     llenarTabla();
     toastr["warning"]("El curso se ha eliminado con éxito", "Eliminar curso");
   }
@@ -640,12 +660,12 @@ function actualizarDatosDocenteGrupo() {
   );
   tglDocSuplente.checked = false;
   if (comprobarDocenteAsignado(id_curso_modal, id_grupo_docente, 1)) {
-    let codDG = listacursos[indxCurso].grupos[indxGrupoCurso].docentes.find(
-      (item) => item.titular == 1
-    ).doc_id;
-    let docente = listacursos[indxCurso].grupos[indxGrupoCurso].docentes[0];
+    let docente = listacursos[indxCurso].grupos[indxGrupoCurso].docentes.find(
+      (item) => item.titular == 1 && item.cgd_estado =="0001"
+    );
+    //let docente = listacursos[indxCurso].grupos[indxGrupoCurso].docentes[0];
     $("#nombre-docente").val(null).trigger("change");
-    $("#nombre-docente").val(codDG).trigger("change");
+    $("#nombre-docente").val(docente.doc_id).trigger("change");
     seleccionar_datos_docente_Guardado(docente);
   } else {
     $("#nombre-docente").val(null).trigger("change");
@@ -677,7 +697,7 @@ function guardar_docente() {
   if (comprobarDocenteAsignado(id_curso_modal, id_grupo_docente, pos)) {
     let indxDocente = listacursos[indxCurso].grupos[
       indxGrupoCurso
-    ].docentes.findIndex((item) => item.titular == pos);
+    ].docentes.findIndex((item) => item.titular == pos && item.cgd_estado =="0001");
     listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].doc_id =
       nombre_docente_modal;
     listacursos[indxCurso].grupos[indxGrupoCurso].docentes[
@@ -709,6 +729,7 @@ function guardar_docente() {
       dni: doc_modal,
       correo: email_modal,
       telefono: telefono_modal,
+      cgd_estado: "0001"
     });
   }
   toastr["success"](mensaje, "Docente asignado");
@@ -716,7 +737,7 @@ function guardar_docente() {
 }
 
 function eliminarDocente() {
-  if (confirm('¿Está seguro que quiere borrar este curso?')) {
+  if (confirm('¿Está seguro que quiere borrar al docente de este curso?')) {
     let id_curso_modal = txtIdModal.value;
     let id_grupo_docente = cboDocGrupo.value;
     let pos = !tglDocSuplente.checked ? 1 : 0;
@@ -730,15 +751,17 @@ function eliminarDocente() {
     );
     let indxDocente = listacursos[indxCurso].grupos[
       indxGrupoCurso
-    ].docentes.findIndex((item) => item.titular == pos);
+    ].docentes.findIndex((item) => item.titular == pos && item.cgd_estado =="0001");
     if (comprobarDocenteAsignado(id_curso_modal, id_grupo_docente, pos)) {
-      if (stdEditarCarga == 1) {
-        arrayEliminadoD.push(listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente]);
+      if (stdEditarCarga == 0){
+        listacursos[indxCurso].grupos[indxGrupoCurso].docentes.splice(indxDocente,1);
+      }else{
+        if(listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].cgd_id !=0){
+          listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].cgd_estado = "0002";
+        }else{
+          listacursos[indxCurso].grupos[indxGrupoCurso].docentes.splice(indxDocente,1);
+        }
       }
-      listacursos[indxCurso].grupos[indxGrupoCurso].docentes.splice(
-        indxDocente,
-        1
-      );
       $("#nombre-docente").val(null).trigger("change");
       seleccionar_datos_docente();
       toastr["warning"](mensaje, "Eliminar Docente");
@@ -762,12 +785,12 @@ function alternarDatosDoc() {
   );
   let pos = !tglDocSuplente.checked ? 1 : 0;
   if (comprobarDocenteAsignado(id_curso_modal, id_grupo_docente, pos)) {
-    let codDG = listacursos[indxCurso].grupos[indxGrupoCurso].docentes.find(
-      (item) => item.titular == pos
-    ).doc_id;
-    let docente = listacursos[indxCurso].grupos[indxGrupoCurso].docentes[0];
+    let docente = listacursos[indxCurso].grupos[indxGrupoCurso].docentes.find(
+      (item) => item.titular == pos && item.cgd_estado =="0001"
+    );
+    //let docente = listacursos[indxCurso].grupos[indxGrupoCurso].docentes[0];
     $("#nombre-docente").val(null).trigger("change");
-    $("#nombre-docente").val(codDG).trigger("change");
+    $("#nombre-docente").val(docente.doc_id).trigger("change");
     seleccionar_datos_docente_Guardado(docente);
   } else {
     $("#nombre-docente").val(null).trigger("change");
@@ -780,7 +803,7 @@ function comprobarDocenteAsignado(idRegistro, idGrupo, puesto) {
     .find((item) => item.index == idRegistro)
     .grupos.find((item) => item.id == idGrupo);
   if (grup.docentes.length != 0) {
-    let doc = grup.docentes.find((item) => item.titular == puesto);
+    let doc = grup.docentes.find((item) => item.titular == puesto && item.cgd_estado == "0001");
     if (doc != null && doc != undefined) {
       return true;
     } else {
@@ -890,7 +913,8 @@ function llenarListaCursos(data) {
           index: parseInt(elementF.cgf_id),
           cgf_id: parseInt(elementF.cgf_id),
           ccg_id: parseInt(elementF.ccg_id),
-          fecha: convertirFecha(elementF.fecha)
+          fecha: convertirFecha(elementF.fecha),
+          cgf_estado: elementF.cgf_estado
         };
         arrayF.push(fecha);
       });
@@ -907,7 +931,8 @@ function llenarListaCursos(data) {
           doc_id: elementD.doc_id,
           docente: elementD.doc_nombres,
           telefono: elementD.doc_celular,
-          titular: elementD.titular
+          titular: elementD.titular,
+          cgd_estado: elementD.cgd_estado
         }
         arrayD.push(docente);
       }); 
@@ -917,7 +942,8 @@ function llenarListaCursos(data) {
         docentes: arrayD,
         fechas: arrayF,
         id: elementG.grupo,
-        nombre: nombreG
+        nombre: nombreG,
+        ccg_estado: elementG.ccg_estado
       };
       arrayG.push(itemGNuevo);
     }
@@ -930,7 +956,7 @@ function llenarListaCursos(data) {
       cur_creditos: element.cur_creditos,
       cur_tipo: element.cur_calidad,
       curso: element.curso,
-      //chc_estado: element
+      chc_estado: element.chc_estado,
       grupos: arrayG,
       horas: parseInt(element.chc_horas),
       index: parseInt(element.cur_id)
