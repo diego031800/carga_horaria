@@ -113,8 +113,9 @@ class CargaHoraria
 	                    CUR.cur_calidad,
                         UPPER(CUR.cur_descripcion) AS curso
                     FROM ADMISION.CURSO CUR
-                    WHERE CUR.cur_ciclo = '" . $this->parametros['ciclo'] . "' AND CUR.cur_estado = 1
+                    WHERE CUR.cur_estado = 1
                     ORDER BY CUR.cur_descripcion ASC";
+                    // CUR.cur_ciclo = '" . $this->parametros['ciclo'] . "' AND 
         $datos = $this->con->return_query_sqlsrv($sql);
         $cursos = "";
         $has_data = 0;
@@ -720,8 +721,10 @@ class CargaHoraria
                         'unidad' => $data[0]['unidad'],
                         'prg_id' => $data[0]['prg_id'],
                         'mencion' => $data[0]['mencion'],
+                        'cgh_estado' => $data[0]['cgh_estado'],
                         'cgc_id' => $data[0]['cgc_id'],
                         'ciclo' => $data[0]['ciclo'],
+                        'cgc_estado' => $data[0]['cgc_estado'],
                     );
                     $carga_horaria[0]['cursos'] = array();
                 }
@@ -741,6 +744,7 @@ class CargaHoraria
                             'calidad_curso' => $fila['calidad_curso'],
                             'cur_creditos' => $fila['cur_creditos'],
                             'chc_horas' => $fila['chc_horas'],
+                            'chc_estado' => $fila['chc_estado'],
                             'grupos' => array()
                         );
 
@@ -754,6 +758,7 @@ class CargaHoraria
                             'chc_id' => $fila['chc_id'],
                             'ccg_id' => $fila['ccg_id'],
                             'grupo' => $fila['grupo'],
+                            'ccg_estado' => $fila['ccg_estado'],
                             'docentes' => array(),
                             'fechas' => array()
                         );
@@ -778,6 +783,7 @@ class CargaHoraria
                             'doc_nombres' => $fila['doc_nombres'],
                             'doc_celular' => $fila['doc_celular'],
                             'doc_email' => $fila['doc_email'],
+                            'cgd_estado' => $fila['cgd_estado'],
                         );
 
                         if ($docentes[$cgd_id]['ccg_id'] == $carga_horaria[0]['cursos'][$chc_id]['grupos'][$ccg_id]['ccg_id']) {
@@ -792,6 +798,7 @@ class CargaHoraria
                             'ccg_id' => $fila['ccg_id'],
                             'cgf_id' => $fila['cgf_id'],
                             'fecha' => $fila['fecha'],
+                            'cgf_estado' => $fila['cgf_estado'],
                         );
 
                         if ($fechas[$cgf_id]['ccg_id'] == $carga_horaria[0]['cursos'][$chc_id]['grupos'][$ccg_id]['ccg_id']) {

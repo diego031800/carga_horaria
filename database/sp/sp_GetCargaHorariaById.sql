@@ -16,8 +16,10 @@ BEGIN
         CH.sec_descripcion as unidad,
         CH.prg_id,
         CH.prg_mencion as mencion,
+        CH.cgh_estado,
         CGC.cgc_id,
         CGC.cgh_ciclo as ciclo,
+        CGC.cgc_estado,
         CHC.chc_id,
         CHC.cur_id,
         CHC.cur_codigo,
@@ -28,8 +30,10 @@ BEGIN
         CC.nombre as calidad_curso,
         CHC.cur_creditos,
         CHC.chc_horas,
+        CHC.chc_estado,
         CCG.ccg_id,
         CCG.ccg_grupo as grupo,
+        CCG.ccg_estado,
         CGD.cgd_id,
         CGD.cgd_titular as titular,
         CGD.doc_condicion,
@@ -40,8 +44,10 @@ BEGIN
         CGD.doc_nombres,
         CGD.doc_celular,
         CGD.doc_email,
+        CGD.cgd_estado,
         CGF.cgf_id,
-        CGF.cgf_fecha as fecha
+        CGF.cgf_fecha as fecha,
+        CGF.cgf_estado
     FROM CARGA_HORARIA CH
     INNER JOIN CARGA_HORARIA_CICLO CGC ON CGC.cgh_id = CH.cgh_id
     INNER JOIN CARGA_HORARIA_CURSO CHC ON CHC.cgc_id = CGC.cgc_id
@@ -52,7 +58,9 @@ BEGIN
     INNER JOIN CARGA_HORARIA_CURSO_GRUPO_FECHA CGF ON CGF.ccg_id = CCG.ccg_id
     WHERE CH.cgh_id = p_cgh_id
 		AND CGC.cgc_id= p_cgc_id
-        AND CH.cgh_estado = '0001'
+        AND CH.cgh_estado = '0001' AND CGC.cgc_estado = '0001'
+        AND CHC.chc_estado = '0001' AND CCG.ccg_estado = '0001'
+        AND CGD.cgd_estado = '0001' AND CGF.cgf_estado = '0001'
 	ORDER BY CH.sec_descripcion ASC, CH.prg_mencion ASC, CGC.cgh_ciclo ASC, CHC.cur_descripcion ASC,
 		CCG.ccg_grupo ASC, CGD.cgd_titular DESC, CGF.cgf_id ASC;
     

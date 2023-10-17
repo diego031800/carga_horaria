@@ -73,8 +73,8 @@ function back() {
 }
 
 /* FUNCION PARA ELIMINAR */
-function eliminar() {
-  
+function eliminar(cgh_id, cgc_id) {
+  let opcion = 'delete_carga_horaria'
 }
 
 /* FUNCION DE BUSCAR */
