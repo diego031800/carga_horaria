@@ -1,7 +1,7 @@
 DROP PROCEDURE IF EXISTS sp_SaveCargaHoraria;
 
 DELIMITER $$
-CREATE PROCEDURE sp_SaveCargaHoraria (
+CREATE DEFINER=`root`@`localhost` PROCEDURE sp_SaveCargaHoraria (
 	IN p_cgh_id INT, 
     IN p_cgh_codigo VARCHAR(10), 
     IN p_sem_id INT, 
@@ -19,7 +19,7 @@ CREATE PROCEDURE sp_SaveCargaHoraria (
 )
 BEGIN
 	DECLARE cgh_id INT;
-    DECLARE cgc_id INT;
+	DECLARE cgc_id INT;
 	IF p_cgh_id IS NULL OR p_cgh_id = 0 THEN
 		SET @cgh_id = (SELECT 
 							CH.cgh_id 
@@ -67,9 +67,12 @@ BEGIN
         ELSE
 			SELECT 0 as respuesta, 'Ya existe una carga horaria para esa mención y ciclo.' as mensaje, @cgh_id as cgh_id;
         END IF;
-    ELSE
+    END IF;
+    
+    IF p_cgh_id IS NOT NULL OR p_cgh_id <> 0 THEN
         -- Actualizar registro existente
-        UPDATE CARGA_HORARIA SET
+        UPDATE CARGA_HORARIA 
+        SET
             cgh_codigo = p_cgh_codigo,
             sem_id = p_sem_id,
             sem_codigo = p_sem_codigo,
@@ -84,7 +87,11 @@ BEGIN
             dispositivo_modificacion = p_dispositivo
         WHERE cgh_id = p_cgh_id;
         
-        UPDATE CARGA_HORARIA_CICLO SET
+        SELECT p_cgh_id, p_cgh_codigo, p_sem_id, p_sem_codigo, p_sem_descripcion, p_sec_id, p_sec_descripcion, p_prg_id, p_prg_mencion, p_cgh_estado,
+            p_usuario, NOW(), p_dispositivo;
+        
+        UPDATE CARGA_HORARIA_CICLO 
+        SET
 			cgh_id = p_cgh_id,
             cgh_ciclo = p_cgc_ciclo,
             usuario_modificacion = p_usuario,
@@ -92,7 +99,7 @@ BEGIN
             dispositivo_modificacion = p_dispositivo
 		WHERE cgc_id = p_cgc_id;
         
-        SELECT 1 as respuesta, 'Se actualizaron los registros exitosamente.' as mensaje, p_cgc_id as cgc_id; 
+        -- SELECT 1 as respuesta, 'Se actualizaron los registros.' as mensaje, p_cgc_id as cgc_id;
     END IF;
 END$$
 DELIMITER ;

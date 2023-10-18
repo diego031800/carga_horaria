@@ -162,7 +162,7 @@ class CargaHoraria
         try {
             $this->con->begin_transaction_mysql();
             $respCargaHoraria = $this->saveCargaHoraria();
-
+            // return $respCargaHoraria;
             if ($respCargaHoraria['respuesta'] == 1) {
                 $cgc_id = $respCargaHoraria['cgc_id'];
 
@@ -170,6 +170,7 @@ class CargaHoraria
                 $cursos = json_decode($this->parametros['p_cursos']);
                 foreach ($cursos as $curso) {
                     $respCargaHorariaCursos = $this->saveCargaHorariaCurso($cgc_id, $curso);
+                    return $respCargaHorariaCursos;
                     if ($respCargaHorariaCursos['respuesta'] == 1) {
                         $chc_id = $respCargaHorariaCursos['chc_id'];
 
@@ -276,10 +277,10 @@ class CargaHoraria
             $sql .= "'" . $curso->cur_ciclo . "', "; // p_cur_ciclo
             $sql .= "'" . $curso->cur_creditos . "', "; // p_cur_creditos
             $sql .= "'" . $curso->horas . "', "; // p_chc_horas
-            $sql .= "'0001', "; // p_chc_estado
+            $sql .= "'" . $curso->chc_estado . "', "; // p_chc_estado
             $sql .= "'" . $_SESSION['usu_id'] . "', "; // p_usuario
             $sql .= "'" . $_SESSION['usu_ip'] . "');"; // p_dispositivo
-            // return $sql;
+            return $sql;
             $datos = $this->con->return_query_mysql($sql);
             $error = $this->con->error_mysql();
             if (empty($error)) {
@@ -308,7 +309,7 @@ class CargaHoraria
             $sql .= "'" . $this->parametros['p_sem_id'] . "', "; // p_sem_id
             $sql .= "'" . $this->parametros['p_prg_id'] . "', "; // p_prg_id
             $sql .= "'" . $grupo->id . "', "; // p_ccg_grupo
-            $sql .= "'0001', "; // p_ccg_estado
+            $sql .= "'" . $grupo->ccg_estado . "', "; // p_ccg_estado
             $sql .= "'" . $_SESSION['usu_id'] . "', "; // p_usuario
             $sql .= "'" . $_SESSION['usu_ip'] . "');"; // p_dispositivo
             // return $sql;
@@ -341,7 +342,7 @@ class CargaHoraria
             $sql .= "NULL, "; // p_cgf_hora_inicio
             $sql .= "NULL, "; // p_cgf_hora_fin
             $sql .= "NULL, "; // p_cgf_horas
-            $sql .= "'0001', "; // p_cgf_estado
+            $sql .= "'" . $fecha->cgf_estado . "', "; // p_cgf_estado
             $sql .= "'" . $_SESSION['usu_id'] . "', "; // p_usuario
             $sql .= "'" . $_SESSION['usu_ip'] . "');"; // p_dispositivo
             // return $sql;
@@ -382,7 +383,7 @@ class CargaHoraria
             $sql .= "'" . $docente->docente . "', "; // p_doc_nombres
             $sql .= "'" . $docente->telefono . "', "; // p_doc_celular
             $sql .= "'" . $docente->correo . "', "; // p_doc_email
-            $sql .= "'0001', "; // p_cgd_estado
+            $sql .= "'" . $docente->cgd_estado . "', "; // p_cgd_estado
             $sql .= "'" . $_SESSION['usu_id'] . "', "; // p_usuario
             $sql .= "'" . $_SESSION['usu_ip'] . "');"; // p_dispositivo
             // return $sql;
