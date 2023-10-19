@@ -37,29 +37,6 @@ BEGIN
         SET @cgd_id = last_insert_id();
         
         SELECT 1 as respuesta, 'El docente se guardo exitosamente.' as mensaje, @cgd_id as cgd_id;
-    ELSE
-        -- Actualizar registro existente
-        UPDATE CARGA_HORARIA_CURSO_GRUPO_DOCENTE SET
-            ccg_id = p_ccg_id,
-            cgd_titular = p_cgd_titular,
-            cgd_horas = p_cgd_horas,
-            cgd_fecha_inicio = p_cgd_fecha_inicio,
-            cgd_fecha_fin = p_cgd_fecha_fin,
-            doc_condicion = p_doc_condicion,
-            doc_grado = p_doc_grado,
-            doc_id = p_doc_id,
-            doc_documento = p_doc_documento,
-            doc_codigo = p_doc_codigo,
-            doc_nombres = p_doc_nombres,
-            doc_celular = p_doc_celular,
-            doc_email = p_doc_email,
-            cgd_estado = p_cgd_estado,
-            usuario_modificacion = p_usuario,
-            fechahora_modificacion = NOW(),
-            dispositivo_modificacion = p_dispositivo
-        WHERE cgd_id = p_cgd_id;
-        
-        SELECT 1 as respuesta, 'Se actualizaron correctamente los datos del docente.' as mensaje, p_cgd_id as cgd_id;
     END IF;
 END$$
 

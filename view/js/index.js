@@ -1092,7 +1092,7 @@ function saveCargaHoraria() {
           toastr["success"](objeto.mensaje, "Registro exitoso");
           setTimeout(() => {
             btnGuardar.disabled = false;
-            // location.href = "../process/detalleCargaHoraria.php?sem_id="+p_sem_id+"&sec_id="+p_sec_id;
+            location.href = "../process/detalleCargaHoraria.php?sem_id="+p_sem_id+"&sec_id="+p_sec_id;
           }, 200);
         } else {
           toastr["error"](objeto.mensaje, "Algo ocurrió");

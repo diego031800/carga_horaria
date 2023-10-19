@@ -109,8 +109,9 @@ if (!isset($_SESSION['login'])) {
                                                 <th class="text-center">PROGRAMA</th>
                                                 <th class="text-center">CICLO</th>
                                                 <th class="text-center">CREADO</th>
+                                                <th class="text-center">CREADO POR</th>
                                                 <th class="text-center">EDITADO</th>
-                                                <th class="text-center">USUARIO</th>
+                                                <th class="text-center">EDITADO POR</th>
                                             </tr>
                                         </thead>
                                         <tbody id="cuerpo_ch"></tbody>

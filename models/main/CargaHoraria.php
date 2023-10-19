@@ -170,7 +170,7 @@ class CargaHoraria
                 $cursos = json_decode($this->parametros['p_cursos']);
                 foreach ($cursos as $curso) {
                     $respCargaHorariaCursos = $this->saveCargaHorariaCurso($cgc_id, $curso);
-                    return $respCargaHorariaCursos;
+                    // return $respCargaHorariaCursos;
                     if ($respCargaHorariaCursos['respuesta'] == 1) {
                         $chc_id = $respCargaHorariaCursos['chc_id'];
 
@@ -178,6 +178,7 @@ class CargaHoraria
                         $grupos = $curso->grupos;
                         foreach ($grupos as $grupo) {
                             $respCursoGrupo = $this->saveGrupoByCurso($chc_id, $grupo);
+                            // return $respCursoGrupo;
                             if ($respCursoGrupo['respuesta'] == 1) {
                                 $ccg_id = $respCursoGrupo['ccg_id'];
 
@@ -227,7 +228,7 @@ class CargaHoraria
     private function saveCargaHoraria()
     {
         try {
-            $sql = "CALL sp_SaveCargaHoraria(";
+            $sql = ($this->parametros['p_cgh_id'] == 0 || is_null($this->parametros['p_cgh_id'])) ? "CALL sp_SaveCargaHoraria(" : "CALL sp_UpdateCargaHoraria(";
             $sql .= "'" . $this->parametros['p_cgh_id'] . "', "; // p_cgh_id
             $sql .= "'" . $this->parametros['p_cgh_codigo'] . "', "; // p_cgh_codigo
             $sql .= "'" . $this->parametros['p_sem_id'] . "', "; // p_sem_id
@@ -266,7 +267,7 @@ class CargaHoraria
     {
         try {
             $this->con->close_open_connection_mysql();
-            $sql = "CALL sp_SaveCargaHorariaCurso(";
+            $sql = ($curso->chc_id == 0 || is_null($curso->chc_id)) ? "CALL sp_SaveCargaHorariaCurso(" : "CALL sp_UpdateCargaHorariaCurso(";
             $sql .= "'" . $curso->chc_id . "', "; // p_chc_id
             $sql .= "'" . $cgc_id . "', "; // p_cgc_id
             $sql .= "'" . $curso->index . "', "; // p_cur_id
@@ -280,7 +281,7 @@ class CargaHoraria
             $sql .= "'" . $curso->chc_estado . "', "; // p_chc_estado
             $sql .= "'" . $_SESSION['usu_id'] . "', "; // p_usuario
             $sql .= "'" . $_SESSION['usu_ip'] . "');"; // p_dispositivo
-            return $sql;
+            // return $sql;
             $datos = $this->con->return_query_mysql($sql);
             $error = $this->con->error_mysql();
             if (empty($error)) {
@@ -303,7 +304,7 @@ class CargaHoraria
     {
         try {
             $this->con->close_open_connection_mysql();
-            $sql = "CALL sp_SaveGrupoByCurso(";
+            $sql = ($grupo->ccg_id == 0 || is_null($grupo->ccg_id)) ? "CALL sp_SaveGrupoByCurso(" : "CALL sp_UpdateGrupoByCurso(";
             $sql .= "'" . $grupo->ccg_id . "', "; // p_ccg_id
             $sql .= "'" . $chc_id . "', "; // p_chc_id
             $sql .= "'" . $this->parametros['p_sem_id'] . "', "; // p_sem_id
@@ -335,7 +336,7 @@ class CargaHoraria
     {
         try {
             $this->con->close_open_connection_mysql();
-            $sql = "CALL sp_SaveFechaByGrupo(";
+            $sql = ($fecha->cgf_id == 0 || is_null($fecha->cgf_id)) ? "CALL sp_SaveFechaByGrupo(" : "CALL sp_UpdateFechaByGrupo(";
             $sql .= "'" . $fecha->cgf_id . "', "; // p_cgf_id
             $sql .= "'" . $ccg_id . "', "; // p_ccg_id
             $sql .= "'" . date('Y-m-d', strtotime(str_replace('/', '-', $fecha->fecha))) . "', "; // p_cgf_fecha
@@ -368,7 +369,7 @@ class CargaHoraria
     {
         try {
             $this->con->close_open_connection_mysql();
-            $sql = "CALL sp_SaveDocenteByGrupo(";
+            $sql = ($docente->cgd_id == 0 || is_null($docente->cgd_id)) ? "CALL sp_SaveDocenteByGrupo(" : "CALL sp_UpdateDocenteByGrupo(";
             $sql .= "'" . $docente->cgd_id . "', "; // p_cgd_id
             $sql .= "'" . $ccg_id . "', "; // p_ccg_id
             $sql .= "" . $docente->titular . ", "; // p_cgd_titular

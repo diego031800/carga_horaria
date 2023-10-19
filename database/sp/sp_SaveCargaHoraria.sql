@@ -68,38 +68,5 @@ BEGIN
 			SELECT 0 as respuesta, 'Ya existe una carga horaria para esa mención y ciclo.' as mensaje, @cgh_id as cgh_id;
         END IF;
     END IF;
-    
-    IF p_cgh_id IS NOT NULL OR p_cgh_id <> 0 THEN
-        -- Actualizar registro existente
-        UPDATE CARGA_HORARIA 
-        SET
-            cgh_codigo = p_cgh_codigo,
-            sem_id = p_sem_id,
-            sem_codigo = p_sem_codigo,
-            sem_descripcion = p_sem_descripcion,
-            sec_id = p_sec_id,
-            sec_descripcion = p_sec_descripcion,
-            prg_id = p_prg_id,
-            prg_mencion = p_prg_mencion,
-            cgh_estado = p_cgh_estado,
-            usuario_modificacion = p_usuario,
-            fechahora_modificacion = NOW(),
-            dispositivo_modificacion = p_dispositivo
-        WHERE cgh_id = p_cgh_id;
-        
-        SELECT p_cgh_id, p_cgh_codigo, p_sem_id, p_sem_codigo, p_sem_descripcion, p_sec_id, p_sec_descripcion, p_prg_id, p_prg_mencion, p_cgh_estado,
-            p_usuario, NOW(), p_dispositivo;
-        
-        UPDATE CARGA_HORARIA_CICLO 
-        SET
-			cgh_id = p_cgh_id,
-            cgh_ciclo = p_cgc_ciclo,
-            usuario_modificacion = p_usuario,
-            fechahora_modificacion = NOW(),
-            dispositivo_modificacion = p_dispositivo
-		WHERE cgc_id = p_cgc_id;
-        
-        -- SELECT 1 as respuesta, 'Se actualizaron los registros.' as mensaje, p_cgc_id as cgc_id;
-    END IF;
 END$$
 DELIMITER ;
