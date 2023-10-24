@@ -685,7 +685,7 @@ CREATE TABLE IF NOT EXISTS `carga_horaria` (
   `fechahora_eliminacion` datetime DEFAULT NULL,
   `dispositivo_eliminacion` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`cgh_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3;
 
 --
 -- Volcado de datos para la tabla `carga_horaria`
@@ -718,7 +718,7 @@ CREATE TABLE IF NOT EXISTS `carga_horaria_ciclo` (
   `dispositivo_eliminacion` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`cgc_id`),
   KEY `cgh_id` (`cgh_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=4;
 
 --
 -- Volcado de datos para la tabla `carga_horaria_ciclo`
@@ -759,7 +759,7 @@ CREATE TABLE IF NOT EXISTS `carga_horaria_curso` (
   `dispositivo_eliminacion` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`chc_id`),
   KEY `cgc_id` (`cgc_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=11;
 
 --
 -- Volcado de datos para la tabla `carga_horaria_curso`
@@ -802,7 +802,7 @@ CREATE TABLE IF NOT EXISTS `carga_horaria_curso_grupo` (
   `dispositivo_eliminacion` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`ccg_id`),
   KEY `chc_id` (`chc_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=12;
 
 --
 -- Volcado de datos para la tabla `carga_horaria_curso_grupo`
@@ -855,7 +855,7 @@ CREATE TABLE IF NOT EXISTS `carga_horaria_curso_grupo_docente` (
   `dispositivo_eliminacion` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`cgd_id`),
   KEY `ccg_id` (`ccg_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=13;
 
 --
 -- Volcado de datos para la tabla `carga_horaria_curso_grupo_docente`
@@ -901,7 +901,7 @@ CREATE TABLE IF NOT EXISTS `carga_horaria_curso_grupo_fecha` (
   `dispositivo_eliminacion` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`cgf_id`),
   KEY `ccg_id` (`ccg_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=83 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=83;
 
 --
 -- Volcado de datos para la tabla `carga_horaria_curso_grupo_fecha`
@@ -1012,7 +1012,7 @@ CREATE TABLE IF NOT EXISTS `carga_horaria_envio_credenciales` (
   `fechahora` datetime DEFAULT NULL,
   `dispositivo` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`chec_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -1043,7 +1043,7 @@ CREATE TABLE IF NOT EXISTS `multitabla` (
   `fechahora_eliminacion` datetime DEFAULT NULL,
   `dispositivo_eliminacion` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`mtb_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=56 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=56;
 
 --
 -- Volcado de datos para la tabla `multitabla`

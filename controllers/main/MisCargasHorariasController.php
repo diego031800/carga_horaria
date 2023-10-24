@@ -12,6 +12,9 @@
   $parametros['p_ciclo'] = '';
   $parametros['p_fecha_inicio'] = '';
   $parametros['p_fecha_fin'] = '';
+  
+  $parametros['p_cgh_id'] = '';
+  $parametros['p_cgc_id'] = '';
 
   /* VERIFICAR ENVIO DE DATOS */
   if (isset($_POST['opcion'])) 
@@ -41,6 +44,15 @@
   if (isset($_POST['p_fecha_fin'])) 
   {
     $parametros['p_fecha_fin'] = $_POST['p_fecha_fin'];
+  }
+
+  if (isset($_POST['p_cgh_id'])) 
+  {
+    $parametros['p_cgh_id'] = $_POST['p_cgh_id'];
+  }
+  if (isset($_POST['p_cgc_id'])) 
+  {
+    $parametros['p_cgc_id'] = $_POST['p_cgc_id'];
   }
 
   $MisCargasHorarias = new MisCargasHorarias();

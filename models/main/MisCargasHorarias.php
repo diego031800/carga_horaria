@@ -108,18 +108,21 @@
                 if (empty($error)) {
                     while ($row = mysqli_fetch_array($datos)) {
                         $index ++;
-                        $data['nro'] = $index; 
-                        $data['acciones'] = '<button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">Acciones</button>
-                                            <div  class="dropdown-menu">
-                                                <button class="dropdown-item btn-sm" onclick="editar('.$row['cgh_id'].', '.$row['cgc_id']. ')">
-                                                    <i class="fa fa-edit text-primary"></i>&nbsp;&nbsp;
-                                                    Editar
-                                                </button>
-                                                <button class="dropdown-item btn-sm" onclick="eliminar('.$row['cgh_id'].', '.$row['cgc_id']. ')">
-                                                    <i class="fa fa-trash-o text-danger"></i>&nbsp;&nbsp;
-                                                    Eliminar
-                                                </button>
-                                            </div>';
+                        $data['nro'] = $index;
+                        if ($row['estado_id']=='0001') {
+                            $data['acciones'] = '<button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">Acciones</button>
+                                                <div  class="dropdown-menu"><button class="dropdown-item btn-sm" onclick="editar('.$row['cgh_id'].', '.$row['cgc_id']. ')">
+                                                        <i class="fa fa-edit text-primary"></i>&nbsp;&nbsp;
+                                                        Editar
+                                                    </button>
+                                                    <button class="dropdown-item btn-sm" onclick="eliminar('.$row['cgh_id'].', '.$row['cgc_id']. ')">
+                                                        <i class="fa fa-trash-o text-danger"></i>&nbsp;&nbsp;
+                                                        Eliminar
+                                                    </button></div>';
+                        } else {
+                            $data['acciones'] = '<button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">Acciones</button>
+                                                <div  class="dropdown-menu"></div>';
+                        }
                         $data['estado'] = '<h6><span class="badge text-bg-'.$row['color'].'">
                                                 '.$row['estado']. '
                                             </span></h6>';
@@ -223,8 +226,8 @@
                 $sql = "CALL sp_deleteCargaHoraria(";
                 $sql .= "'".$this->parametros['p_cgh_id']."', "; // p_cgh_id
                 $sql .= "'".$this->parametros['p_cgc_id']."', "; // p_cgc_id
-                $sql .= "'".$_SESSION['usu_id'].", "; // p_usuario
-                $sql .= "'".$_SESSION['REMOTE_ADDR']."');"; // p_dispositivo
+                $sql .= "'".$_SESSION['usu_id']."', "; // p_usuario
+                $sql .= "'".$_SESSION['usu_ip']."');"; // p_dispositivo
                 // return $sql;
                 $datos = $this->con->return_query_mysql($sql);
                 $error = $this->con->error_mysql();
