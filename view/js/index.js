@@ -495,8 +495,8 @@ function cursoAgregado(index, accion, indexnuevo) {
       return false;
     } else {
       if (
-        listacursos.find((cursoI) => cursoI.index === index && cursoI.chc_estado == "0001") != null &&
-        listacursos.find((cursoI) => cursoI.index === index && cursoI.chc_estado == "0001" ) != undefined
+        listacursos.find((cursoI) => cursoI.index === indexnuevo && cursoI.chc_estado == "0001") != null &&
+        listacursos.find((cursoI) => cursoI.index === indexnuevo && cursoI.chc_estado == "0001" ) != undefined
       ) {
         toastr["warning"]("Ya has agregador el curso", "Agregar curso");
         return true;
