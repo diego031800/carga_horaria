@@ -13,7 +13,16 @@ if (isset($_POST['sem_id']))
 {
     $cgh_id = $_POST['docentes'];
 }
+try {
+    $correo = new CorreoCargaHoraria();
+    $rutaPDFCarga = '';
+    $respuesta = $correo->enviarCorreoCierre($item,$rutaPdf);
+    unlink($rutaPdf);
+    $correo->cerrarConexion(); 
+} catch (Exception $ex) {
+    die("Error: " . $ex);
+}
 
-$rutaPDFCarga ='';
+echo $respuesta;
 
 ?>

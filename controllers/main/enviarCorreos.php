@@ -28,26 +28,29 @@ class CorreoCargaHoraria
         $this->mail->Port = 465;
         $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $this->mail->SMTPAuth = true;
-        $this->mail->Username = 'abyzuss5@gmail.com';
-        $this->mail->Password = 'pdto zrga nvfk djtg';
-        $this->mail->setFrom('abyzuss5@gmail.com', 'UTIC POSGRADO');
+        $this->mail->Username = 'upg_utic@unitru.edu.pe';
+        $this->mail->Password = 'ojvg gftu qpbd urtr';
+        $this->mail->setFrom('upg_utic@unitru.edu.pe', 'UTIC POSGRADO');
         $this->mail->CharSet = 'UTF-8'; 
     }
 
     public function enviarCorreoCierre($datos, $rutapdf, $nombreUnidad)
     {
-        $this->mail->addAddress($datos['correo'],$datos['nombre']);
-        $this->mail->Subject = 'Cierre de carga horaria del SEMESTRE 2023 DE LA UNIDAD DE CIENCIAS DE LA COMUNICACIÓN';
-        
-
-        $rutaImagenAdjunta = 'assets/images/documentos/img_upg.png';
-        $this->mail->addEmbeddedImage($rutaImagenAdjunta, 'NOMBRE');
-
-        if ($this->mail->send()) {
-            echo 'Correo enviado con éxito';
-        } else {
-            echo 'Error al enviar el correo: ' . $this->mail->ErrorInfo;
+        $respuesta= '';
+        try {
+            $this->mail->addAddress($datos['correo'],$datos['nombre']);
+            $this->mail->Subject = 'Cierre de carga horaria del SEMESTRE 2023 DE LA UNIDAD DE: '.$nombreUnidad;
+            $this->mail->Body = $this->generarMensajeCorreoCierre($nombreUnidad);
+            $this->mail->addAttachment($rutapdf, $nombreUnidad);
+            if ($this->mail->send()) {
+                $respuesta= 'Correo enviado con éxito';
+            } else {
+                $respuesta= 'Error al enviar el correo: ' . $this->mail->ErrorInfo;
+            }
+        } catch (Exception $ex) {
+            die("Error: " . $ex);
         }
+        return $respuesta; 
     }
 
     public function enviarCredencial($item,$rutaPdf)
@@ -103,6 +106,12 @@ class CorreoCargaHoraria
         $mensaje .= '<p><a href="http://www.epgnew.unitru.edu.pe">www.epgnew.unitru.edu.pe</a></p>';
         $mensaje .= '<p>Si en algún momento llega a recibir credenciales o datos que no son suyos, comuniquese con la unidad.</p>';
         $mensaje .= '<p>ATTE. Unidad de Tecnologías Informáticas y Comunicaciones o Sistemas de la EPG.</p>';
+        return $mensaje;
+    }
+
+    private function generarMensajeCorreoCierre($unidad)
+    {
+        $mensaje = '';
         return $mensaje;
     }
 
