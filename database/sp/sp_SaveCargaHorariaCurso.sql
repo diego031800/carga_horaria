@@ -33,25 +33,6 @@ BEGIN
         SET @chc_id = last_insert_id();
         
         SELECT 1 as respuesta, 'Se registro correctamente el curso.' as mensaje, @chc_id as chc_id;
-    ELSE
-        -- Actualizar registro existente
-        UPDATE CARGA_HORARIA_CURSO SET
-            cgc_id = p_cgc_id,
-            cur_id = p_cur_id,
-            cur_codigo = p_cur_codigo,
-            cur_descripcion = p_cur_descripcion,
-            cur_tipo = p_cur_tipo,
-            cur_calidad = p_cur_calidad,
-            cur_ciclo = p_cur_ciclo,
-            cur_creditos = p_cur_creditos,
-            chc_horas = p_chc_horas,
-            chc_estado = p_chc_estado,
-            usuario_modificacion = p_usuario,
-            fechahora_modificacion = NOW(),
-            dispositivo_modificacion = p_dispositivo
-        WHERE chc_id = p_chc_id;
-        
-        SELECT 1 as respuesta, 'Se actualizó correctamente el curso.' as mensaje, p_chc_id as chc_id;
     END IF;
 END$$
 DELIMITER ;

@@ -129,8 +129,9 @@
                         $data['programa'] = $row['programa'];
                         $data['ciclo'] = $row['ciclo'];
                         $data['creado'] = $row['creado'];
-                        $data['editado'] = $row['editado'];
                         $data['usuario'] = $this->get_nombres_usuario($row['usuario']);
+                        $data['editado'] = $row['editado'];
+                        $data['usuario_modificacion'] = is_null($row['usuario_modificacion'])?'SIN EDICIÓN': $this->get_nombres_usuario($row['usuario_modificacion']);
                         array_push($data_table, $data);
                     }
                     return json_encode($data_table);

@@ -27,20 +27,5 @@ BEGIN
         SET @cgf_id = last_insert_id();
         
         SELECT 1 as respuesta, 'Se registro la fecha correctamente.' as mensaje, @cgf_id as cgf_id;
-    ELSE
-        -- Actualizar registro existente
-        UPDATE CARGA_HORARIA_CURSO_GRUPO_FECHA SET
-            ccg_id = p_ccg_id,
-            cgf_fecha = p_cgf_fecha,
-            cgf_hora_inicio = p_cgf_hora_inicio,
-            cgf_hora_fin = p_cgf_hora_fin,
-            cgf_horas = p_cgf_horas,
-            cgf_estado = p_cgf_estado,
-            usuario_modificacion = p_usuario,
-            fechahora_modificacion = NOW(),
-            dispositivo_modificacion = p_dispositivo
-        WHERE cgf_id = p_cgf_id;
-        
-        SELECT 1 as respuesta, 'Se actualizo el registro correctamente.' as mensaje, p_cgf_id as cgf_id;
     END IF;
 END$$
