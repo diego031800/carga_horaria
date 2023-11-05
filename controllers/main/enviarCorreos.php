@@ -34,7 +34,7 @@ class CorreoCargaHoraria
         $this->mail->CharSet = 'UTF-8'; 
     }
 
-    public function enviarCorreoCierre($datos)
+    public function enviarCorreoCierre($datos, $rutapdf, $nombreUnidad)
     {
         $this->mail->addAddress($datos['correo'],$datos['nombre']);
         $this->mail->Subject = 'Cierre de carga horaria del SEMESTRE 2023 DE LA UNIDAD DE CIENCIAS DE LA COMUNICACIÓN';
