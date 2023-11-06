@@ -1,5 +1,5 @@
 <?php 
-require_once '../../vendor/autoload.php';
+require_once '../../../vendor/autoload.php';
 
 date_default_timezone_set('America/Lima');
 
@@ -57,7 +57,7 @@ class CredencialDocente{
         // Configurar el pie de página
         $this->mpdf->SetFooter($this->footer);
         //Imagen de fondo
-        $this->mpdf->SetDefaultBodyCSS('background', "url('../../assets/images/credencial/fondo.jpg')");
+        $this->mpdf->SetDefaultBodyCSS('background', "url('../../../assets/images/credencial/fondo.jpg')");
         $this->mpdf->SetDefaultBodyCSS('background-image-resize', 6);
         //Cambiando el tamaño y la orientación de la página
         $this->mpdf->SetAutoPageBreak('auto', 1); // Puedes ajustar el margen inferior según tus necesidades
