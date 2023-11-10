@@ -310,7 +310,28 @@ if (!isset($_SESSION['login'])) {
                                                 <label for="" class="form-label">Grupo:</label><br />
                                             </div>
                                             <div class="col-5 mb-12">
-                                                <select class="form-select" id="cbo-grupo">
+                                                <select class="form-select" id="cbo-grupos">
+                                                    <option value="1">Grupo A</option>
+                                                    <option value="2">Grupo B</option>
+                                                    <option value="3">Grupo C</option>
+                                                    <option value="4">Grupo D</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-7 mb-12" style="display: flex; justify-content: space-between;">
+                                                <button class="btn btn-outline-warning" style="height: 90%;" onClick="agregarGrupo();" id="btn-addGrupo"> <i class="fa fa-plus"></i>
+                                                    Agregar grupo</button>
+                                            </div>
+                                            <div class="col-12">
+                                                <hr>
+                                                <br>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 mb-12 row">
+                                            <div class="col-12 mb-12">
+                                                <label for="" class="form-label">Grupo:</label><br />
+                                            </div>
+                                            <div class="col-5 mb-12">
+                                                <select class="form-select" id="cbo-grupo" disabled>
                                                 </select>
                                             </div>
                                             <div class="col-7 mb-12" style="display: flex; justify-content: space-between;">
