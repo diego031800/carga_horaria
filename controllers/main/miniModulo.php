@@ -39,9 +39,9 @@ try {
         $rutaManual = '../../assets/docs/ManualSigap.pdf';
         $mail->addAddress($item->correo,$item->nombre);
         $mail->isHTML(true);
-        $mail->Body = generarMensajeCorreo($item->nombre,$item->codigo,$item->documento,'SMTR58592023');
+        $mail->Body = generarMensajeCorreo($item->nombre,$item->documento,$item->codigo,'SMTR58592023');
         $pdf = new CredencialDocente();
-        $rutaPdf = $pdf->generarCredencial($item->nombre,$item->codigo,$item->documento,'SMTR58592023');
+        $rutaPdf = $pdf->generarCredencial($item->nombre,$item->documento,$item->codigo,'SMTR58592023');
         $mail->addAttachment($rutaManual,'Manual de docente para SIGAP');
         $mail->addAttachment($rutaPdf, $item->nombre);
         //unlink($rutaPdf);
