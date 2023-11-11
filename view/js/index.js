@@ -20,13 +20,12 @@ let txtFechas = document.getElementById("newTratFechaIni");
 let btnGuardarCurso = document.getElementById("btnGuardarCurso");
 let txtIdCursoEditar = document.getElementById("cursoEditar");
 let btnEditarCarga = document.getElementById("btneditarCargaHoraria");
-let cboGrupoCurso = document.getElementById("cbo-grupo");
 
 // Grupo
 let txtIdCursoGrupo = document.getElementById("cursoIdModalGrupo");
 let txtTituloModalGrupo = document.getElementById("title-Grupo");
 let cboGrupoSeleccionado = document.getElementById("cbo-grupos");
-let cboGrupos = document.getElementById("cbo-grupo");
+let cboGrupoCurso = document.getElementById("cbo-grupo");
 
 // Docente modal
 
@@ -58,11 +57,11 @@ let arrayEliminadoC = [];
 let arrayEliminadoG = [];
 let arrayEliminadoD = [];
 let arrayEliminadoF = [];
-let arrayGruposDisponibles=[
-  {id:1, nombre: "Grupo A"},
-  {id:2, nombre: "Grupo B"},
-  {id:3, nombre: "Grupo C"},
-  {id:4, nombre: "Grupo D"}
+let arrayGruposDisponibles = [
+  { id: 1, nombre: "Grupo A" },
+  { id: 2, nombre: "Grupo B" },
+  { id: 3, nombre: "Grupo C" },
+  { id: 4, nombre: "Grupo D" },
 ];
 // FUNCIONES
 // NAVEGACION
@@ -336,57 +335,85 @@ function actualizarCboGrupoCurso(ind) {
         );
       }
     });
-  }else{
-    $("#cbo-grupo").append(
-      '<option value="">Sin Grupos...</option>'
-    );
+  } else {
+    $("#cbo-grupo").append('<option value="">Sin Grupos...</option>');
   }
+}
+function actualizarCboGruposDisponibles() {
+  $("#cbo-grupos").empty();
+  arrayGruposDisponibles.forEach((element) => {
+    $("#cbo-grupos").append(
+      '<option value="' + element.id + '">' + element.nombre + "</option>"
+    );
+  });
 }
 
 function agregarGrupo() {
   let id_curso_modal = txtIdCursoGrupo.value;
-  let nombreSeleccionado = $("#cbo-grupos option:selected");
-  let indx = listacursos.find((cursoI) => cursoI.index == id_curso_modal).grupos.findIndex((element) => element.nombre == nombreSeleccionado);
-  listacursos
+  let value = cboGrupoSeleccionado.value;
+  let nombgreseleccionado = arrayGruposDisponibles.find(
+    (it) => it.id == value
+  ).nombre;
+  let indx = listacursos
     .find((cursoI) => cursoI.index == id_curso_modal)
-    .grupos.push({
-      ccg_id: 0,
-      id: 2,
-      nombre: "Grupo B",
-      docentes: [],
-      fechas: [],
-      horas: 0,
-      ccg_estado: "0001",
-    });
-  actualizarCboGrupoCurso(id_curso_modal);
-  toastr["success"]("El grupo se ha agregado con éxito", "Agregar grupo");
-  $("#btn-addGrupo").hide();
-  $("#btn-deleteGrupo").show();
-  llenarTabla();
+    .grupos.findIndex((element) => element.id == value);
+  if (indx == -1) {
+    listacursos
+      .find((cursoI) => cursoI.index == id_curso_modal)
+      .grupos.push({
+        ccg_id: 0,
+        id: value,
+        nombre: nombgreseleccionado,
+        docentes: [],
+        fechas: [],
+        horas: 0,
+        ccg_estado: "0001",
+      });
+    actualizarCboGrupoCurso(id_curso_modal);
+    toastr["success"]("El grupo se ha agregado con éxito", "Agregar grupo");
+    $("#btn-deleteGrupo").prop("disabled", false);
+    $("#btnGuardarDatosGrupo").prop("disabled", false);
+    cboGrupoCurso.disabled = false;
+    txtFechas.disabled = false;
+    llenarTabla();
+  } else {
+    toastr["warning"]("Este grupo ya se ha registrado", "Agregar grupo");
+  }
 }
 
 function eliminarGrupo() {
-  if (confirm("Se eliminará el grupo B ¿está de acuerdo?")) {
+  let idG = cboGrupoCurso.value;
+  let nombgreseleccionado = arrayGruposDisponibles.find(
+    (it) => it.id == idG
+  ).nombre;
+  if (
+    confirm("Se eliminará el " + nombgreseleccionado + " ¿está de acuerdo?")
+  ) {
     let id_curso_modal = txtIdCursoGrupo.value;
+    let indxC = listacursos.findIndex(
+      (cursoI) => cursoI.index == id_curso_modal
+    );
+    let indxG = listacursos[indxC].grupos.findIndex(
+      (grupoI) => grupoI.id == idG
+    );
+    let grupo = listacursos[indxC].grupos[indxG];
     if (stdEditarCarga == 1) {
-      grupo = listacursos.find((cursoI) => cursoI.index == id_curso_modal)
-        .grupos[1];
       if (grupo.ccg_id != 0) {
-        listacursos.find(
-          (cursoI) => cursoI.index == id_curso_modal
-        ).grupos[1].ccg_estado = "0002";
+        listacursos[indxC].grupos[indxG].ccg_estado = "0002";
       } else {
-        listacursos
-          .find((cursoI) => cursoI.index == id_curso_modal)
-          .grupos.pop();
+        listacursos[indxC].grupos.splice(indxG, 1);
       }
     } else {
-      listacursos.find((cursoI) => cursoI.index == id_curso_modal).grupos.pop();
+      listacursos[indxC].grupos.splice(indxG, 1);
     }
     actualizarCboGrupoCurso(id_curso_modal);
     alternarDatosGrupo();
-    $("#btn-addGrupo").show();
-    $("#btn-deleteGrupo").hide();
+    if (listacursos[indxC].grupos.length == 0) {
+      $("#btn-deleteGrupo").prop("disabled", true);
+      cboGrupoCurso.disabled = true;
+      txtFechas.disabled = true;
+      $("#btnGuardarDatosGrupo").prop("disabled", true);
+    }
     toastr["warning"]("El grupo se ha eliminado con éxito", "Eliminar grupo");
     llenarTabla();
   }
@@ -423,21 +450,24 @@ function guardarDatosGrupo() {
 }
 
 function alternarDatosGrupo() {
-  let idGrupo = cboGrupoCurso.value;
   let index = parseInt(txtIdCursoGrupo.value);
-  let grupo = listacursos
-    .find((it) => it.index == index)
-    .grupos.find((it) => it.id == idGrupo);
-  if (grupo.fechas.length != 0) {
-    var fechasMostrar = grupo.fechas.map(function (fecha) {
-      if (fecha.cgf_estado == "0001") {
-        var partes = fecha.fecha.split("/");
-        return new Date(partes[2], partes[1] - 1, partes[0]);
-      }
-    });
-    $(".datepicker3").datepicker("setDates", fechasMostrar);
-  } else {
-    $(".datepicker3").datepicker("clearDates");
+  let indxC = listacursos.findIndex((it) => it.index == index);
+  if (listacursos[indxC].grupos.length != 0) {
+    let idGrupo = cboGrupoCurso.value;
+    let grupo = listacursos
+      .find((it) => it.index == index)
+      .grupos.find((it) => it.id == idGrupo);
+    if (grupo.fechas.length != 0) {
+      var fechasMostrar = grupo.fechas.map(function (fecha) {
+        if (fecha.cgf_estado == "0001") {
+          var partes = fecha.fecha.split("/");
+          return new Date(partes[2], partes[1] - 1, partes[0]);
+        }
+      });
+      $(".datepicker3").datepicker("setDates", fechasMostrar);
+    } else {
+      $(".datepicker3").datepicker("clearDates");
+    }
   }
 }
 
@@ -480,16 +510,15 @@ function abrir_grupo_modal(idCurso) {
   txtTituloModalGrupo.textContent =
     "REGISTRAR GRUPOS PARA EL CURSO: " + curso.curso;
   $("#myModal-grupo").fadeIn();
-  if (curso.grupos.length == 1) {
-    $("#btn-addGrupo").show();
-    $("#btn-deleteGrupo").hide();
-  } else {
-    $("#btn-addGrupo").hide();
-    $("#btn-deleteGrupo").show();
-  }
   txtIdCursoGrupo.value = idCurso;
   actualizarCboGrupoCurso(idCurso);
   alternarDatosGrupo();
+  if (curso.grupos.length != 0) {
+    $("#btn-deleteGrupo").prop("disabled", false);
+    cboGrupoCurso.disabled = false;
+    txtFechas.disabled = false;
+    $("#btnGuardarDatosGrupo").prop("disabled", false);
+  }
 }
 
 /* Abre el modal de curso, con los datos del curso para editar */
@@ -905,40 +934,43 @@ function limpiarInputsModal() {
 }
 
 function abrir_docente_modal(index) {
-  let curso = listacursos.find((cursoI) => cursoI.index === index);
-  txtTituloModalDocente.textContent =
-    "ASIGNANDO DOCENTES PARA LOS GRUPOS DEL CURSO: " + curso.curso;
-  let docente = listacursos.find((item) => item.index == index).grupos[0]
-    .docentes[0];
-  console.log(docente);
-  if (docente != null || docente != undefined) {
-    $("#nombre-docente").val(docente.doc_id).trigger("change");
-    $("#condicion-docente").val(docente.condicion);
-    $("#grado-docente").val(docente.grado);
-    $("#codigo-docente").val(docente.codigo);
-    $("#doc-docente").val(docente.dni);
-    //$("#email-docente").val(docente.correo);
-    $("#telefono-docente").val(docente.telefono);
-    txtDocEmail.value = docente.correo;
-  } else {
-    limpiarInputsModal();
+  let indxC = listacursos.findIndex((cursoI) => cursoI.index === index);
+  if (listacursos[indxC].grupos.length != 0) {
+    let curso = listacursos.find((cursoI) => cursoI.index === index);
+    txtTituloModalDocente.textContent = "ASIGNANDO DOCENTES PARA LOS GRUPOS DEL CURSO: " + curso.curso;
+    let docente = listacursos[indxC].grupos[0].docentes[0];
+    console.log(docente);
+    if (docente != null || docente != undefined) {
+      $("#nombre-docente").val(docente.doc_id).trigger("change");
+      $("#condicion-docente").val(docente.condicion);
+      $("#grado-docente").val(docente.grado);
+      $("#codigo-docente").val(docente.codigo);
+      $("#doc-docente").val(docente.dni);
+      //$("#email-docente").val(docente.correo);
+      $("#telefono-docente").val(docente.telefono);
+      txtDocEmail.value = docente.correo;
+    } else {
+      limpiarInputsModal();
+    }
+    $("#id-curso-docente").val(index);
+    $("#nombre-docente").select2({
+      dropdownCssClass: "limitar-opciones",
+      dropdownParent: $("#myModal-docente"),
+      placeholder: "Selecciona un docente ...",
+    });
+    $("#nombre-docente").on("change", function () {
+      seleccionar_datos_docente();
+    });
+    toastr["info"](
+      'Para ver y/o agregar los datos del docente suplente, active la opcion que dice: "Agregar docente suplente" ',
+      "Asignar docente"
+    );
+    $("#myModal-docente").fadeIn();
+    actualizarCboGrupoDoc(index);
+    actualizarDatosDocenteGrupo();
+  }else{
+    toastr["error"]("Debe registrar un grupo almenos","Asignar docente");
   }
-  $("#id-curso-docente").val(index);
-  $("#nombre-docente").select2({
-    dropdownCssClass: "limitar-opciones",
-    dropdownParent: $("#myModal-docente"),
-    placeholder: "Selecciona un docente ...",
-  });
-  $("#nombre-docente").on("change", function () {
-    seleccionar_datos_docente();
-  });
-  toastr["info"](
-    'Para ver y/o agregar los datos del docente suplente, active la opcion que dice: "Agregar docente suplente" ',
-    "Asignar docente"
-  );
-  $("#myModal-docente").fadeIn();
-  actualizarCboGrupoDoc(index);
-  actualizarDatosDocenteGrupo();
 }
 
 /* Cargar datos al entrar como "Editar" */
@@ -998,7 +1030,7 @@ function llenarListaCursos(data) {
         };
         arrayD.push(docente);
       });
-      nombreG = elementG.grupo == 1 ? "Grupo A" : "Grupo B";
+      nombreG = arrayGruposDisponibles.find((it) => it.id == elementG.grupo).nombre;
       itemGNuevo = {
         ccg_id: parseInt(elementG.ccg_id),
         docentes: arrayD,
@@ -1237,6 +1269,7 @@ function cancelar() {
 
 /* FUNCION AL CARGAR EL DOCUMENTO */
 async function load_document() {
+  actualizarCboGruposDisponibles()
   await get_cbo_semestres();
   await get_cbo_unidades();
   change_cbo_ciclo();
@@ -1265,6 +1298,7 @@ async function load_document() {
 
   camposCursos(true, 1);
   btnGuardar.disabled = true;
+  txtFechas.disabled = true;
   //cboCiclo.disabled = true;
   /* CAMPOS GENERALES */
   $("#btnCancelar").hide();
