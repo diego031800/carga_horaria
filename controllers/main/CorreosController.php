@@ -20,7 +20,7 @@ try {
     foreach ($datosJson as $item) {
         $correo = new CorreoCargaHoraria();
         $pdf = new CredencialDocente();
-        $rutaPdf = $pdf->generarCredencial($item->nombre,$item->codigo,$item->documento,$item->sem);
+        $rutaPdf = $pdf->generarCredencial($item->nombre,$item->documento,$item->codigo,$item->sem);
         $itemEnviado = $correo->enviarCredencial($item,$rutaPdf); 
         $itemsEnviados[] = $itemEnviado;
         unlink($rutaPdf);

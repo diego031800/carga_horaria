@@ -70,7 +70,7 @@ class CorreoCargaHoraria
             $rutaManual = '../../assets/docs/ManualSigap.pdf';
             $this->mail->addAddress($item->correo,$item->nombre);
             $this->mail->isHTML(true);
-            $this->mail->Body = $this->generarMensajeCorreo($item->nombre,$item->codigo,$item->documento,$item->sem);
+            $this->mail->Body = $this->generarMensajeCorreo();
             $this->mail->addAttachment($rutaManual,'Manual de docente para SIGAP');
             $this->mail->addAttachment($rutaPdf, $item->nombre);
             if ($this->mail->send()) {
@@ -92,20 +92,17 @@ class CorreoCargaHoraria
         return $itemEnviado;
     }
     
-    private function generarMensajeCorreo($nombre, $codigo, $doc, $semestre)
+    private function generarMensajeCorreo()
     {
-        $mensaje = '<p>Buenos días dr(a): '.$nombre.', les saluda cordialmente la Unidad de Tecnologías Informáticas y Comunicaciones / Sistemas de la EPG:</p>';
-        $mensaje .= '<p>Se recomienda que descargue la lista de estudiantes por curso para llevar el control de asistencias.</p>';
+        $mensaje = ' <p>Buenas tardes estimado Docentes de la ESCUELA DE POSGRADO, que vienen brindando sus servicios en distintos cursos asignados por la unidad académica, con el fin de regularizar 
+        y sistematizar nuestros procesos constantemente hacemos llegar su credencial de acceso al sistema de registro de notas online, Dirigido por la Unidad de Tecnologías Informáticas y Comunicaciones de la EPG.</p>';
+        $mensaje .= '<p>Este registro de notas online permitirá dar por finalizado el curso asignado a su carga horaria.</p>';
         $mensaje .= '<p>Se adjunta su Credencial y Manual de Docente para el registro de notas online.</p>';
-        $mensaje .= '<p>Si necesita Soporte informático o ayuda con el registro o acceso comuníquese con los siguientes números:</p>';
-        $mensaje .= '<p>Anderson J. Zavaleta Simón /UTIC-EPG: 984 599 249</p>';
-        $mensaje .= '<p>Ronald Córdova Paredes /SISTEMAS-EPG: 978 468 194</p>';
-        $mensaje .= '<p>Documento Docente: '.$doc.'</p>';
-        $mensaje .= '<p>Token Docente: '.$codigo.'</p>';
-        $mensaje .= '<p>Código del semestre: '.$semestre.'</p>';
+        $mensaje .= '<p>Para soporte o ayuda con el registro o accesos al sistema comuníquese con los siguientes números:</p>';
+        $mensaje .= '<ul><li>Anderson J. Zavaleta Simón / UTIC-EPG: 984 599 249</li><li>Ronald Córdova Paredes / SISTEMAS-EPG: 978 468 194</li></ul>';
         $mensaje .= '<p><a href="http://www.epgnew.unitru.edu.pe">www.epgnew.unitru.edu.pe</a></p>';
-        $mensaje .= '<p>Si en algún momento llega a recibir credenciales o datos que no son suyos, comuniquese con la unidad.</p>';
-        $mensaje .= '<p>ATTE. Unidad de Tecnologías Informáticas y Comunicaciones o Sistemas de la EPG.</p>';
+        $mensaje .= '<p>Video tutorial para el proceso de registro de notas online: <a href="https://drive.google.com/file/d/150q2t4Wo3k7RH_5L0UE9qaK4WiGjdtvB/view?usp=drive_link">Enlace al video</a></p>';
+        $mensaje .='<p>ATTE. Unidad de Tecnologías Informáticas y Comunicaciones de la EPG.</p>';
         return $mensaje;
     }
 

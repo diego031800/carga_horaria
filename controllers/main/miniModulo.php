@@ -71,12 +71,12 @@ try {
     $rutaPdf = $pdf->generarCredencial($nombre,$dni,$codigo,$cod_sem);
     $mail->addAttachment($rutaManual,'Manual de docente para SIGAP');
     $mail->addAttachment($rutaPdf, $nombre);
-    //unlink($rutaPdf);
     if ($mail->send()) {
         echo "SI";
     } else {
         echo "NO";
     }
+    unlink($rutaPdf);
     $mail->smtpClose();
 } catch (Exception $ex) {
     die("Error: " . $ex);
