@@ -17,6 +17,11 @@
             'url' => '/view/process/envioCredenciales.php', 
             'parent_id' => '2'
         ],
+        [ 
+            'name' => 'Módulo de credenciales',
+            'url' => '/view/process/moduloCredenciales.php', 
+            'parent_id' => '2'
+        ],
     );
 
     ?>

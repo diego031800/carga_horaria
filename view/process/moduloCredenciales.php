@@ -71,18 +71,12 @@ if (!isset($_SESSION['login'])) {
                             style="color: #ffffff; background-color:rgba(135, 135, 135, 0.09); border-radius: 18px;">
                             <div class="card-body">
                                 <div class="row d-flex justify-content-center align-items-center">
-                                    <div class="col-lg-2 col-6 mb-3">
+                                    <div class="col-lg-6 col-12 mb-3">
                                         <label for="" class="form-label">Semestre</label>
                                         <select class="form-select" id="cboSemestre">
                                         </select>
                                     </div>
-                                    <div class="col-lg-1 col-md-2 col-6 d-flex align-items-center h-100 border border-start-0 border-bottom-0 border-top-0 border-dark-subtle"
-                                        style="height: 80px!important;">
-                                        <button class="btn btn-primary align-middle" type="button" id="btnBuscar">
-                                            <i class="fa fa-search"></i>
-                                        </button>
-                                    </div>
-                                    <div class="col-lg-10 col-12 mb-6 row">
+                                    <div class="col-lg-12 col-12 mb-6 row">
                                         <div class="col-6 mb-3">
                                             <label for="" class="form-label">Nombre:</label><br />
                                             <select class="form-select" id="nombre-docente">
@@ -100,9 +94,10 @@ if (!isset($_SESSION['login'])) {
                                             <label for="" class="form-label">Código:</label><br />
                                             <input type="text" class="form-control" id="codigo-docente" disabled>
                                         </div>
-
                                     </div>
-                                    <div class="col-lg-2 col-md-2">
+                                    
+                                </div>
+                                <div class="">
                                         <button class="btn btn-warning text-light m-4" id="btnEnviando" disabled
                                             style="display: none;">
                                             <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
@@ -110,8 +105,6 @@ if (!isset($_SESSION['login'])) {
                                         </button>
                                         <button class="btn btn-warning text-light m-4" id="btnEnviar" onClick="enviarCred();"><i
                                                 class="fa fa-send-o"></i>&nbsp;&nbsp; Enviar credencial</button>
-                                    </div>
-
                                 </div>
                             </div>
                         </div>

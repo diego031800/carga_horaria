@@ -59,9 +59,7 @@ let arrayEliminadoD = [];
 let arrayEliminadoF = [];
 let arrayGruposDisponibles = [
   { id: 1, nombre: "Grupo A" },
-  { id: 2, nombre: "Grupo B" },
-  { id: 3, nombre: "Grupo C" },
-  { id: 4, nombre: "Grupo D" },
+  { id: 2, nombre: "Grupo B" }
 ];
 // FUNCIONES
 // NAVEGACION

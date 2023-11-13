@@ -66,7 +66,7 @@ function enviarCred() {
     let dni_doc = txtDocDocumento.value;
     let sem_option = $("#cboSemestre option:selected");
     let sem_codigo = sem_option.data("codigo");
-    if (comprobarCampo(email_doc, "correo") && comprobarCampo(codigo_doc, "codigo") && comprobarCampo(nombre_doc, "nombre") && comprobarCampo(dni_doc, "DNI") && comprobarCampo(sem_codigo, "sem_codigo")) {
+    if (comprobarCampo(sem_codigo, "sem_codigo")&& comprobarCampo(nombre_doc, "nombre") && comprobarCampo(email_doc, "correo")&& comprobarCampo(dni_doc, "DNI") && comprobarCampo(codigo_doc, "codigo")) {
         $.ajax({
             type: 'post',
             url: '../../controllers/main/miniModulo.php',
