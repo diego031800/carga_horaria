@@ -171,7 +171,6 @@ if (!isset($_SESSION['login'])) {
             "showMethod": "fadeIn",
             "hideMethod": "fadeOut"
         }
-
     });
     </script>
 </body>

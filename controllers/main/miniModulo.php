@@ -58,13 +58,13 @@ try {
     $mail->Port = 465;
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
     $mail->SMTPAuth = true;
-    $mail->Username = 'abyzuss5@gmail.com';
-    $mail->Password = 'pdto zrga nvfk djtg';
-    $mail->setFrom('abyzuss5@gmail.com', 'UTIC POSGRADO');
+    $mail->Username = 'upg_utic@unitru.edu.pe';
+    $mail->Password = 'ojvg gftu qpbd urtr';
+    $mail->setFrom('upg_utic@unitru.edu.pe', 'UTIC POSGRADO');
     $mail->CharSet = 'UTF-8';  
     $mail->Subject = 'ENTREGA DE CREEDENCIALES DEL SIGAP - DOCENTE';
     $rutaManual = '../../assets/docs/ManualSigap.pdf';
-    $mail->addAddress("geraldayala87@gmail.com",$nombre);
+    $mail->addAddress($correo,$nombre);
     $mail->isHTML(true);
     $mail->Body = generarMensajeCorreo();
     $pdf = new CredencialDocente();
@@ -92,7 +92,7 @@ function generarMensajeCorreo()
     $mensaje .= '<p>Para soporte o ayuda con el registro o accesos al sistema comuníquese con los siguientes números:</p>';
     $mensaje .= '<ul><li>Anderson J. Zavaleta Simón / UTIC-EPG: 984 599 249</li><li>Ronald Córdova Paredes / SISTEMAS-EPG: 978 468 194</li></ul>';
     $mensaje .= '<p><a href="http://www.epgnew.unitru.edu.pe">www.epgnew.unitru.edu.pe</a></p>';
-    //$mensaje .= '<p>Video tutorial para el proceso de registro de notas online: <a href="https://drive.google.com/file/d/150q2t4Wo3k7RH_5L0UE9qaK4WiGjdtvB/view">Enlace al video</a></p>';
+    $mensaje .= '<p>Video tutorial para el proceso de registro de notas online: <a href="https://drive.google.com/file/d/150q2t4Wo3k7RH_5L0UE9qaK4WiGjdtvB/view?usp=drive_link">Enlace al video</a></p>';
     $mensaje .='<p>ATTE. Unidad de Tecnologías Informáticas y Comunicaciones de la EPG.</p>';
     return $mensaje;
 }
