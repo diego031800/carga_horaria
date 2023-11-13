@@ -771,25 +771,14 @@ function guardar_docente() {
     ].docentes.findIndex(
       (item) => item.titular == pos && item.cgd_estado == "0001"
     );
-    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].doc_id =
-      nombre_docente_modal;
-    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[
-      indxDocente
-    ].docente = txtDocente;
-    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[
-      indxDocente
-    ].condicion = condicion_modal;
-    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].grado =
-      grado_modal;
-    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].codigo =
-      codigo_modal;
-    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].dni =
-      doc_modal;
-    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].correo =
-      email_modal;
-    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[
-      indxDocente
-    ].telefono = telefono_modal;
+    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].doc_id =nombre_docente_modal;
+    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].docente = txtDocente;
+    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].condicion = condicion_modal;
+    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].grado =grado_modal;
+    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].codigo = codigo_modal;
+    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].dni = doc_modal;
+    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].correo = email_modal;
+    listacursos[indxCurso].grupos[indxGrupoCurso].docentes[indxDocente].telefono = telefono_modal;
   } else {
     listacursos[indxCurso].grupos[indxGrupoCurso].docentes.push({
       cgd_id: 0,
