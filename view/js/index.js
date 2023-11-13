@@ -519,10 +519,10 @@ function abrir_grupo_modal(idCurso) {
     txtFechas.disabled = false;
     $("#btnGuardarDatosGrupo").prop("disabled", false);
   }else{
-    $("#btn-deleteGrupo").prop("disabled", false);
-    cboGrupoCurso.disabled = false;
-    txtFechas.disabled = false;
-    $("#btnGuardarDatosGrupo").prop("disabled", false);
+    $("#btn-deleteGrupo").prop("disabled", true);
+    cboGrupoCurso.disabled = true;
+    txtFechas.disabled = true;
+    $("#btnGuardarDatosGrupo").prop("disabled", true);
   }
 }
 
