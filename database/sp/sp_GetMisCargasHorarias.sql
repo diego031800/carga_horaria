@@ -28,14 +28,14 @@ BEGIN
         CASE WHEN CGC.fechahora_modificacion IS NULL THEN
 			'SIN EDICIÓN'
 		ELSE date_format(CGC.fechahora_modificacion, '%d/%m/%Y %h:%i %p') END as editado,
-        CH.cgh_estado as estado_id,
+        CGC.cgc_estado as estado_id,
         ECH.nombre as estado,
         ECH.color,
         CGC.usuario,
         CGC.usuario_modificacion
     FROM CARGA_HORARIA CH
     INNER JOIN CARGA_HORARIA_CICLO CGC ON CGC.cgh_id = CH.cgh_id
-    INNER JOIN V_ESTADOS_CARGA_HORARIA ECH ON ECH.valor = CH.cgh_estado
+    INNER JOIN V_ESTADOS_CARGA_HORARIA ECH ON ECH.valor = CGC.cgc_estado
     WHERE (CH.sem_id = p_sem_id)
 		AND (CH.sec_id = p_sec_id)
 		AND (CH.prg_id = p_prg_id OR p_prg_id = '')

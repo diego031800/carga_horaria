@@ -8,15 +8,7 @@ CREATE PROCEDURE sp_deleteCargaHoraria (
     IN p_dispositivo VARCHAR(100)
 )
 BEGIN
-	UPDATE CARGA_HORARIA
-    SET
-		cgh_estado = '0008',
-        usuario_eliminacion = p_usuario,
-        fechahora_eliminacion = now(),
-        dispositivo_eliminacion = p_dispositivo
-	WHERE cgh_id = p_cgh_id;
-    
-    UPDATE CARGA_HORARIA_CICLO
+	UPDATE CARGA_HORARIA_CICLO
     SET
 		cgc_estado = '0008',
         usuario_eliminacion = p_usuario,

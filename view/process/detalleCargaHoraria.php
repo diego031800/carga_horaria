@@ -32,6 +32,7 @@ if (!isset($_SESSION['login'])) {
         <link rel="stylesheet" href="../../assets/css/default-css.css">
         <link rel="stylesheet" href="../../assets/css/styles.css">
         <link rel="stylesheet" href="../../assets/css/responsive.css">
+        <link rel="stylesheet" href="../../assets/css/css_toastr.min.css">
         <!-- modernizr css -->
         <script src="../../assets/js/vendor/modernizr-2.8.3.min.js"></script>
         <!-- SELECT 2 -->
@@ -131,6 +132,26 @@ if (!isset($_SESSION['login'])) {
 
         </div>
 
+        <!-- MODALES -->
+        <!-- MODAL ELIMINAR -->
+        <div class="modal" tabindex="-1" id="modal_eliminar" style="display: none;">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">ELIMINAR</h5>
+                    <button type="button" class="btn-close" aria-label="Close" onclick="$('#modal_eliminar').hide()"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Esta seguro que quiere eliminar esta carga?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btnCerrar">Cerrar</button>
+                    <button type="button" class="btn btn-danger" id="btnEliminar">Eliminar</button>
+                </div>
+                </div>
+            </div>
+        </div>
+
         <!-- SCRIPTS -->
 
         <!-- JQUERY -->
@@ -157,8 +178,29 @@ if (!isset($_SESSION['login'])) {
         <script src="../../assets/js/data_table/dataTables.responsive.min.js"></script>
         <!-- SCRIPT DESPACHO -->
         <script src="../../view/js/process/detalleCargaHoraria.js"></script>
+        <!-- SCRIPT TOASTR -->
+        <script src="../../assets/js/js_toastr.min.js"></script>
         <!-- SCRIPT PROPIO INICIO -->
         <script>
+            $(document).ready(function() {
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": true,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+            });
         </script>
     </body>
 

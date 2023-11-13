@@ -73,8 +73,55 @@ function back() {
 }
 
 /* FUNCION PARA ELIMINAR */
+function respEliminar() {
+  return new Promise((resolve, reject) => {
+    $('#modal_eliminar').show();
+    function handleEliminar() {
+      $('#modal_eliminar').hide();
+      resolve(true);
+    }
+
+    function handleCerrar() {
+      $('#modal_eliminar').hide();
+      resolve(false);
+    }
+
+    document.getElementById('btnEliminar').addEventListener('click', handleEliminar);
+    document.getElementById('btnCerrar').addEventListener('click', handleCerrar);
+  });
+}
+
 function eliminar(cgh_id, cgc_id) {
-  let opcion = 'delete_carga_horaria'
+  respEliminar().then((eliminar) => {
+    if (eliminar) {
+      let opcion = 'delete_carga_horaria'
+      let p_cgh_id = cgh_id;
+      let p_cgc_id = cgc_id;
+    
+      $.ajax({
+        type: "POST",
+        url: "../../controllers/main/MisCargasHorariasController.php",
+        data: "opcion=" + opcion + 
+        "&p_cgh_id=" + p_cgh_id +
+        "&p_cgc_id=" + p_cgc_id,
+        beforeSend: function () {
+          
+        },
+        success: function (data) {
+          let response = JSON.parse(data);
+          if (response.respuesta == 1) {
+            toastr["success"](response.mensaje, "Correcto!");
+            buscar();
+          } else {
+            toastr["error"](response.mensaje, "Error!");
+          }
+        },
+        error: function (data) {
+          toastr["error"]("Error, no se pudo eliminar el registro.", "Error!");
+        },
+      });
+    }
+  });
 }
 
 /* FUNCION DE BUSCAR */
