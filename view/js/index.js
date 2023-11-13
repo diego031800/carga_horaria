@@ -466,6 +466,8 @@ function alternarDatosGrupo() {
     } else {
       $(".datepicker3").datepicker("clearDates");
     }
+  }else {
+    $(".datepicker3").datepicker("clearDates");
   }
 }
 
@@ -512,6 +514,11 @@ function abrir_grupo_modal(idCurso) {
   actualizarCboGrupoCurso(idCurso);
   alternarDatosGrupo();
   if (curso.grupos.length != 0) {
+    $("#btn-deleteGrupo").prop("disabled", false);
+    cboGrupoCurso.disabled = false;
+    txtFechas.disabled = false;
+    $("#btnGuardarDatosGrupo").prop("disabled", false);
+  }else{
     $("#btn-deleteGrupo").prop("disabled", false);
     cboGrupoCurso.disabled = false;
     txtFechas.disabled = false;
