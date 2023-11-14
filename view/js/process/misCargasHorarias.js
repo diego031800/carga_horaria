@@ -71,7 +71,7 @@ function buscar() {
           { data: 'codigo', className: 'dt-center align-middle' },
           { data: 'semestre', className: 'dt-center align-middle' },
           { data: 'unidad', className: 'dt-center align-middle' },
-          { data: 'usuario', className: 'dt-center align-middle' },
+          //{ data: 'usuario', className: 'dt-center align-middle' },
         ],
         responsive: true,
         select: true,

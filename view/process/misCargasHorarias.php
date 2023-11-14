@@ -97,7 +97,6 @@ if (!isset($_SESSION['login'])) {
                                                 <th class="text-center">CÓDIGO</th>
                                                 <th class="text-center">SEMESTRE</th>
                                                 <th class="text-center">UNIDAD</th>
-                                                <th class="text-center">USUARIO</th>
                                             </tr>
                                         </thead>
                                         <tbody id="cuerpo_ch"></tbody>

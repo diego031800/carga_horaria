@@ -75,7 +75,7 @@
                         $data['codigo'] = $row['codigo'];
                         $data['semestre'] = $row['semestre'];
                         $data['unidad'] = $row['unidad'];
-                        $data['usuario'] = $this->get_nombres_usuario($row['usuario']);
+                        //$data['usuario'] = $this->get_nombres_usuario($row['usuario']);
                         // $data['p_unidades'] = $row['p_unidades'];
                         array_push($data_table, $data);
                     }
