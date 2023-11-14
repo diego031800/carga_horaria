@@ -167,7 +167,7 @@ function get_carga_horaria($sem_id, $sec_id)
         'ccg_id' => $fila['ccg_id'],
         'cgd_id' => $fila['cgd_id'],
         'titular' => $fila['titular'],
-        'doc_condicion' => $fila['doc_condicion'],
+        'doc_condicion' => $fila['condicion'],
         'doc_documento' => $fila['doc_documento'],
         'doc_nombres' => $fila['doc_nombres'],
       );
@@ -357,7 +357,7 @@ if (count($carga_horaria) > 0) {
                                   " . $docente['doc_nombres'] . "<br>" . ($docente['titular'] == 1 ? '<b>(TITULAR)</b>' : '') . "
                                   </td>";
                     $html .= "<td class='text-center' style='vertical-align: middle; width: 120px;'>
-                                  " . $docente['condicion'] . "
+                                  " . $docente['doc_condicion'] . "
                                   </td>";
                     if ($fila_docente == 0) {
                       $html .= "<td class='text-center' style='vertical-align: middle; width: 150px;' rowspan='" . (count($docentes) == 0 ? '' : count($docentes)) . "'>";
