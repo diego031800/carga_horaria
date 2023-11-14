@@ -357,7 +357,7 @@ if (count($carga_horaria) > 0) {
                                   " . $docente['doc_nombres'] . "<br>" . ($docente['titular'] == 1 ? '<b>(TITULAR)</b>' : '') . "
                                   </td>";
                     $html .= "<td class='text-center' style='vertical-align: middle; width: 120px;'>
-                                  " . $docente['doc_condicion'] . "
+                                  " . $docente['condicion'] . "
                                   </td>";
                     if ($fila_docente == 0) {
                       $html .= "<td class='text-center' style='vertical-align: middle; width: 150px;' rowspan='" . (count($docentes) == 0 ? '' : count($docentes)) . "'>";
