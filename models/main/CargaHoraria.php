@@ -656,7 +656,7 @@ class CargaHoraria
                                 'ccg_id' => $fila['ccg_id'],
                                 'cgd_id' => $fila['cgd_id'],
                                 'titular' => $fila['titular'],
-                                'doc_condicion' => $fila['doc_condicion'],
+                                'doc_condicion' => $fila['condicion'],
                                 'doc_documento' => $fila['doc_documento'],
                                 'doc_nombres' => $fila['doc_nombres'],
                             );
@@ -777,6 +777,7 @@ class CargaHoraria
                             'ccg_id' => $fila['ccg_id'],
                             'cgd_id' => $fila['cgd_id'],
                             'titular' => $fila['titular'],
+                            'condicion' => $fila['condicion'],
                             'doc_condicion' => $fila['doc_condicion'],
                             'doc_grado' => $fila['doc_grado'],
                             'doc_id' => $fila['doc_id'],

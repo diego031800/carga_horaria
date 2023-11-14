@@ -94,14 +94,6 @@ if (!isset($_SESSION['login'])) {
                                         </button>
                                     </div>
                                 </div>
-                                <div class="col-3">
-                                    <div class="d-grid">
-                                        <button class="btn btn-success" id="btnDescargarExc" type="button" disabled>
-                                            <i class="fa fa-file-excel-o"></i>
-                                            &nbsp; Descargar Excel
-                                        </button>
-                                    </div>
-                                </div>
                             </div>
                             <div class="row mt-3">
                                 <div class="col-12" id="tabla_carga_horaria">
