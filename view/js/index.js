@@ -1291,6 +1291,7 @@ async function load_document() {
     cboSemestre.disabled = true;
     cboUnidad.disabled = true;
     get_cbo_programas();
+    change_cbo_ciclo();
   }
 
   camposCursos(true, 1);
