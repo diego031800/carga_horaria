@@ -279,6 +279,7 @@ function abrirAgregarCurso() {
   limpiarInputs();
   $("#myModal-curso").fadeIn();
   txtIdCursoEditar.value = 0;
+  $("#cboCurso").select2('open');
 }
 
 function accionBtnGuardarCurso() {

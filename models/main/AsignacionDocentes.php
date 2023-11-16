@@ -31,10 +31,9 @@
         private function get_asignaciones_docentes()
         {
             try {
-                $sql = "CALL sp_GetAsignacionDocenteByPrograma(";
+                $sql = "CALL sp_GetAsignacionDocenteByUnidad(";
                 $sql .= "'".$this->parametros['p_sem_id']."', "; // p_sem_id
-                $sql .= "'".$this->parametros['p_sec_id']."', "; // p_sec_id
-                $sql .= "'".$this->parametros['p_prg_id']."'); "; // p_prg_id
+                $sql .= "'".$this->parametros['p_sec_id']."'); "; // p_sec_id
                 // return $sql;
                 $datos = $this->con->return_query_mysql($sql);
                 // return json_encode($datos);
@@ -48,23 +47,17 @@
                         $index ++;
                         $data['nro'] = $index; 
                         $data['acciones'] = '<div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="1" id="envio_'.$row['cgd_id'].'" checked>
-                                                <label class="form-check-label" for="envio_'.$row['cgd_id'].'">
+                                                <input class="form-check-input" type="checkbox" value="1" id="envio_'.$index.'" checked>
+                                                <label class="form-check-label" for="envio_'.$index.'">
                                                     Enviar credenciales
                                                 </label>
-                                            </div>'; 
-                        $data['ciclo'] = $row['ciclo'];
-                        $data['curso'] = $row['cur_descripcion'];
-                        $data['grupo'] = $row['grupo'];
+                                            </div>';
                         $data['docente'] = $row['doc_nombres'];
                         $data['correo'] = $row['doc_email'];
-                        $data['fecha_inicio'] = $row['fecha_inicio'];
-                        $data['fecha_fin'] = $row['fecha_fin'];
                         $data['sem_codigo'] = $row['sem_codigo'];
                         $data['doc_documento'] = $row['doc_documento'];
                         $data['doc_codigo'] = $row['doc_codigo'];
                         $data['doc_email'] = $row['doc_email'];
-                        $data['cgd_id'] = $row['cgd_id'];
                         array_push($data_table, $data);
                     }
                     return json_encode($data_table);

@@ -67,12 +67,12 @@
             try{
                 $this->con->close_open_connection_mysql();
                 foreach ($datosGuardar as $item) {
-                    $sql = "INSERT into carga_horaria_envio_credenciales ( sem_id, sec_id, prg_id,
+                    $sql = "INSERT into carga_horaria_envio_credenciales ( sem_id, sec_id,
                         chec_doc_nombre, chec_doc_correo,chec_envio,chec_envio_fecha,chec_envio_error
                         ,fechahora,usuario, dispositivo) values(";
                     $sql .= "".$item['sem_id'].",";
                     $sql .= "".$item['sec_id'].",";
-                    $sql .= "".$item['prg_id'].",";
+                    //$sql .= "".$item['prg_id'].",";
                     $sql .= "'".$item['nombre']."',";
                     $sql .= "'".$item['correo']."',";
                     $sql .= "".$item['envio'].",";
@@ -88,12 +88,11 @@
             }
         }
 
-        public function get_ReporteEnvios($sem, $sec, $prg){
+        public function get_ReporteEnvios($sem, $sec){
             try {
                 $sql = "CALL sp_getReporteEnvios(";
                 $sql .= "".$sem.", ";
-                $sql .= "".$sec.", ";
-                $sql .= "".$prg."); ";
+                $sql .= "".$sec."); ";
                 $datos = $this->con->return_query_mysql($sql);
                 
                 $respuesta = array();

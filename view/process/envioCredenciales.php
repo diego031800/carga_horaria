@@ -78,11 +78,6 @@ if (!isset($_SESSION['login'])) {
                                             </select>
                                             <small style="color: #666666;"><b>Filtar</b> por Unidad</small>
                                         </div>
-                                        <div class="col-lg-3 col-6">
-                                            <select class="form-select" id="cboPrograma">
-                                            </select>
-                                            <small style="color: #666666;"><b>Filtar</b> por Programa</small>
-                                        </div>
                                         <div class="col-lg-1 col-md-2 col-6 d-flex align-items-center h-100 border border-start-0 border-bottom-0 border-top-0 border-dark-subtle" style="height: 80px!important;">
                                             <button class="btn btn-primary align-middle" type="button" id="btnBuscar">
                                                 <i class="fa fa-search"></i>
@@ -106,13 +101,8 @@ if (!isset($_SESSION['login'])) {
                                             <tr class="table-info">
                                                 <th class="text-center">N°</th>
                                                 <th class="text-center">ACCIONES</th>
-                                                <th class="text-center">CICLO</th>
-                                                <th class="text-center">CURSO</th>
-                                                <th class="text-center">GRUPO</th>
                                                 <th class="text-center">DOCENTE</th>
                                                 <th class="text-center">CORREO</th>
-                                                <th class="text-center">INICIO</th>
-                                                <th class="text-center">FIN</th>
                                             </tr>
                                         </thead>
                                         <tbody id="cuerpo_asignacion"></tbody>

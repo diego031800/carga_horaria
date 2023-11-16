@@ -8,7 +8,6 @@
   $parametros['opcion'] = '';
   $parametros['p_sem_id'] = '';
   $parametros['p_sec_id'] = '';
-  $parametros['p_prg_id'] = '';
 
   /* VERIFICAR ENVIO DE DATOS */
   if (isset($_POST['opcion'])) 
@@ -22,10 +21,6 @@
   if (isset($_POST['p_sec_id'])) 
   {
     $parametros['p_sec_id'] = $_POST['p_sec_id'];
-  }
-  if (isset($_POST['p_prg_id'])) 
-  {
-    $parametros['p_prg_id'] = $_POST['p_prg_id'];
   }
 
   $AsignacionDocentes = new AsignacionDocentes();

@@ -4,7 +4,7 @@ require '../../vendor/phpmailer/phpmailer/src/Exception.php';
 require '../../vendor/phpmailer/phpmailer/src/PHPMailer.php';
 require '../../vendor/phpmailer/phpmailer/src/SMTP.php';
 include_once '../../models/main/datosEnvio.php';
-include_once '../../controllers/main/pdfCredencial.php';
+//include_once '../../controllers/main/pdfCredencial.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -63,12 +63,11 @@ class CorreoCargaHoraria
                 'fechahora' => '',
                 'error' => '',
                 'sem_id' => '',
-                'sec_id' => '',
-                'prg_id' => ''
+                'sec_id' => ''
             );
             $this->mail->Subject = 'ENTREGA DE CREEDENCIALES DEL SIGAP - DOCENTE';
             $rutaManual = '../../assets/docs/ManualSigap.pdf';
-            $this->mail->addAddress($item->correo,$item->nombre);
+            $this->mail->addAddress("geraldayala87@gmail.com",$item->nombre);
             $this->mail->isHTML(true);
             $this->mail->Body = $this->generarMensajeCorreo();
             $this->mail->addAttachment($rutaManual,'Manual de docente para SIGAP');
@@ -83,7 +82,6 @@ class CorreoCargaHoraria
             }
             $itemEnviado['sem_id'] = intval($item->sem_id);
             $itemEnviado['sec_id'] = intval($item->sec_id);
-            $itemEnviado['prg_id'] = intval($item->prg_id);
             //unlink($rutaPdf);
             $itemEnviado['fechahora'] = date('Y-m-d H:i:s');
         } catch (Exception $ex) {

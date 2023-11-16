@@ -16,23 +16,21 @@ $pro_id = '';
 $report = 0;
 $datosDoc = array();
 
-if (isset($_POST['semTxt']) && isset($_POST['secTxt']) && isset($_POST['prgTxt']) && isset($_POST['reporte'])) {
+if (isset($_POST['semTxt']) && isset($_POST['secTxt']) && isset($_POST['reporte'])) {
     $sem = $_POST['semTxt'];
     $sec = $_POST['secTxt'];
-    $pro = $_POST['prgTxt'];
     $report = intval($_POST['reporte']);
     if($report == 0){
         if(isset($_POST['docs'])){
             $datosDoc = json_decode($_POST['docs']);
         }
     }else{
-        if(isset($_POST['sem_id']) && isset($_POST['sec_id']) && isset($_POST['prg_id'])){
+        if(isset($_POST['sem_id']) && isset($_POST['sec_id'])){
             $sem_id = $_POST['sem_id'];
             $sec_id = $_POST['sec_id'];
-            $pro_id = $_POST['prg_id'];
         }
         $datosEnvio = new datosEnvio();
-        $datosDoc = $datosEnvio->get_ReporteEnvios(intval($sem_id), intval($sec_id), intval($pro_id));
+        $datosDoc = $datosEnvio->get_ReporteEnvios(intval($sem_id), intval($sec_id));
     }
 }
 
@@ -57,11 +55,6 @@ $html = "<header>
                 <tbody>
                     <tr>
                         <td class='bg-azul text-center' colspan='7'><b>UNIDAD ACADÉMICA: &nbsp;&nbsp;".$sec."</b></td>
-                    </tr>
-                    <tr>
-                        <td class='bg-azul text-center' style='vertical-align: middle; width: 180px;' colspan='7'>
-                        <b>PROGRAMA ACADÉMICO: &nbsp;&nbsp; ".$pro."</b>
-                        </td>
                     </tr>
                 </tbody>
             </table>";

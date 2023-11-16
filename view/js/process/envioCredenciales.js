@@ -76,14 +76,12 @@ function enviarCredenciales() {
   sem_idCbo = cboSemestre.value;
   sec_txt = cboUnidad.options[cboUnidad.selectedIndex].text;
   sec_idCbo = cboUnidad.value;
-  prg_txt = cboPrograma.options[cboPrograma.selectedIndex].text;
-  prg_idCbo = cboPrograma.value;
   filas.forEach(function (fila, index) {
     var checkbox = fila.querySelector(".form-check-input");
     if (checkbox.checked) {
       // La fila está seleccionada
-      var nombre = fila.cells[5].textContent;
-      var correo = fila.cells[6].textContent;
+      var nombre = fila.cells[2].textContent;
+      var correo = fila.cells[3].textContent;
       var idx = docentes_array.findIndex((item) => item.docente == nombre);
       var codigo = docentes_array[idx].doc_codigo;
       var documento = docentes_array[idx].doc_documento;
@@ -96,8 +94,7 @@ function enviarCredenciales() {
         documento: documento,
         sem: sem_codigo,
         sem_id: sem_idCbo,
-        sec_id: sec_idCbo,
-        prg_id: prg_idCbo,
+        sec_id: sec_idCbo
       });
     }
   });
@@ -152,7 +149,6 @@ function reportEnvioPDF(response){
     data: {
       semTxt: sem_txt,
       secTxt: sec_txt,
-      prgTxt: prg_txt,
       reporte: 0,
       docs: responseJson
     },xhrFields: {
@@ -182,19 +178,15 @@ function reportGeneralPdf(){
   sem_idCbo = cboSemestre.value;
   sec_txt = cboUnidad.options[cboUnidad.selectedIndex].text;
   sec_idCbo = cboUnidad.value;
-  prg_txt = cboPrograma.options[cboPrograma.selectedIndex].text;
-  prg_idCbo = cboPrograma.value;
   $.ajax({
     type: "POST",
     url: "pdfEnvio.php", // Reemplaza esto con la URL de tu servidor
     data: {
       semTxt: sem_txt,
       secTxt: sec_txt,
-      prgTxt: prg_txt,
       reporte: 1,
       sem_id: sem_idCbo,
-      sec_id: sec_idCbo,
-      prg_id: prg_idCbo,
+      sec_id: sec_idCbo
     },xhrFields: {
         responseType: 'blob'
     },
@@ -227,14 +219,12 @@ function buscar() {
   let opcion = "get_asignaciones_docentes";
   let p_sem_id = cboSemestre.value ? cboSemestre.value : 0;
   let p_sec_id = cboUnidad.value ? cboUnidad.value : 0;
-  let p_prg_id = cboPrograma.value ? cboPrograma.value : 0;
   $.ajax({
     type: "POST",
     url: "../../controllers/main/AsignacionDocentesController.php",
     data: "opcion=" + opcion +
       "&p_sem_id=" + p_sem_id +
-      "&p_sec_id=" + p_sec_id +
-      "&p_prg_id=" + p_prg_id,
+      "&p_sec_id=" + p_sec_id,
     beforeSend: function () {
       btnBuscar.disabled = true;
       let spinner = '<div class="d-flex justify-content-center mt-5"><div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"><span class="visually-hidden">Loading...</span></div></div>'
@@ -257,13 +247,8 @@ function buscar() {
         columns: [
           { data: 'nro', className: 'dt-center align-middle' },
           { data: 'acciones', className: 'dt-center align-middle' },
-          { data: 'ciclo', className: 'dt-center align-middle' },
-          { data: 'curso', className: 'dt-center align-middle' },
-          { data: 'grupo', className: 'dt-center align-middle' },
           { data: 'docente', className: 'dt-center align-middle' },
-          { data: 'correo', className: 'dt-center align-middle' },
-          { data: 'fecha_inicio', className: 'dt-center align-middle' },
-          { data: 'fecha_fin', className: 'dt-center align-middle' }
+          { data: 'correo', className: 'dt-center align-middle' }
         ],
         responsive: true,
         select: true,
