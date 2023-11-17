@@ -1072,8 +1072,11 @@ function convertirFecha(fechaString) {
 }
 
 function actualizarComboDocentes(){
+  let id_grupo_docente = cboDocGrupo.value;
   $("#nombre-docente").empty();
-  
+  get_docentes();
+  $("#nombre-docente").val(id_grupo_docente).trigger("change");
+  seleccionar_datos_docente();
 }
 
 /* Habilitar o deshabilitar los campos de la unidad */
