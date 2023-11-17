@@ -253,7 +253,6 @@ function buscar_cursosPromesa() {
 
 function get_docentes() {
   let opcion = "get_docentes";
-
   $.ajax({
     type: "POST",
     url: "../../controllers/main/CargaHorariaController.php",
@@ -1070,6 +1069,11 @@ function convertirFecha(fechaString) {
   // Crear la nueva cadena de fecha en el formato deseado
   const nuevaFecha = `${día}/${mes}/${año}`;
   return nuevaFecha;
+}
+
+function actualizarComboDocentes(){
+  $("#nombre-docente").empty();
+  
 }
 
 /* Habilitar o deshabilitar los campos de la unidad */
