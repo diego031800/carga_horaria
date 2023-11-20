@@ -207,7 +207,7 @@ if (!isset($_SESSION['login'])) {
                                                 </select>
                                             </div>
                                             <div class="col-6 mb-4" style="display: flex; justify-content: space-between;">
-                                                <button class="btn btn-outline-primary" style="height: 90%;" onClick="get_docentes();" id="btn-actualizarCbo"> <i class="fa fa-trash-o"></i> Actualizar datos</button>
+                                                <button class="btn btn-outline-primary" style="height: 90%;" onClick="actualizarComboDocentes();" id="btn-actualizarCbo"> <i class="fa fa-rotate-right"></i> Actualizar datos</button>
                                                 <div class="form-check form-switch">
                                                     <input class="form-check-input" type="checkbox" role="switch" id="tglSuplente">
                                                     <label class="form-check-label" for="tglSuplente">Agregar docente

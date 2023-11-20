@@ -67,10 +67,14 @@ class CorreoCargaHoraria
             );
             $this->mail->Subject = 'ENTREGA DE CREEDENCIALES DEL SIGAP - DOCENTE';
             $rutaManual = '../../assets/docs/ManualSigap.pdf';
+            $rutaFlayer = '../../assets/docs/Infografia_enlace.pdf';
+            $rutaComunicado = '../../assets/docs/Comunicado_docente.pdf';
             $this->mail->addAddress($item->correo,$item->nombre);
             $this->mail->isHTML(true);
             $this->mail->Body = $this->generarMensajeCorreo();
             $this->mail->addAttachment($rutaManual,'Manual de docente para SIGAP');
+            $this->mail->addAttachment($rutaFlayer,'Infografia de enlaces');
+            $this->mail->addAttachment($rutaComunicado,'Comunicado docentes');
             $this->mail->addAttachment($rutaPdf, $item->nombre);
             if ($this->mail->send()) {
                 $itemEnviado['envio'] = 1;
@@ -92,11 +96,12 @@ class CorreoCargaHoraria
     
     private function generarMensajeCorreo()
     {
-        $mensaje = ' <p>Buenas tardes estimado Docentes de la ESCUELA DE POSGRADO, que vienen brindando sus servicios en distintos cursos asignados por la unidad académica, con el fin de regularizar 
-        y sistematizar nuestros procesos constantemente hacemos llegar su credencial de acceso al sistema de registro de notas online, Dirigido por la Unidad de Tecnologías Informáticas y Comunicaciones de la EPG.</p>';
-        $mensaje .= '<p>Este registro de notas online permitirá dar por finalizado el curso asignado a su carga horaria.</p>';
-        $mensaje .= '<p>Se adjunta su Credencial y Manual de Docente para el registro de notas online.</p>';
-        $mensaje .= '<p>Para soporte o ayuda con el registro o accesos al sistema comuníquese con los siguientes números:</p>';
+        $mensaje = '<h1>¡Bienvenido al semestre 2023-II!</h1>';
+        $mensaje .= ' <p>Buenos días estimado Docentes de la ESCUELA DE POSGRADO, se le hace el envío de sus credenciales para ingresar al sistema SIGAP correspondiente al semestre
+        2023-II; en el cual podrán descargar la lista de alumnos matriculados en el curso que esté dictando, en la infografía podrá ver de manera gráfica los pasos a seguir.</p>';
+        $mensaje .= '<p>En el menú de la izquierda, verá una opción que dice “Aula virtual” (como se muestra en el comunicado) en la cual podrá ir al aula virtual, las formas de 
+        acceder se explican detalladamente en el comunicado.</p>';
+        $mensaje .= '<p>Para soporte o ayuda comuníquese con los siguientes números:</p>';
         $mensaje .= '<ul><li>Anderson J. Zavaleta Simón / UTIC-EPG: 984 599 249</li><li>Ronald Córdova Paredes / SISTEMAS-EPG: 978 468 194</li></ul>';
         $mensaje .= '<p><a href="http://www.epgnew.unitru.edu.pe">www.epgnew.unitru.edu.pe</a></p>';
         $mensaje .= '<p>Video tutorial para el proceso de registro de notas online: <a href="https://drive.google.com/file/d/150q2t4Wo3k7RH_5L0UE9qaK4WiGjdtvB/view?usp=drive_link">Enlace al video</a></p>';
