@@ -18,8 +18,8 @@
             'parent_id' => '2'
         ],
         [ 
-            'name' => 'Módulo de credenciales',
-            'url' => '/view/process/moduloCredenciales.php', 
+            'name' => 'Regularizacion de datos',
+            'url' => '/view/process/regularizacionDocentes.php', 
             'parent_id' => '2'
         ],
     );

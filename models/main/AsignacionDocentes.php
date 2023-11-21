@@ -166,6 +166,18 @@
             }
         }
 
+        private function actualizar_datos_docentes($docente, $sec_id, $cod_docente)
+        {
+            try {
+                $sql="UPDATE carga_horaria_grupo_docente";
+                $sql .= "doc_documento='".$docente['documento']."',";
+                $sql .= "doc_email".$docente['documento']."',";
+                $sql .= "where doc_codigo='".$cod_docente."',";
+            } catch (Exception $ex) {
+                die("Error: " . $ex);
+            }
+        }
+
         private function get_unidades_asignadas($usu_id)
         {
             try {

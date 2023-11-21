@@ -111,6 +111,8 @@ if (!isset($_SESSION['login'])) {
                                 </div>
                             </div>
                             <div>
+                            <div class="col-lg-4 col-md-2">
+                                <a class="btn btn-primary text-light m-4" href="/view/process/moduloCredenciales.php">Directa</a>
                             </div>
                         </div>
                     </div>

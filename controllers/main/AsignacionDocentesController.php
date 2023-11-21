@@ -8,6 +8,7 @@
   $parametros['opcion'] = '';
   $parametros['p_sem_id'] = '';
   $parametros['p_sec_id'] = '';
+  $parametros['p_doc_datos'] = '';
 
   /* VERIFICAR ENVIO DE DATOS */
   if (isset($_POST['opcion'])) 
