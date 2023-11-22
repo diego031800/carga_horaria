@@ -25,6 +25,12 @@
                 case 'get_programas':
                     echo $this->get_programas();
                     break;
+                case 'comprobar_docente':
+                    echo $this->comprobar_docente();
+                    break;
+                case 'actualizar_datos_docentes':
+                    echo $this->actualizar_datos_docentes();
+                    break;
             }
         }
 
@@ -166,13 +172,40 @@
             }
         }
 
-        private function actualizar_datos_docentes($docente, $sec_id, $cod_docente)
+        private function comprobar_docente(){
+            try {
+                $doc_id = $this->parametros['doc_id'];
+                $sql = "select doc_nombre from carga_horaria_curso_grupo_docente where doc_id=".$doc_id.";";
+                $datos = $this->con->return_query_sqlsrv($sql);
+                if ($datos->fetch(PDO::FETCH_ASSOC)) {
+                    return json_encode(['respuesta' => 1, 'mensaje' => 'Si existe un docente']);
+                } else {
+                    return json_encode(['respuesta' => 0, 'mensaje' => 'El docente no ha sido asignado en este semestre']);
+                }
+            } catch (Exception $ex) {
+                die("Error: " . $ex);
+            }
+        }
+
+        private function actualizar_datos_docentes()
         {
             try {
+                $docente = $this->parametros['p_docente'];
+                $sec_id = $this->parametros['p_sec_id'];
+                $doc_id = $this->parametros['p_doc_id'];
                 $sql="UPDATE carga_horaria_grupo_docente";
-                $sql .= "doc_documento='".$docente['documento']."',";
-                $sql .= "doc_email".$docente['documento']."',";
-                $sql .= "where doc_codigo='".$cod_docente."',";
+                $sql .= "doc_documento='".$docente['nombres']."',";
+                $sql .= "doc_nombres='".$docente['documento']."',";
+                $sql .= "doc_email".$docente['email']."',";
+                $sql .= "doc_codigo".$docente['codigo']."',";
+                $sql .= "where doc_id='".$doc_id."',";
+                $respuesta = $this->con->return_query_sqlsrv($sql);
+                $error = $this->con->error_mysql();
+                if (empty($error)) {
+                    return json_encode(['respuesta' => 1, 'mensaje' => 'Se guardó exitosamente los datos del docente']);
+                } else {
+                    return json_encode(['respuesta' => 0, 'mensaje' => $error]);
+                }
             } catch (Exception $ex) {
                 die("Error: " . $ex);
             }

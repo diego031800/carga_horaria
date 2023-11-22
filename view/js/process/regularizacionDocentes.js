@@ -2,6 +2,7 @@ let cboDocNombre = document.getElementById("nombre-docente");
 let txtDocCodigo = document.getElementById("codigo-docente");
 let txtDocDocumento = document.getElementById("doc-docente");
 let txtDocEmail = document.getElementById("email-docente");
+let doc_id;
 
 function get_cbo_semestres() {
     let opcion = "get_cbo_semestres";
@@ -17,16 +18,6 @@ function get_cbo_semestres() {
             alert("Error al mostrar: " + data);
         },
     });
-}
-
-function seleccionar_datos_docente() {
-    let doc_opcion = $("#nombre-docente option:selected");
-    let doc_documento = doc_opcion.data("documento");
-    let doc_email = doc_opcion.data("email");
-    let doc_codigo = doc_opcion.data("codigo");
-    $("#doc-docente").val(doc_documento);
-    $("#email-docente").val(doc_email);
-    $("#codigo-docente").val(doc_codigo);
 }
 
 function get_docentes() {
@@ -45,6 +36,22 @@ function get_docentes() {
         },
     });
 }
+
+function comprobarDocenteGuardado(){
+    
+}
+
+function seleccionar_datos_docente() {
+    doc_id = cboDocNombre.value;
+    let doc_opcion = $("#nombre-docente option:selected");
+    let doc_documento = doc_opcion.data("documento");
+    let doc_email = doc_opcion.data("email");
+    let doc_codigo = doc_opcion.data("codigo");
+    $("#doc-docente").val(doc_documento);
+    $("#email-docente").val(doc_email);
+    $("#codigo-docente").val(doc_codigo);
+}
+
 
 function load_document() {
     get_cbo_semestres();
@@ -70,3 +77,5 @@ function comprobarCampo(campo, nombre) {
         return false;
     }
 }
+
+window.addEventListener("load", load_document);
