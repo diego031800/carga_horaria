@@ -174,8 +174,14 @@
 
         private function comprobar_docente(){
             try {
-                $doc_id = $this->parametros['doc_id'];
-                $sql = "select doc_nombre from carga_horaria_curso_grupo_docente where doc_id=".$doc_id.";";
+                $sem_id = $this->parametros['p_sem_id'];
+                $doc_id = $this->parametros['p_doc_id'];
+                $sql = "select * from carga_horaria_curso_grupo_docente CHCGD
+                INNER JOIN carga_horaria_curso_grupo CHCG ON CHCG.ccg_id = CHCGD.ccg_id
+                INNER JOIN carga_horaria_curso CHC ON CHC.chc_id = CHCG.chc_id
+                INNER JOIN carga_horaria_ciclo CHCI ON CHCI.cgc_id = CHC.cgc_id
+                INNER JOIN carga_horaria CH ON CHCI.cgh_id = CH.cgh_id
+                where CHCGD.doc_id = ".$doc_id." and CH.sem_id =".$sem_id.";";
                 $datos = $this->con->return_query_sqlsrv($sql);
                 if ($datos->fetch(PDO::FETCH_ASSOC)) {
                     return json_encode(['respuesta' => 1, 'mensaje' => 'Si existe un docente']);
@@ -191,10 +197,10 @@
         {
             try {
                 $docente = $this->parametros['p_docente'];
-                $sec_id = $this->parametros['p_sec_id'];
+                $sem_id = $this->parametros['p_sem_id'];
                 $doc_id = $this->parametros['p_doc_id'];
-                $sql="UPDATE carga_horaria_grupo_docente";
-                $sql .= "doc_documento='".$docente['nombres']."',";
+                $sql="CALL sp_RegularizarDatosDocente(";
+                $sql .= "'".$this->parametros['p_sem_id']."',";
                 $sql .= "doc_nombres='".$docente['documento']."',";
                 $sql .= "doc_email".$docente['email']."',";
                 $sql .= "doc_codigo".$docente['codigo']."',";
