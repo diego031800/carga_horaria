@@ -182,8 +182,8 @@
                 INNER JOIN carga_horaria_ciclo CHCI ON CHCI.cgc_id = CHC.cgc_id
                 INNER JOIN carga_horaria CH ON CHCI.cgh_id = CH.cgh_id
                 where CHCGD.doc_id = ".$doc_id." and CH.sem_id =".$sem_id.";";
-                $datos = $this->con->return_query_sqlsrv($sql);
-                if ($datos->fetch(PDO::FETCH_ASSOC)) {
+                $datos = $this->con->return_query_mysql($sql);
+                if (mysqli_fetch_array($datos)) {
                     return json_encode(['respuesta' => 1, 'mensaje' => 'Si existe un docente']);
                 } else {
                     return json_encode(['respuesta' => 0, 'mensaje' => 'El docente no ha sido asignado en este semestre']);
@@ -196,19 +196,26 @@
         private function actualizar_datos_docentes()
         {
             try {
-                $docente = $this->parametros['p_docente'];
+                $docente = json_decode($this->parametros['p_docente']);
                 $sem_id = $this->parametros['p_sem_id'];
                 $doc_id = $this->parametros['p_doc_id'];
                 $sql="CALL sp_RegularizarDatosDocente(";
-                $sql .= "'".$this->parametros['p_sem_id']."',";
-                $sql .= "doc_nombres='".$docente['documento']."',";
-                $sql .= "doc_email".$docente['email']."',";
-                $sql .= "doc_codigo".$docente['codigo']."',";
-                $sql .= "where doc_id='".$doc_id."',";
-                $respuesta = $this->con->return_query_sqlsrv($sql);
+                $sql .= "'".$sem_id."',";
+                $sql .= "'".$doc_id."',";
+                $sql .= "'".$docente['codigo']."',";
+                $sql .= "'".$docente['documento']."',";
+                $sql .= "'".$docente['nombres']."',";
+                $sql .= "'".$docente['email']."',";
+                $sql .= "'" .$_SESSION['usu_id']. "', "; // p_usuario
+                $sql .= "'" .$_SESSION['usu_ip']. "');"; // p_dispositivo
+                $respuesta = $this->con->return_query_mysql($sql);
                 $error = $this->con->error_mysql();
                 if (empty($error)) {
-                    return json_encode(['respuesta' => 1, 'mensaje' => 'Se guardó exitosamente los datos del docente']);
+                    while ($row = mysqli_fetch_array($respuesta)){
+                        if ($row['respuesta'] == 1) {
+                            return json_encode(['respuesta' => $row['respuesta'], 'mensaje' => 'Se guardó exitosamente los datos del docente']);
+                        }
+                    }
                 } else {
                     return json_encode(['respuesta' => 0, 'mensaje' => $error]);
                 }

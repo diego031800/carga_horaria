@@ -103,7 +103,7 @@ if (!isset($_SESSION['login'])) {
                                             <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
                                             <span role="status">&nbsp;&nbsp; Enviando ...</span>
                                         </button>
-                                        <button class="btn btn-warning text-light m-4" id="btnEnviar" onClick=""><i
+                                        <button class="btn btn-warning text-light m-4" id="btnActualizar" onClick="actualizar_datos_docente();"><i
                                                 class="fa fa-send-o"></i>&nbsp;&nbsp; Enviar credencial</button>
                                 </div>
                             </div>
