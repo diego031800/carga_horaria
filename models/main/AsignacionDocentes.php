@@ -1,5 +1,6 @@
 <?php
 
+date_default_timezone_set('America/Lima');
     include_once '../../models/conexion.php';
 
     class AsignacionDocentes
@@ -202,10 +203,10 @@
                 $sql="CALL sp_RegularizarDatosDocente(";
                 $sql .= "'".$sem_id."',";
                 $sql .= "'".$doc_id."',";
-                $sql .= "'".$docente['codigo']."',";
-                $sql .= "'".$docente['documento']."',";
-                $sql .= "'".$docente['nombres']."',";
-                $sql .= "'".$docente['email']."',";
+                $sql .= "'".$docente->codigo."',";
+                $sql .= "'".$docente->documento."',";
+                $sql .= "'".$docente->nombres."',";
+                $sql .= "'".$docente->email."',";
                 $sql .= "'" .$_SESSION['usu_id']. "', "; // p_usuario
                 $sql .= "'" .$_SESSION['usu_ip']. "');"; // p_dispositivo
                 $respuesta = $this->con->return_query_mysql($sql);

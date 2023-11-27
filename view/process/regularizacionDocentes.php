@@ -44,7 +44,7 @@ if (!isset($_SESSION['login'])) {
     <!-- <link rel="stylesheet" href="../css/styles.css"> -->
     <!-- ESTILOS PROPIOS -->
     <link rel="stylesheet" href="../css/styles.css">
-    <title>ENVIO CREDENCIALES</title>
+    <title>REGULARIZACION DE DATOS DEL DOCENTE</title>
 </head>
 
 <body>
@@ -101,10 +101,10 @@ if (!isset($_SESSION['login'])) {
                                         <button class="btn btn-warning text-light m-4" id="btnEnviando" disabled
                                             style="display: none;">
                                             <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                                            <span role="status">&nbsp;&nbsp; Enviando ...</span>
+                                            <span role="status">&nbsp;&nbsp; Guardando ...</span>
                                         </button>
                                         <button class="btn btn-warning text-light m-4" id="btnActualizar" onClick="actualizar_datos_docente();"><i
-                                                class="fa fa-send-o"></i>&nbsp;&nbsp; Enviar credencial</button>
+                                                class="fa fa-save"></i>&nbsp;&nbsp; Actualizar</button>
                                 </div>
                             </div>
                         </div>
