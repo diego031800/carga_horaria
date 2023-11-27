@@ -259,10 +259,14 @@ function get_docentes() {
     success: function (data) {
       let opciones = data;
       asesor =
-        '<option value="0000" data-email="sn@unitru.edu.pe" data-documento="99999999"' +
-        'data-celular="999999999" data-codigo="ZZZZ9999">ASESORADO</option>';
-      $("#nombre-docente").html(opciones);
-      $("#nombre-docente").append(asesor);
+      '<option value="0000" data-email="sn@unitru.edu.pe" data-documento="99999999"' +
+      'data-celular="999999999" data-codigo="ZZZZ9999">ASESORADO</option>';
+    sinAsignar =
+      '<option value="0000" data-email="sn@unitru.edu.pe" data-documento="00000000"' +
+      'data-celular="999999999" data-codigo="AAAA0000">SIN ASIGNAR</option>';
+    $("#nombre-docente").html(opciones);
+    $("#nombre-docente").append(asesor);
+    $("#nombre-docente").append(sinAsignar);
     },
     error: function (data) {
       alert("Error al mostrar");
@@ -282,8 +286,12 @@ function get_docentesPromesa() {
         asesor =
           '<option value="0000" data-email="sn@unitru.edu.pe" data-documento="99999999"' +
           'data-celular="999999999" data-codigo="ZZZZ9999">ASESORADO</option>';
+        sinAsignar =
+          '<option value="0000" data-email="sn@unitru.edu.pe" data-documento="00000000"' +
+          'data-celular="999999999" data-codigo="AAAA0000">SIN ASIGNAR</option>';
         $("#nombre-docente").html(opciones);
         $("#nombre-docente").append(asesor);
+        $("#nombre-docente").append(sinAsignar);
         resolve();
       },
       error: function (data) {
