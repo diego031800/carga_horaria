@@ -295,7 +295,6 @@ function get_docentesPromesa() {
         resolve();
       },
       error: function (data) {
-        alert("Error al mostrar");
         reject("Error al mostrar");
       },
     });
