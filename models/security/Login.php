@@ -51,4 +51,10 @@
       }
       return json_encode($resp);
     }
+
+    private function get_Permisos(){
+      
+    }
   }
+
+?>
