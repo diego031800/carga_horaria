@@ -86,12 +86,14 @@ function enviarCredenciales() {
       var codigo = docentes_array[idx].doc_codigo;
       var documento = docentes_array[idx].doc_documento;
       var sem_codigo = docentes_array[idx].sem_codigo;
+      var doc_id = docentes_array[idx].doc_id;
       // Agrega los datos al arreglo de filas seleccionadas
       filasSeleccionadas.push({
         nombre: nombre,
         correo: correo,
         codigo: codigo,
         documento: documento,
+        doc_id: doc_id,
         sem: sem_codigo,
         sem_id: sem_idCbo,
         sec_id: sec_idCbo

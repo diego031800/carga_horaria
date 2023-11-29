@@ -63,13 +63,14 @@ class CorreoCargaHoraria
                 'fechahora' => '',
                 'error' => '',
                 'sem_id' => '',
-                'sec_id' => ''
+                'sec_id' => '',
+                'doc_id' => 0
             );
             $this->mail->Subject = 'ENTREGA DE CREEDENCIALES DEL SIGAP - DOCENTE';
             $rutaManual = '../../assets/docs/ManualSigap.pdf';
             $rutaFlayer = '../../assets/docs/Infografia_enlace.pdf';
             $rutaComunicado = '../../assets/docs/Comunicado_docente.pdf';
-            $this->mail->addAddress($item->correo,$item->nombre);
+            $this->mail->addAddress("geraldayala87@gmail.com",$item->nombre);
             $this->mail->isHTML(true);
             $this->mail->Body = $this->generarMensajeCorreo();
             $this->mail->addAttachment($rutaManual,'Manual de docente para SIGAP');
@@ -84,6 +85,7 @@ class CorreoCargaHoraria
                 $error = $this->mail->ErrorInfo;
                 $itemEnviado['error'] = $error;
             }
+            $itemEnviado['doc_id'] = intval($item->doc_id);
             $itemEnviado['sem_id'] = intval($item->sem_id);
             $itemEnviado['sec_id'] = intval($item->sec_id);
             //unlink($rutaPdf);

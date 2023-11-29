@@ -67,12 +67,12 @@
             try{
                 $this->con->close_open_connection_mysql();
                 foreach ($datosGuardar as $item) {
-                    $sql = "INSERT into carga_horaria_envio_credenciales ( sem_id, sec_id,
+                    $sql = "INSERT into carga_horaria_envio_credenciales ( sem_id, sec_id, chec_doc_id,
                         chec_doc_nombre, chec_doc_correo,chec_envio,chec_envio_fecha,chec_envio_error
                         ,fechahora,usuario, dispositivo) values(";
                     $sql .= "".$item['sem_id'].",";
                     $sql .= "".$item['sec_id'].",";
-                    //$sql .= "".$item['prg_id'].",";
+                    $sql .= "".$item['doc_id'].",";
                     $sql .= "'".$item['nombre']."',";
                     $sql .= "'".$item['correo']."',";
                     $sql .= "".$item['envio'].",";
@@ -82,6 +82,7 @@
                     $sql .= "'".$_SESSION['usu_id']."', "; // p_usuario
                     $sql .= "'".$_SESSION['usu_ip']."');"; // p_dispositivo
                     $this->con->simple_query_mysql($sql);
+                    error_log($sql);
                 }
             }catch (Exception $ex) {
                 die("Error: " . $this->con->error_mysql(). $ex);

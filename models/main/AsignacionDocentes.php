@@ -65,6 +65,7 @@ date_default_timezone_set('America/Lima');
                         $data['doc_documento'] = $row['doc_documento'];
                         $data['doc_codigo'] = $row['doc_codigo'];
                         $data['doc_email'] = $row['doc_email'];
+                        $data['doc_id'] = $row['doc_id'];
                         array_push($data_table, $data);
                     }
                     return json_encode($data_table);
