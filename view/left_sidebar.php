@@ -1,6 +1,10 @@
  <?php
 
     include_once '../../models/config.php';
+    include_once '../../models/main/Menu.php';
+
+    $menu = new Menu();
+    $menuItems1 = $menu->get_paginas();
 
     // Obtener la URL actual
     $currentUrl = $_SERVER['REQUEST_URI'];
@@ -9,17 +13,17 @@
     $menuItems = array(
         [
             'name' => 'Mis cargas horarias',
-            'url' => '/view/process/misCargasHorarias.php', 
+            'url' => '/view/process/misCargasHorarias.php',
             'parent_id' => '1'
         ],
-        [ 
+        [
             'name' => 'Enviar credenciales',
-            'url' => '/view/process/envioCredenciales.php', 
+            'url' => '/view/process/envioCredenciales.php',
             'parent_id' => '2'
         ],
-        [ 
+        [
             'name' => 'Regularizacion de datos',
-            'url' => '/view/process/regularizacionDocentes.php', 
+            'url' => '/view/process/regularizacionDocentes.php',
             'parent_id' => '2'
         ],
     );
@@ -37,29 +41,29 @@
          <div class="menu-inner">
              <nav>
                  <ul class="metismenu" id="menu">
-                     <li <?php if (isParentActive($menuItems, $currentUrl, 1)) echo 'class="active"'; ?>>
+                     <li <?php if (isParentActive($menuItems1, $currentUrl, 1)) echo 'class="active"'; ?>>
                          <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-table"></i><span>Carga horaria</span></a>
                          <ul class="collapse">
-                             <?php foreach ($menuItems as $item) { 
-                                if ($item['parent_id'] == 1) { ?>
-                                 <li <?php if ($currentUrl === $item['url']) echo 'class="active"'; ?>>
-                                     <a href="<?php echo $item['url']; ?>"><?php echo $item['name']; ?></a>
-                                 </li>
-                             <?php 
-                                  }
+                             <?php foreach ($menuItems1 as $item) {
+                                    if ($item['parent_id'] == 1) { ?>
+                                     <li <?php if ($currentUrl === $item['url']) echo 'class="active"'; ?>>
+                                         <a href="<?php echo $item['url']; ?>" <?php if (!Permiso($item['id'])) echo 'style="display: none;"' ?>><?php echo $item['name']; ?></a>
+                                     </li>
+                             <?php
+                                    }
                                 } ?>
                          </ul>
                      </li>
-                     <li <?php if (isParentActive($menuItems, $currentUrl, 2)) echo 'class="active"'; ?>>
+                     <li <?php if (isParentActive($menuItems1, $currentUrl, 2)) echo 'class="active"'; ?>>
                          <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-user"></i><span> Acciones docentes</span></a>
                          <ul class="collapse">
-                             <?php foreach ($menuItems as $item) { 
-                                if ($item['parent_id'] == 2) { ?>
-                                 <li <?php if ($currentUrl === $item['url']) echo 'class="active"'; ?>>
-                                     <a href="<?php echo $item['url']; ?>"><?php echo $item['name']; ?></a>
-                                 </li>
-                             <?php 
-                                  }
+                             <?php foreach ($menuItems1 as $item) {
+                                    if ($item['parent_id'] == 2) { ?>
+                                     <li <?php if ($currentUrl === $item['url']) echo 'class="active"'; ?>>
+                                         <a href="<?php echo $item['url']; ?>" <?php if (!Permiso($item['id'])) echo 'style="display: none;"' ?>><?php echo $item['name']; ?></a>
+                                     </li>
+                             <?php
+                                    }
                                 } ?>
                          </ul>
                      </li>
@@ -81,5 +85,14 @@
             }
         }
         return false;
+    }
+
+    function Permiso($id_pag)
+    {
+        if (in_array($id_pag, $_SESSION['permisos'])) {
+            return true;
+        } else {
+            return false;
+        }
     }
     ?>
