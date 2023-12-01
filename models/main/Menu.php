@@ -33,4 +33,21 @@ class Menu
             
         }
     }
+
+    public function get_pagina_id($nombre)
+    {
+        try {
+            $sql = "SELECT chp_id FROM carga_horaria_pagina where chp_nombre='".$nombre."';";
+            $datos = $this->con->return_query_mysql($sql);
+            $error = $this->con->error_mysql();
+            if (empty($error)) {
+              while ($row = mysqli_fetch_array($datos)) {
+                $pagina_id = $row['chp_id'];
+              }
+              return $pagina_id;
+            }
+        } catch (\Throwable $th) {
+            
+        }
+    }
 }

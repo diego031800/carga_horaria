@@ -3,6 +3,7 @@
     include_once '../../models/config.php';
     include_once '../../models/main/Menu.php';
 
+
     $menu = new Menu();
     $menuItems1 = $menu->get_paginas();
 
@@ -42,7 +43,8 @@
              <nav>
                  <ul class="metismenu" id="menu">
                      <li <?php if (isParentActive($menuItems1, $currentUrl, 1)) echo 'class="active"'; ?>>
-                         <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-table"></i><span>Carga horaria</span></a>
+                         <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-user"></i><span>
+                                 Admin</span></a>
                          <ul class="collapse">
                              <?php foreach ($menuItems1 as $item) {
                                     if ($item['parent_id'] == 1) { ?>
@@ -55,10 +57,39 @@
                          </ul>
                      </li>
                      <li <?php if (isParentActive($menuItems1, $currentUrl, 2)) echo 'class="active"'; ?>>
-                         <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-user"></i><span> Acciones docentes</span></a>
+                         <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-table"></i><span>Carga
+                                 horaria</span></a>
                          <ul class="collapse">
                              <?php foreach ($menuItems1 as $item) {
                                     if ($item['parent_id'] == 2) { ?>
+                                     <li <?php if ($currentUrl === $item['url']) echo 'class="active"'; ?>>
+                                         <a href="<?php echo $item['url']; ?>" <?php if (!Permiso($item['id'])) echo 'style="display: none;"' ?>><?php echo $item['name']; ?></a>
+                                     </li>
+                             <?php
+                                    }
+                                } ?>
+                         </ul>
+                     </li>
+                     <li <?php if (isParentActive($menuItems1, $currentUrl, 3)) echo 'class="active"'; ?>>
+                         <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-user"></i><span> Acciones
+                                 docentes</span></a>
+                         <ul class="collapse">
+                             <?php foreach ($menuItems1 as $item) {
+                                    if ($item['parent_id'] == 3) { ?>
+                                     <li <?php if ($currentUrl === $item['url']) echo 'class="active"'; ?>>
+                                         <a href="<?php echo $item['url']; ?>" <?php if (!Permiso($item['id'])) echo 'style="display: none;"' ?>><?php echo $item['name']; ?></a>
+                                     </li>
+                             <?php
+                                    }
+                                } ?>
+                         </ul>
+                     </li>
+                     <li <?php if (isParentActive($menuItems1, $currentUrl, 4)) echo 'class="active"'; ?>>
+                         <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-user"></i><span>
+                                 Reporte</span></a>
+                         <ul class="collapse">
+                             <?php foreach ($menuItems1 as $item) {
+                                    if ($item['parent_id'] == 4) { ?>
                                      <li <?php if ($currentUrl === $item['url']) echo 'class="active"'; ?>>
                                          <a href="<?php echo $item['url']; ?>" <?php if (!Permiso($item['id'])) echo 'style="display: none;"' ?>><?php echo $item['name']; ?></a>
                                      </li>

@@ -1,9 +1,21 @@
 <?php
 include_once '../../models/config.php';
+include_once '../../models/main/Menu.php';
 session_start();
+$menu = new Menu();
+$menuItems1 = $menu->get_paginas();
+$id;
+foreach ($menuItems1 as $key) {
+    if($key['name'] == 'Regularizacion de datos'){
+        $id=$key['id'];
+    }
+}
 if (!isset($_SESSION['login'])) {
     header("Location:../../index.php");
-} else {
+}else if(!in_array($id, $_SESSION['permisos'])){
+    header("Location:SinPermiso.php");
+}
+else {
     date_default_timezone_set('America/Lima');
 ?>
 <!DOCTYPE html>
