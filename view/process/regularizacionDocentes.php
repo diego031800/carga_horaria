@@ -4,6 +4,7 @@ include_once '../../models/main/Menu.php';
 session_start();
 $menu = new Menu();
 $GLOBALS['paginas'] = $menu->get_paginas();
+$GLOBALS['parents'] = $menu->get_parents();
 $borrar='/carga_horaria';
 $currentUrl = $_SERVER['REQUEST_URI'];
 foreach ($GLOBALS['paginas'] as $item){

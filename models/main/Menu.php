@@ -29,8 +29,8 @@ class Menu
               }
               return $paginas;
             }
-        } catch (\Throwable $th) {
-            
+        } catch (Exception $ex) {
+          die("Error: " . $this->con->error_mysql(). $ex);  
         }
     }
 
@@ -44,15 +44,15 @@ class Menu
             if (empty($error)) {
               while ($row = mysqli_fetch_array($datos)) {
                 $pag_menu = array(
-                    'id' => $row['chp_id'],
-                    'name' => $row['chp_nombre']
+                    'id' => $row['parent_id'],
+                    'name' => $row['parent_nombre']
                 );
                 $paginas[] = $pag_menu;
               }
               return $paginas;
             }
-        } catch (\Throwable $th) {
-            
+        } catch (Exception $ex) {
+          die("Error: " . $this->con->error_mysql(). $ex);  
         }
     }
 
@@ -68,8 +68,8 @@ class Menu
               }
               return $pagina_id;
             }
-        } catch (\Throwable $th) {
-            
+        } catch (Exception $ex) {
+          die("Error: " . $this->con->error_mysql(). $ex);  
         }
     }
 }
