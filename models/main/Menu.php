@@ -34,6 +34,28 @@ class Menu
         }
     }
 
+    public function get_parents()
+    {
+        try {
+            $sql = "SELECT * FROM carga_horaria_parents";
+            $datos = $this->con->return_query_mysql($sql);
+            $error = $this->con->error_mysql();
+            $paginas = array();
+            if (empty($error)) {
+              while ($row = mysqli_fetch_array($datos)) {
+                $pag_menu = array(
+                    'id' => $row['chp_id'],
+                    'name' => $row['chp_nombre']
+                );
+                $paginas[] = $pag_menu;
+              }
+              return $paginas;
+            }
+        } catch (\Throwable $th) {
+            
+        }
+    }
+
     public function get_pagina_id($nombre)
     {
         try {

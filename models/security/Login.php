@@ -43,6 +43,7 @@ class Login
       $_SESSION['nombres'] = $fila['nombres'];
       $_SESSION['usu_ip'] = $this->parametros['ip'];
       $_SESSION['permisos'] = $this->get_Permisos($usu_id);
+      $_SESSION['id_pag_activa'] = 0;
     }
     if (!empty($usu_id)) {
       $resp = array('respuesta' => 'Acceso permitido');
@@ -58,12 +59,9 @@ class Login
       $sql = "SELECT chpp_id_pag FROM carga_horaria_pagina_permisos where chpp_id_usu =" . $usu_id . ";";
       $datos = $this->con->return_query_mysql($sql);
       $error = $this->con->error_mysql();
-      error_log($sql);
       $permisos = array();
       if (empty($error)) {
-        error_log("PASÓ");
         while ($row = mysqli_fetch_array($datos)) {
-          error_log($row['chpp_id_pag']);
           array_push($permisos, $row['chpp_id_pag']);
         }
       }

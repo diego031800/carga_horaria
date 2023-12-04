@@ -3,31 +3,10 @@
     include_once '../../models/config.php';
     include_once '../../models/main/Menu.php';
 
-
-    $menu = new Menu();
-    $menuItems1 = $menu->get_paginas();
-
+    $menuItems1 = $GLOBALS['paginas'];
     // Obtener la URL actual
     $currentUrl = $_SERVER['REQUEST_URI'];
-
     // Definir los enlaces y sus URLs correspondientes
-    $menuItems = array(
-        [
-            'name' => 'Mis cargas horarias',
-            'url' => '/view/process/misCargasHorarias.php',
-            'parent_id' => '1'
-        ],
-        [
-            'name' => 'Enviar credenciales',
-            'url' => '/view/process/envioCredenciales.php',
-            'parent_id' => '2'
-        ],
-        [
-            'name' => 'Regularizacion de datos',
-            'url' => '/view/process/regularizacionDocentes.php',
-            'parent_id' => '2'
-        ],
-    );
 
     ?>
 

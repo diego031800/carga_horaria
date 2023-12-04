@@ -3,16 +3,18 @@ include_once '../../models/config.php';
 include_once '../../models/main/Menu.php';
 session_start();
 $menu = new Menu();
-$menuItems1 = $menu->get_paginas();
-$id;
-foreach ($menuItems1 as $key) {
-    if($key['name'] == 'Regularizacion de datos'){
-        $id=$key['id'];
+$GLOBALS['paginas'] = $menu->get_paginas();
+$borrar='/carga_horaria';
+$currentUrl = $_SERVER['REQUEST_URI'];
+foreach ($GLOBALS['paginas'] as $item){
+    $url = $borrar.$item['url'];
+    if ($currentUrl === $url){
+        $_SESSION['id_pag_activa']= $item['id'];
     }
 }
 if (!isset($_SESSION['login'])) {
     header("Location:../../index.php");
-}else if(!in_array($id, $_SESSION['permisos'])){
+}else if(!in_array($_SESSION['id_pag_activa'], $_SESSION['permisos'])){
     header("Location:SinPermiso.php");
 }
 else {
