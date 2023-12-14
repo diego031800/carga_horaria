@@ -45,7 +45,8 @@ class Menu
               while ($row = mysqli_fetch_array($datos)) {
                 $pag_menu = array(
                     'id' => $row['parent_id'],
-                    'name' => $row['parent_nombre']
+                    'name' => $row['parent_name'],
+                    'icon' => $row['parent_icono']
                 );
                 $paginas[] = $pag_menu;
               }

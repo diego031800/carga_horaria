@@ -1,6 +1,10 @@
 <?php
 include_once '../../models/config.php';
+include_once '../../models/main/Menu.php';
 session_start();
+$menu = new Menu();
+$GLOBALS['paginas'] = $menu->get_paginas();
+$GLOBALS['parents'] = $menu->get_parents();
 if (!isset($_SESSION['login'])) {
     header("Location:../../index.php");
 } else {
