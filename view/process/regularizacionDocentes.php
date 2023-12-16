@@ -2,23 +2,25 @@
 include_once '../../models/config.php';
 include_once '../../models/main/Menu.php';
 session_start();
-$menu = new Menu();
-$GLOBALS['paginas'] = $menu->get_paginas();
-$GLOBALS['parents'] = $menu->get_parents();
-$borrar='/carga_horaria';
-$currentUrl = $_SERVER['REQUEST_URI'];
-foreach ($GLOBALS['paginas'] as $item){
-    $url = $borrar.$item['url'];
-    if ($currentUrl === $url){
-        $_SESSION['id_pag_activa']= $item['id'];
-    }
-}
 if (!isset($_SESSION['login'])) {
     header("Location:../../index.php");
-}else if(!in_array($_SESSION['id_pag_activa'], $_SESSION['permisos'])){
-    header("Location:SinPermiso.php");
 }
 else {
+    $menu = new Menu();
+    $GLOBALS['paginas'] = $menu->get_paginas($_SESSION['usu_id']);
+    $GLOBALS['parents'] = $menu->get_parents($_SESSION['usu_id']);
+    $borrar = '/carga_horaria';
+    $currentUrl = $_SERVER['REQUEST_URI'];
+    error_log($currentUrl);
+    foreach ($GLOBALS['paginas'] as $item) {
+        $url = $borrar . $item['url'];
+        if ($currentUrl === $url) {
+            $_SESSION['id_pag_activa'] = $item['id'];
+        }
+    }
+    if (!in_array($_SESSION['id_pag_activa'], $_SESSION['permisos'])) {
+        header("Location:../mensajes/SinPermiso.php");
+    }
     date_default_timezone_set('America/Lima');
 ?>
 <!DOCTYPE html>

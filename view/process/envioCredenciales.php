@@ -2,23 +2,23 @@
 include_once '../../models/config.php';
 include_once '../../models/main/Menu.php';
 session_start();
-$menu = new Menu();
-$GLOBALS['paginas'] = $menu->get_paginas();
-$GLOBALS['parents'] = $menu->get_parents();
-$borrar='/carga_horaria';
-$currentUrl = $_SERVER['REQUEST_URI'];
-foreach ($GLOBALS['paginas'] as $item){
-    $url = $borrar.$item['url'];
-    if ($currentUrl === $url){
-        $_SESSION['id_pag_activa']= $item['id'];
-    }
-}
 if (!isset($_SESSION['login'])) {
     header("Location:../../index.php");
-}else if(!in_array($_SESSION['id_pag_activa'], $_SESSION['permisos'])){
-    header("Location:SinPermiso.php");
-} 
-else {
+} else {
+    $menu = new Menu();
+    $GLOBALS['paginas'] = $menu->get_paginas($_SESSION['usu_id']);
+    $GLOBALS['parents'] = $menu->get_parents($_SESSION['usu_id']);
+    $borrar = '/carga_horaria';
+    $currentUrl = $_SERVER['REQUEST_URI'];
+    foreach ($GLOBALS['paginas'] as $item) {
+        $url = $borrar . $item['url'];
+        if ($currentUrl === $url) {
+            $_SESSION['id_pag_activa'] = $item['id'];
+        }
+    }
+    if (!in_array($_SESSION['id_pag_activa'], $_SESSION['permisos'])) {
+        header("Location:../mensajes/SinPermiso.php");
+    }
     date_default_timezone_set('America/Lima');
 ?>
     <!DOCTYPE html>
@@ -126,71 +126,71 @@ else {
                                 </div>
                             </div>
                             <div>
-                            <div class="col-lg-4 col-md-2">
-                                <a class="btn btn-primary text-light m-4" href="/view/process/moduloCredenciales.php">Directa</a>
+                                <div class="col-lg-4 col-md-2">
+                                    <a class="btn btn-primary text-light m-4" href="/view/process/moduloCredenciales.php">Directa</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- main content area end -->
+
+                <!-- START FOOTER -->
+                <?php require_once('../footer.php') ?>
+                <!-- END FOOTER -->
+
             </div>
-            <!-- main content area end -->
 
-            <!-- START FOOTER -->
-            <?php require_once('../footer.php') ?>
-            <!-- END FOOTER -->
+            <!-- SCRIPTS -->
 
-        </div>
-
-        <!-- SCRIPTS -->
-
-        <!-- JQUERY -->
-        <script src="../../assets/js/jquery-3.7.0.min.js"></script>
-        <!-- BOOTSTRAP -->
-        <script src="../../assets/js/popper.min.js"></script>
-        <script src="../../assets/js/bootstrap.min.js"></script>
-        <script src="../../assets/js/datepicker/bootstrap-datepicker.min.js"></script>
-        <script src="../../assets/js/datepicker/bootstrap-datepicker.es.min.js"></script>
-        <script src="../../assets/js/datepicker/bootstrapValidator.min.js"></script>
-        <script src="../../assets/js/owl.carousel.min.js"></script>
-        <script src="../../assets/js/metisMenu.min.js"></script>
-        <script src="../../assets/js/jquery.slimscroll.min.js"></script>
-        <script src="../../assets/js/jquery.slicknav.min.js"></script>
-        <!-- DATE PICKER -->
-        <script src="../../assets/js/datepicker/es_ES.min.js"></script>
-        <!-- SELECT 2 -->
-        <script src="../../assets/js/select2/select2.js"></script>
-        <!-- others plugins -->
-        <script src="../../assets/js/plugins.js"></script>
-        <script src="../../assets/js/scripts.js"></script>
-        <!-- DATA TABLE -->
-        <script src="../../assets/js/data_table/jquery.dataTables.min.js"></script>
-        <script src="../../assets/js/data_table/dataTables.responsive.min.js"></script>
-        <!-- SCRIPT DESPACHO -->
-        <script src="../../view/js/process/envioCredenciales.js"></script>
-        <!-- SCRIPT TOASTR -->
-        <script src="../../assets/js/js_toastr.min.js"></script>
-        <!-- SCRIPT PROPIO INICIO -->
-        <script>
-            $(document).ready(function() {
-                toastr.options = {
-                    "closeButton": false,
-                    "debug": false,
-                    "newestOnTop": true,
-                    "progressBar": true,
-                    "positionClass": "toast-top-right",
-                    "preventDuplicates": false,
-                    "onclick": null,
-                    "showDuration": "300",
-                    "hideDuration": "1000",
-                    "timeOut": "5000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut"
-                }
-            });
-        </script>
+            <!-- JQUERY -->
+            <script src="../../assets/js/jquery-3.7.0.min.js"></script>
+            <!-- BOOTSTRAP -->
+            <script src="../../assets/js/popper.min.js"></script>
+            <script src="../../assets/js/bootstrap.min.js"></script>
+            <script src="../../assets/js/datepicker/bootstrap-datepicker.min.js"></script>
+            <script src="../../assets/js/datepicker/bootstrap-datepicker.es.min.js"></script>
+            <script src="../../assets/js/datepicker/bootstrapValidator.min.js"></script>
+            <script src="../../assets/js/owl.carousel.min.js"></script>
+            <script src="../../assets/js/metisMenu.min.js"></script>
+            <script src="../../assets/js/jquery.slimscroll.min.js"></script>
+            <script src="../../assets/js/jquery.slicknav.min.js"></script>
+            <!-- DATE PICKER -->
+            <script src="../../assets/js/datepicker/es_ES.min.js"></script>
+            <!-- SELECT 2 -->
+            <script src="../../assets/js/select2/select2.js"></script>
+            <!-- others plugins -->
+            <script src="../../assets/js/plugins.js"></script>
+            <script src="../../assets/js/scripts.js"></script>
+            <!-- DATA TABLE -->
+            <script src="../../assets/js/data_table/jquery.dataTables.min.js"></script>
+            <script src="../../assets/js/data_table/dataTables.responsive.min.js"></script>
+            <!-- SCRIPT DESPACHO -->
+            <script src="../../view/js/process/envioCredenciales.js"></script>
+            <!-- SCRIPT TOASTR -->
+            <script src="../../assets/js/js_toastr.min.js"></script>
+            <!-- SCRIPT PROPIO INICIO -->
+            <script>
+                $(document).ready(function() {
+                    toastr.options = {
+                        "closeButton": false,
+                        "debug": false,
+                        "newestOnTop": true,
+                        "progressBar": true,
+                        "positionClass": "toast-top-right",
+                        "preventDuplicates": false,
+                        "onclick": null,
+                        "showDuration": "300",
+                        "hideDuration": "1000",
+                        "timeOut": "5000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                    }
+                });
+            </script>
     </body>
 
     </html>

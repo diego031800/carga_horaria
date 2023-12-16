@@ -10,10 +10,13 @@ class Menu
         $this->con = new connection();
     }
 
-    public function get_paginas()
+    public function get_paginas($id_usu)
     {
         try {
-            $sql = "SELECT * FROM carga_horaria_pagina";
+            /*$sql = "select * from carga_horaria_pagina CHP
+            INNER JOIN carga_horaria_pagina_permisos CHPP on CHPP.chpp_id_pag = CHP.chp_id
+            where CHPP.chpp_id_usu = ".$id_usu.";";*/
+            $sql="SELECT * FROM carga_horaria_pagina";
             $datos = $this->con->return_query_mysql($sql);
             $error = $this->con->error_mysql();
             $paginas = array();
@@ -34,10 +37,13 @@ class Menu
         }
     }
 
-    public function get_parents()
+    public function get_parents($id_usu)
     {
         try {
-            $sql = "SELECT * FROM carga_horaria_parents";
+            $sql = "select * from carga_horaria_parents CHPT 
+            INNER JOIN carga_horaria_pagina CHP on CHP.chp_parent = CHPT.parent_id
+            INNER JOIN carga_horaria_pagina_permisos CHPP on CHPP.chpp_id_pag = CHP.chp_id
+            where CHPP.chpp_id_usu =".$id_usu.";";
             $datos = $this->con->return_query_mysql($sql);
             $error = $this->con->error_mysql();
             $paginas = array();

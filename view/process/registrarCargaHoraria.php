@@ -4,6 +4,20 @@ session_start();
 if (!isset($_SESSION['login'])) {
     header("Location:../../index.php");
 } else {
+    $menu = new Menu();
+    $GLOBALS['paginas'] = $menu->get_paginas($_SESSION['usu_id']);
+    $GLOBALS['parents'] = $menu->get_parents($_SESSION['usu_id']);
+    $borrar = '/carga_horaria';
+    $currentUrl = $_SERVER['REQUEST_URI'];
+    foreach ($GLOBALS['paginas'] as $item) {
+        $url = $borrar . $item['url'];
+        if ($currentUrl === $url) {
+            $_SESSION['id_pag_activa'] = $item['id'];
+        }
+    }
+    if (!in_array($_SESSION['id_pag_activa'], $_SESSION['permisos'])) {
+        header("Location:../mensajes/SinPermiso.php");
+    }
     date_default_timezone_set('America/Lima');
 ?>
     <!DOCTYPE html>

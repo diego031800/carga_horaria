@@ -2,13 +2,24 @@
 include_once '../../models/config.php';
 include_once '../../models/main/Menu.php';
 session_start();
-
 if (!isset($_SESSION['login'])) {
     header("Location:../../index.php");
 } else {
     $menu = new Menu();
     $GLOBALS['paginas'] = $menu->get_paginas($_SESSION['usu_id']);
     $GLOBALS['parents'] = $menu->get_parents($_SESSION['usu_id']);
+    $borrar = '/carga_horaria';
+    $currentUrl = $_SERVER['REQUEST_URI'];
+    error_log($currentUrl);
+    foreach ($GLOBALS['paginas'] as $item) {
+        $url = $borrar . $item['url'];
+        if ($currentUrl === $url) {
+            $_SESSION['id_pag_activa'] = $item['id'];
+        }
+    }
+    if (!in_array($_SESSION['id_pag_activa'], $_SESSION['permisos'])) {
+        header("Location:../mensajes/SinPermiso.php");
+    }
     date_default_timezone_set('America/Lima');
 ?>
     <!DOCTYPE html>
@@ -37,6 +48,7 @@ if (!isset($_SESSION['login'])) {
         <link rel="stylesheet" href="../../assets/css/default-css.css">
         <link rel="stylesheet" href="../../assets/css/styles.css">
         <link rel="stylesheet" href="../../assets/css/responsive.css">
+        <link rel="stylesheet" href="../../assets/css/css_toastr.min.css">
         <!-- modernizr css -->
         <script src="../../assets/js/vendor/modernizr-2.8.3.min.js"></script>
         <!-- SELECT 2 -->
@@ -44,9 +56,10 @@ if (!isset($_SESSION['login'])) {
         <!-- DATA TABLE -->
         <link rel="stylesheet" href="../../assets/css/data_table/jquery.dataTables.min.css">
         <link rel="stylesheet" href="../../assets/css/data_table/responsive.dataTables.min.css">
+        <!-- <link rel="stylesheet" href="../css/styles.css"> -->
         <!-- ESTILOS PROPIOS -->
         <link rel="stylesheet" href="../css/styles.css">
-        <title>CARGA HORARIA</title>
+        <title>REGULARIZACION DE DATOS DEL DOCENTE</title>
     </head>
 
     <body>
@@ -62,52 +75,52 @@ if (!isset($_SESSION['login'])) {
                 <!-- END NAV BAR -->
                 <div class="main-content-inner">
                     <div class="card shadow p-3 mb-5 bg-body-tertiary rounded mt-5" style="min-height: 620px;">
-                        <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+                        <div class="card-header bg-transparent d-flex justify-content-between align-items-center text-center">
                             &nbsp;
-                            <h3 class="card-title m-3">Mis Cargas Horarias</h3>
-                            <button class="btn btn-primary" type="button" id="btnNuevaCarga">
-                                <i class="fa fa-plus-square"></i> &nbsp;&nbsp; Carga Horaria
-                            </button>
+                            <h3 class="card-title m-3" id="lblTitulo">Regularizacion de datos de Docentes</h3>
+                            &nbsp;
                         </div>
                         <div class="card-body">
                             <div class="card" style="color: #ffffff; background-color:rgba(135, 135, 135, 0.09); border-radius: 18px;">
                                 <div class="card-body">
-                                    <div class="row d-flex justify-content-center">
-                                        <div class="col-lg-2 col-6">
+                                    <div class="row d-flex justify-content-center align-items-center">
+                                        <div class="col-lg-6 col-12 mb-3">
+                                            <label for="" class="form-label">Semestre</label>
                                             <select class="form-select" id="cboSemestre">
                                             </select>
-                                            <small style="color: #666666;"><b>Filtar</b> por semestre</small>
                                         </div>
-                                        <div class="col-lg-3 col-6">
-                                            <select class="form-select" id="cboUnidad">
-                                            </select>
-                                            <small style="color: #666666;"><b>Filtar</b> por Unidad</small>
+                                        <div class="col-lg-12 col-12 mb-6 row">
+                                            <div class="col-6 mb-3">
+                                                <label for="" class="form-label">Nombre:</label><br />
+                                                <select class="form-select" id="nombre-docente">
+                                                </select>
+                                            </div>
+                                            <div class="col-6 mb-3">
+                                                <label for="" class="form-label">Correo:</label><br />
+                                                <input type="email" class="form-control" id="email-docente">
+                                            </div>
+                                            <div class="col-6 mb-3">
+                                                <label for="" class="form-label">Documento de identidad:</label><br />
+                                                <input type="text" class="form-control" id="doc-docente">
+                                            </div>
+                                            <div class="col-6 mb-3">
+                                                <label for="" class="form-label">Código:</label><br />
+                                                <input type="text" class="form-control" id="codigo-docente" disabled>
+                                            </div>
                                         </div>
-                                        <div class="col-lg-1 col-md-4 col-6 align-items-center">
-                                            <button class="btn btn-primary" type="button" id="btnBuscar">
-                                                <i class="fa fa-search"></i>
-                                            </button>
-                                        </div>
+
+                                    </div>
+                                    <div class="">
+                                        <button class="btn btn-warning text-light m-4" id="btnEnviando" disabled style="display: none;">
+                                            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                                            <span role="status">&nbsp;&nbsp; Guardando ...</span>
+                                        </button>
+                                        <button class="btn btn-warning text-light m-4" id="btnActualizar" onClick="actualizar_datos_docente();"><i class="fa fa-save"></i>&nbsp;&nbsp; Actualizar</button>
                                     </div>
                                 </div>
                             </div>
-                            <div class="card mt-4" style="color: #ffffff; background-color:rgba(135, 135, 135, 0.09); border-radius: 18px;">
-                                <div class="card-body">
-                                    <table id="table_ch" class="table table-bordered dt-responsive table-hover">
-                                        <thead>
-                                            <tr class="table-info">
-                                                <th class="text-center">N°</th>
-                                                <th class="text-center">ACCIONES</th>
-                                                <th class="text-center">ESTADO</th>
-                                                <th class="text-center">CÓDIGO</th>
-                                                <th class="text-center">SEMESTRE</th>
-                                                <th class="text-center">UNIDAD</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="cuerpo_ch"></tbody>
-                                    </table>
-                                    <div id="tbl_spinner"></div>
-                                </div>
+
+                            <div>
                             </div>
                         </div>
                     </div>
@@ -146,13 +159,36 @@ if (!isset($_SESSION['login'])) {
         <script src="../../assets/js/data_table/jquery.dataTables.min.js"></script>
         <script src="../../assets/js/data_table/dataTables.responsive.min.js"></script>
         <!-- SCRIPT DESPACHO -->
-        <script src="../../view/js/process/misCargasHorarias.js"></script>
+        <script src="../../view/js/process/regularizacionDocentes.js"></script>
+        <!-- SCRIPT TOASTR -->
+        <script src="../../assets/js/js_toastr.min.js"></script>
         <!-- SCRIPT PROPIO INICIO -->
         <script>
+            $(document).ready(function() {
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": true,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+            });
         </script>
     </body>
 
     </html>
 
 
-<?php } ?>
+<?php
+}
+?>
