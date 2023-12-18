@@ -34,6 +34,31 @@ if (isset($_POST['semTxt']) && isset($_POST['secTxt']) && isset($_POST['reporte'
     }
 }
 
+$cabecera = "<header>
+            <table style='width: 100%;'>
+                <tbody>
+                    <tr>
+                    <td style='width: 30%;'> <img src='../../assets/images/documentos/img_upg_CMYK.png' style='width: 160px; height: auto;'> </td>
+                    <td class='text-center' style='width: 40%;'>
+                        <div style='text-align: center; font-weight: bold;'>
+                        Envío de credenciales en el semestre: ".$sem."
+                        </div> 
+                    </td>
+                    <td style='width: 30%;'></td>
+                    </tr>
+                </tbody>
+            </table>
+        </header>
+        <br>
+        <body>
+            <table class='table table-bordered'>
+                <tbody>
+                    <tr>
+                        <td class='bg-azul text-center' colspan='7'><b>UNIDAD ACADÉMICA: &nbsp;&nbsp;".$sec."</b></td>
+                    </tr>
+                </tbody>
+            </table>";
+
 $html = "<header>
             <table style='width: 100%;'>
                 <tbody>
@@ -60,6 +85,20 @@ $html = "<header>
             </table>";
 
     // Armado de la tabla donde 
+    $inicioTabla = "<table class='table table-bordered' style='page-break-inside: avoid;'>
+    <thead>
+        <tr class='table-info'>
+            <th class='text-center'>N°</th>
+            <th class='text-center'>NOMBRES Y APELLIDOS</th>
+            <th class='text-center'>CORREO</th>
+            <th class='text-center'>ENVIADO</th>
+            <th class='text-center'>FECHA ENVIO</th>
+            <th class='text-center'>OCURRENCIA</th>
+        </tr>
+    </thead>
+    <tbody>
+    ";
+
     $html .= "<table class='table table-bordered' style='page-break-inside: avoid;'>
     <thead>
         <tr class='table-info'>
@@ -73,6 +112,9 @@ $html = "<header>
     </thead>
     <tbody>
     ";
+
+
+    $registrosPorPagina = 20;
     $contador = 1; 
     foreach ($datosDoc as $key) {
         $html .= "<tr>";
@@ -98,7 +140,13 @@ $html = "<header>
         }
         $html .= "</tr>";
         $contador++;
+        if ($contador == $registrosPorPagina) {
+            $html .= "</tbody></table>";
+            $html .= $cabecera;
+            $html .= $inicioTabla;
+        }
     }
+    
     $html .= "</tbody></table>";
     $mpdf = new \Mpdf\Mpdf();
     $mpdf->defaultfooterline = 0;
