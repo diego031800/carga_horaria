@@ -35,14 +35,15 @@ class Seguridad
             WHERE U.usu_estado = 1";
             $datos = $this->con->return_query_sqlsrv($sql);
             $usuarios = array();
+            $usuario = [];
+            $index = 0;
             while ($row = $datos->fetch(PDO::FETCH_ASSOC)) {
-                $usuario = array(
-                    'usu_id' => 'NI',
-                    'nombres' => 'NN',
-                );
+                $index ++;
+                $usuario['nro'] = $index;
                 $usuario['usu_id'] = $row['usu_id'];
                 $usuario['nombres'] = $row['nombres'];
-                $usuarios[] = $usuario;
+                $usuario['acciones'] = '<button class="btn btn-warning" onClick="abrir_Modal_permisos('.$index.')"></button>';
+                array_push($usuarios, $usuario);
             }
             $mensaje = 'Se completó correctamente la sentencia';
             return json_encode(['respuesta'=>1, 'mensaje' => $mensaje, 'usuarios'=> $usuarios]);

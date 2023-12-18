@@ -59,7 +59,7 @@ if (!isset($_SESSION['login'])) {
         <!-- <link rel="stylesheet" href="../css/styles.css"> -->
         <!-- ESTILOS PROPIOS -->
         <link rel="stylesheet" href="../css/styles.css">
-        <title>REGULARIZACION DE DATOS DEL DOCENTE</title>
+        <title>PERMISOS DE USUARIO</title>
     </head>
 
     <body>
@@ -77,52 +77,24 @@ if (!isset($_SESSION['login'])) {
                     <div class="card shadow p-3 mb-5 bg-body-tertiary rounded mt-5" style="min-height: 620px;">
                         <div class="card-header bg-transparent d-flex justify-content-between align-items-center text-center">
                             &nbsp;
-                            <h3 class="card-title m-3" id="lblTitulo">Regularizacion de datos de Docentes</h3>
+                            <h3 class="card-title m-3" id="lblTitulo">Gestión de permisos de usuarios</h3>
                             &nbsp;
                         </div>
-                        <div class="card-body">
-                            <div class="card" style="color: #ffffff; background-color:rgba(135, 135, 135, 0.09); border-radius: 18px;">
+                        <div class="card mt-4" style="color: #ffffff; background-color:rgba(135, 135, 135, 0.09); border-radius: 18px;">
                                 <div class="card-body">
-                                    <div class="row d-flex justify-content-center align-items-center">
-                                        <div class="col-lg-6 col-12 mb-3">
-                                            <label for="" class="form-label">Semestre</label>
-                                            <select class="form-select" id="cboSemestre">
-                                            </select>
-                                        </div>
-                                        <div class="col-lg-12 col-12 mb-6 row">
-                                            <div class="col-6 mb-3">
-                                                <label for="" class="form-label">Nombre:</label><br />
-                                                <select class="form-select" id="nombre-docente">
-                                                </select>
-                                            </div>
-                                            <div class="col-6 mb-3">
-                                                <label for="" class="form-label">Correo:</label><br />
-                                                <input type="email" class="form-control" id="email-docente">
-                                            </div>
-                                            <div class="col-6 mb-3">
-                                                <label for="" class="form-label">Documento de identidad:</label><br />
-                                                <input type="text" class="form-control" id="doc-docente">
-                                            </div>
-                                            <div class="col-6 mb-3">
-                                                <label for="" class="form-label">Código:</label><br />
-                                                <input type="text" class="form-control" id="codigo-docente" disabled>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <div class="">
-                                        <button class="btn btn-warning text-light m-4" id="btnEnviando" disabled style="display: none;">
-                                            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                                            <span role="status">&nbsp;&nbsp; Guardando ...</span>
-                                        </button>
-                                        <button class="btn btn-warning text-light m-4" id="btnActualizar" onClick="actualizar_datos_docente();"><i class="fa fa-save"></i>&nbsp;&nbsp; Actualizar</button>
-                                    </div>
+                                    <table id="table_ch" class="table table-bordered dt-responsive table-hover">
+                                        <thead>
+                                            <tr class="table-info">
+                                                <th class="text-center">N°</th>
+                                                <th class="text-center">USUARIOS</th>
+                                                <th class="text-center">ACCIONES</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="cuerpo_asignacion"></tbody>
+                                    </table>
+                                    <div id="tbl_spinner"></div>
                                 </div>
                             </div>
-
-                            <div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
