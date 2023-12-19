@@ -141,8 +141,7 @@ $html = "<header>
         }
         $html .= "</tr>";
         if ($registroContado == $registrosPorPagina) {
-            $html .= "</tbody></table>
-            <br>";
+            $html .= "</tbody></table><pagebreak />";
             $html .= $cabecera;
             $html .= $inicioTabla;
             $registroContado = 1;
