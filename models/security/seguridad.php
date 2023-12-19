@@ -42,7 +42,7 @@ class Seguridad
                 $usuario['nro'] = $index;
                 $usuario['usu_id'] = $row['usu_id'];
                 $usuario['nombres'] = $row['nombres'];
-                $usuario['acciones'] = '<button class="btn btn-warning" onClick="abrir_Modal_permisos('.$index.')"></button>';
+                $usuario['acciones'] = '<button class="btn btn-warning" onClick="abrir_Modal_permisos('.$index.')">Ver permisos</button>';
                 array_push($usuarios, $usuario);
             }
             $mensaje = 'Se completó correctamente la sentencia';
@@ -51,4 +51,6 @@ class Seguridad
             return json_encode(['respuesta'=> 0, 'mensaje' => $ex]);
         }
     }
+    
+    
 }

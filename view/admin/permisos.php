@@ -81,25 +81,57 @@ if (!isset($_SESSION['login'])) {
                             &nbsp;
                         </div>
                         <div class="card mt-4" style="color: #ffffff; background-color:rgba(135, 135, 135, 0.09); border-radius: 18px;">
-                                <div class="card-body">
-                                    <table id="table_ch" class="table table-bordered dt-responsive table-hover">
-                                        <thead>
-                                            <tr class="table-info">
-                                                <th class="text-center">N°</th>
-                                                <th class="text-center">USUARIOS</th>
-                                                <th class="text-center">ACCIONES</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="cuerpo_asignacion"></tbody>
-                                    </table>
-                                    <div id="tbl_spinner"></div>
-                                </div>
+                            <div class="card-body">
+                                <table id="table_ch" class="table table-bordered dt-responsive table-hover">
+                                    <thead>
+                                        <tr class="table-info">
+                                            <th class="text-center">N°</th>
+                                            <th class="text-center">USUARIOS</th>
+                                            <th class="text-center">ACCIONES</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="cuerpo_asignacion"></tbody>
+                                </table>
+                                <div id="tbl_spinner"></div>
                             </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <!-- main content area end -->
-
+            <!-- MODAL CURSO -->
+            <div class="modal" id="myModal-permisos">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Registrar curso</h5>
+                        </div>
+                        <div class="modal-body">
+                            <input type="number" id="cursoEditar" hidden>
+                            <div class="row">
+                                <div class="col-lg-9 col-9">
+                                    <label for="" class="form-label">Curso</label><br>
+                                    <select name="cboCurso" id="cboCurso" class="form-select" disabled>
+                                        <option value="SD">Antes selecciona un ciclo ...</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-3 col-6 mb-3">
+                                    <label for="" class="form-label">Horas</label>
+                                    <input type="number" class="form-control" name="txtHoras" id="txtHoras" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-success" id="btnGuardarCurso" onClick="accionBtnGuardarCurso();">
+                                <i class="fa fa-save"></i> Guardar
+                            </button>
+                            <button class="btn btn-danger" onClick="$('#myModal-curso').fadeOut();">
+                                <i class="fa fa-close"></i> Cerrar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- START FOOTER -->
             <?php require_once('../footer.php') ?>
             <!-- END FOOTER -->
@@ -131,7 +163,7 @@ if (!isset($_SESSION['login'])) {
         <script src="../../assets/js/data_table/jquery.dataTables.min.js"></script>
         <script src="../../assets/js/data_table/dataTables.responsive.min.js"></script>
         <!-- SCRIPT DESPACHO -->
-        <script src="../../view/js/process/regularizacionDocentes.js"></script>
+        <script src="../../view/js/security/seguridad.js"></script>
         <!-- SCRIPT TOASTR -->
         <script src="../../assets/js/js_toastr.min.js"></script>
         <!-- SCRIPT PROPIO INICIO -->
