@@ -115,6 +115,7 @@ $html = "<header>
 
 
     $registrosPorPagina = 15;
+    $registroContado = 1;
     $contador = 1; 
     foreach ($datosDoc as $key) {
         $html .= "<tr>";
@@ -139,11 +140,14 @@ $html = "<header>
             $html .= "<td>".$key->error."</td>";
         }
         $html .= "</tr>";
-        if ($contador == $registrosPorPagina) {
+        if ($registroContado == $registrosPorPagina) {
             $html .= "</tbody></table>
             <br>";
             $html .= $cabecera;
             $html .= $inicioTabla;
+            $registroContado = 1;
+        }else{
+            $registroContado++;
         }
         
         $contador++;
