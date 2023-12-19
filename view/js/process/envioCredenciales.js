@@ -101,7 +101,6 @@ function enviarCredenciales() {
     }
   });
   let docentes = JSON.stringify(filasSeleccionadas);
-  console.log(docentes);
   // Retornamos una promesa
   return new Promise(function (resolve, reject) {
     $.ajax({

@@ -70,7 +70,7 @@ class CorreoCargaHoraria
             $rutaManual = '../../assets/docs/ManualSigap.pdf';
             $rutaFlayer = '../../assets/docs/Infografia_enlace.pdf';
             $rutaComunicado = '../../assets/docs/Comunicado_docente.pdf';
-            $this->mail->addAddress("geraldayala87@gmail.com",$item->nombre);
+            $this->mail->addAddress($item->correo,$item->nombre);
             $this->mail->isHTML(true);
             $this->mail->Body = $this->generarMensajeCorreo();
             $this->mail->addAttachment($rutaManual,'Manual de docente para SIGAP');
