@@ -51,6 +51,31 @@ class Seguridad
             return json_encode(['respuesta'=> 0, 'mensaje' => $ex]);
         }
     }
+
+    private function get_paginas(){
+        try {
+            $sql="SELECT CHP.chp_id, CHP.chp_nombre, CHPT.parent_name from carga_horaria_pagina CHP
+            LEFT JOIN carga_horaria_parents CHPT ON CHP.chp_parent = CHPT.parent_id 
+            where CHP.chp_tipo = 1";
+            $paginas = array();
+            $pagina = [];
+            $index = 0;
+            $datos = $this->con->return_query_mysql($sql);
+            $error = $this->con->error_mysql();
+            if (empty($error)) {
+                while ($row = mysqli_fetch_array($datos)) {
+                    $index ++;
+                    $pagina['nro'] = $index;
+                    $pagina['pag_id'] = $row['usu_id'];
+                    $pagina['pag_nombre'] = $row['nombres'];
+                    $pagina['parent_nombre'] = '<button class="btn btn-warning" onClick="abrir_Modal_permisos('.$index.')">Ver permisos</button>';    
+                }
+                return $paginas;
+            }
+        } catch (Exception $ex) {
+            return json_encode(['respuesta'=> 0, 'mensaje' => $ex]);
+        }
+    }
     
     
 }
