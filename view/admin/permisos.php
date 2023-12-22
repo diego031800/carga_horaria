@@ -104,28 +104,25 @@ if (!isset($_SESSION['login'])) {
                 <div class="modal-dialog modal-dialog-centered modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Registrar curso</h5>
+                            <h5 class="modal-title" id="titulo_modal">GESTIONAR PERMISOS DE:</h5>
                         </div>
                         <div class="modal-body">
-                            <input type="number" id="cursoEditar" hidden>
-                            <div class="row">
-                                <div class="col-lg-9 col-9">
-                                    <label for="" class="form-label">Curso</label><br>
-                                    <select name="cboCurso" id="cboCurso" class="form-select" disabled>
-                                        <option value="SD">Antes selecciona un ciclo ...</option>
-                                    </select>
-                                </div>
-                                <div class="col-lg-3 col-6 mb-3">
-                                    <label for="" class="form-label">Horas</label>
-                                    <input type="number" class="form-control" name="txtHoras" id="txtHoras" required>
-                                </div>
-                            </div>
+                            <input type="number" id="id_usuario" hidden>
+                            <table id="table_paginas_1" class="table table-bordered dt-responsive table-hover">
+                                    <thead>
+                                        <tr class="table-info">
+                                            <th class="text-center">N°</th>
+                                            <th class="text-center">PÁGINA</th>
+                                            <th class="text-center">PARENT</th>
+                                            <th class="text-center">PERMITIDO</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="cuerpo_paginas"></tbody>
+                                </table>
+                                <div id="tbl_spinner_1"></div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-success" id="btnGuardarCurso" onClick="accionBtnGuardarCurso();">
-                                <i class="fa fa-save"></i> Guardar
-                            </button>
-                            <button class="btn btn-danger" onClick="$('#myModal-curso').fadeOut();">
+                            <button class="btn btn-danger" onClick="$('#myModal-permisos').fadeOut();">
                                 <i class="fa fa-close"></i> Cerrar
                             </button>
                         </div>
