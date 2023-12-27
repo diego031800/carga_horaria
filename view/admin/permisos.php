@@ -122,6 +122,9 @@ if (!isset($_SESSION['login'])) {
                                 <div id="tbl_spinner_1"></div>
                         </div>
                         <div class="modal-footer">
+                            <button class="btn btn-success" id="btnGuardarPermisos" onClick="guardar_permisos();">
+                                <i class="fa fa-save"></i> Guardar
+                            </button>
                             <button class="btn btn-danger" onClick="$('#myModal-permisos').fadeOut();">
                                 <i class="fa fa-close"></i> Cerrar
                             </button>

@@ -40,10 +40,10 @@ class Menu
     public function get_parents($id_usu)
     {
         try {
-            $sql = "select * from carga_horaria_parents CHPT 
+            $sql = "select CHPT.parent_id, CHPT.parent_icono, CHPT.parent_name from carga_horaria_parents CHPT 
             INNER JOIN carga_horaria_pagina CHP on CHP.chp_parent = CHPT.parent_id
             INNER JOIN carga_horaria_pagina_permisos CHPP on CHPP.chpp_id_pag = CHP.chp_id
-            where CHPP.chpp_id_usu =".$id_usu.";";
+            where CHPP.chpp_id_usu =".$id_usu." group by CHPT.parent_id, CHPT.parent_icono, CHPT.parent_name;";
             $datos = $this->con->return_query_mysql($sql);
             $error = $this->con->error_mysql();
             $paginas = array();

@@ -24,6 +24,9 @@ class Seguridad
                 break;
             case 'get_permisos_usuarios':
                 echo $this->get_permisos_usuarios();
+                break;
+            case 'save_permisos_usuario':
+                echo $this->save_permisos_usuario();
                 break;    
             default:
                 break;
@@ -48,7 +51,7 @@ class Seguridad
                 $usuario['nro'] = $index;
                 $usuario['usu_id'] = $row['usu_id'];
                 $usuario['nombres'] = $row['nombres'];
-                $usuario['acciones'] = '<button class="btn btn-warning" onClick="abrir_Modal_permisos('.$index.')">Ver permisos</button>';
+                $usuario['acciones'] = '<button class="btn btn-warning" onClick="abrir_Modal_permisos('.$row['usu_id'].')">Ver permisos</button>';
                 array_push($usuarios, $usuario);
             }
             $mensaje = 'Se completó correctamente la sentencia';
@@ -88,20 +91,43 @@ class Seguridad
 
     private function get_permisos_usuarios(){
         try {
-            $sql="SELECT * from carga_horaria_pagina_permisos where chpp_id_usu = ". $this->parametros['id_usu'];
-            $permiso = array();
-            $permisos = [];
+            $sql="SELECT CHPP.* FROM carga_horaria_pagina_permisos CHPP 
+            inner JOIN carga_horaria_pagina CHP on CHP.chp_id = CHPP.chpp_id_pag
+            where CHPP.chpp_id_usu = ". $this->parametros['id_usu']." and CHP.chp_tipo =1;";
+            //$sql="SELECT * from carga_horaria_pagina_permisos where chpp_id_usu = ". $this->parametros['id_usu']."and CHP.chp_tipo = 1";
+            $permisos = array();
+            $permiso = [];
             $datos = $this->con->return_query_mysql($sql);
             $error = $this->con->error_mysql();
             if (empty($error)) {
                 while ($row = mysqli_fetch_array($datos)) {
-                    $pagina['permiso_id'] = $row['chpp_id'];
-                    $pagina['chpp_id_usu'] = $row['chpp_id_usu'];
-                    $pagina['chpp_id_pag'] = $row['chpp_id_pag'];     
+                    $permiso['permiso_id'] = $row['chpp_id'];
+                    $permiso['chpp_id_usu'] = $row['chpp_id_usu'];
+                    $permiso['chpp_id_pag'] = $row['chpp_id_pag'];
+                    $permiso['chpp_estado'] = '1';     
                     array_push($permisos, $permiso);   
                 }
                 return json_encode(['respuesta'=> 1, 'mensaje' => "La consulta se ejecutó con éxito", 'permisos'=> $permisos]);
             }
+        } catch (Exception $ex) {
+            return json_encode(['respuesta'=> 0, 'mensaje' => $ex]);
+        }
+    }
+
+    private function save_permisos_usuario(){
+        try {
+            $permisos = json_decode($this->parametros['permisos_usu']);
+            foreach ($permisos as $permiso) {
+                if($permiso->permiso_id ==0){
+                    $sql = "INSERT INTO carga_horaria_pagina_permisos (chpp_id_usu,chpp_id_pag) value(".$permiso->chpp_id_usu.",".$permiso->chpp_id_pag.");";
+                }else{
+                    if($permiso->chpp_estado ==0){
+                        $sql = "delete from carga_horaria_pagina_permisos where chpp_id=".$permiso->permiso_id.";";
+                    }
+                }
+                $this->con->simple_query_mysql($sql);
+            }
+            return json_encode(['respuesta'=> 1, 'mensaje' => "Se han guardado exitosamente los permisos"]);
         } catch (Exception $ex) {
             return json_encode(['respuesta'=> 0, 'mensaje' => $ex]);
         }

@@ -1,6 +1,9 @@
+let txt_id_usu_modal = document.getElementById("id_usuario");
 let usuarios = [];
 let paginas = [];
-let permisos= [];
+let permisos = [];
+
+let flag_cambio_array_permisos = false;
 
 function get_usuarios() {
   let opcion = "get_usuarios";
@@ -69,12 +72,45 @@ function load_document() {
 }
 
 function abrir_Modal_permisos(id_usuario) {
+  flag_cambio_array_permisos = false;
   $("#myModal-permisos").fadeIn();
+  txt_id_usu_modal.value = id_usuario;
   llenar_Tabla();
+  get_permisos_usuario(id_usuario);
 }
 
-function get_permisos_usuario(id_usuario){
+function get_permisos_usuario(id_usuario) {
+  let opcion = "get_permisos_usuarios";
+  $.ajax({
+    type: "POST",
+    url: "../../controllers/security/seguridadController.php",
+    data: {
+      opcion: opcion,
+      id_usu: id_usuario,
+    },
+    success: function (data) {
+      let datos = JSON.parse(data);
+      if (datos.respuesta == 1) {
+        permisos = datos.permisos;
+        marcar_permisos_usuario();
+      } else {
+        toastr["error"](datos.mensaje, "Obtener datos");
+      }
+    },
+    error: function (data) {
+      let datos = JSON.parse(data);
+      toastr["error"](datos.mensaje, "Obtener datos");
+    },
+  });
+}
 
+function marcar_permisos_usuario() {
+  permisos.forEach((element) => {
+    id_input = "check_pag_" + element.chpp_id_pag;
+    check_pag = document.getElementById(id_input);
+    check_pag.checked = true;
+    cambio_label_permiso(element.chpp_id_pag);
+  });
 }
 
 function llenar_Tabla() {
@@ -134,6 +170,8 @@ function get_paginas() {
         $("#cuerpo_paginas").html("");
         $("#tbl_spinner_1").html("");
         paginas = datos.paginas;
+      } else {
+        toastr["error"](data.mensaje, "Obtener datos");
       }
     },
     error: function (data) {
@@ -143,23 +181,77 @@ function get_paginas() {
 }
 
 function agregar_eliminar_permiso(id) {
-  let id_input = "check_pag_"+id; 
-  let id_label = "label_pag_"+id; 
+  let usu_id = txt_id_usu_modal.value;
+  let id_input = "check_pag_" + id;
+  let id_label = "label_pag_" + id;
   let check_pag = document.getElementById(id_input);
   let label_pag = document.getElementById(id_label);
-  if(check_pag.checked){
+  index_permiso = permisos.findIndex((item) => item.chpp_id_pag == id);
+  if (check_pag.checked) {
     label_pag.textContent = "SI";
-  }else{
+    if(index_permiso == -1){
+      permisos.push({
+        permiso_id : 0,
+        chpp_id_usu : usu_id,
+        chpp_id_pag : id,
+        chpp_estado : "1"
+      });
+    }else{
+      permisos[index_permiso].chpp_estado = 1;
+    }
+  } else {
+    label_pag.textContent = "NO";
+    if(permisos[index_permiso].permiso_id == 0){
+      permisos.splice(index_permiso,1);
+    }else{
+      permisos[index_permiso].chpp_estado = 0;
+    }
+  }
+  flag_cambio_array_permisos = true;
+}
+
+function cambio_label_permiso(id) {
+  let id_input = "check_pag_" + id;
+  let id_label = "label_pag_" + id;
+  let check_pag = document.getElementById(id_input);
+  let label_pag = document.getElementById(id_label);
+  if (check_pag.checked) {
+    label_pag.textContent = "SI";
+  } else {
     label_pag.textContent = "NO";
   }
+}
+
+function guardar_permisos(){
+  let usu_id = txt_id_usu_modal.value;
+  let opcion="save_permisos_usuario";
+  $.ajax({
+    type: "POST",
+    url: "../../controllers/security/seguridadController.php",
+    data: {
+      opcion: opcion,
+      id_usu: usu_id,
+      permisos_usu: JSON.stringify(permisos)
+    },
+    success: function (data) {
+      let datos = JSON.parse(data);
+      if (datos.respuesta == 1) {
+        toastr["success"](datos.mensaje, "Guardar permisos");
+      } else {
+        toastr["error"](datos.mensaje, "Guardar permisos");
+      }
+    },
+    error: function (data) {
+      toastr["error"](data.mensaje, "Guardar permisos");
+    },
+  })
 }
 
 // EVENTOS
 window.addEventListener("load", load_document);
 
 window.onclick = function (event) {
-  if (event.target === document.getElementById("myModal-docente")) {
+  if (event.target === document.getElementById("myModal-permisos")) {
     $("#myModal-permisos").fadeOut();
-    limpiarInputsModal();
   }
 };
