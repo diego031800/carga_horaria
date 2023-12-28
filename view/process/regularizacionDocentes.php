@@ -13,7 +13,7 @@ else {
     $currentUrl = $_SERVER['REQUEST_URI'];
     error_log($currentUrl);
     foreach ($GLOBALS['paginas'] as $item) {
-        $url = $borrar . $item['url'];
+        $url = $item['url'];
         if ($currentUrl === $url) {
             $_SESSION['id_pag_activa'] = $item['id'];
         }
