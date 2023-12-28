@@ -2,6 +2,7 @@
 
 include_once '../../models/conexion.php';
 
+
 class Seguridad
 {
     private $con;
@@ -117,21 +118,44 @@ class Seguridad
     private function save_permisos_usuario(){
         try {
             $permisos = json_decode($this->parametros['permisos_usu']);
+            $rpta = 1;
             foreach ($permisos as $permiso) {
-                if($permiso->permiso_id ==0){
+                $sql ="";
+                if($permiso->permiso_id == 0){
                     $sql = "INSERT INTO carga_horaria_pagina_permisos (chpp_id_usu,chpp_id_pag) value(".$permiso->chpp_id_usu.",".$permiso->chpp_id_pag.");";
+                    $this->con->simple_query_mysql($sql);
                 }else{
-                    if($permiso->chpp_estado ==0){
+                    if($permiso->chpp_estado == 0){
                         $sql = "delete from carga_horaria_pagina_permisos where chpp_id=".$permiso->permiso_id.";";
+                        $this->con->simple_query_mysql($sql);
                     }
                 }
-                $this->con->simple_query_mysql($sql);
             }
-            return json_encode(['respuesta'=> 1, 'mensaje' => "Se han guardado exitosamente los permisos"]);
+            if($_SESSION['usu_id'] == $this->parametros['id_usu']){
+                $this->set_Permisos($this->parametros['id_usu']);
+                $rpta = 2;
+            }
+            return json_encode(['respuesta'=> $rpta, 'mensaje' => "Se han guardado exitosamente los permisos"]);
         } catch (Exception $ex) {
             return json_encode(['respuesta'=> 0, 'mensaje' => $ex]);
         }
     }
     
-    
+    private function set_Permisos($usu_id)
+  {
+    try {
+      $sql = "SELECT chpp_id_pag FROM carga_horaria_pagina_permisos where chpp_id_usu =" . $usu_id . ";";
+      $datos = $this->con->return_query_mysql($sql);
+      $error = $this->con->error_mysql();
+      $permisos = array();
+      if (empty($error)) {
+        while ($row = mysqli_fetch_array($datos)) {
+          array_push($permisos, $row['chpp_id_pag']);
+        }
+      }
+      $_SESSION['permisos'] = $permisos;
+    } catch (Exception $ex) {
+      die("Error: " . $this->con->error_mysql(). $ex);  
+    }
+  }
 }

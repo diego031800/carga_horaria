@@ -237,7 +237,13 @@ function guardar_permisos(){
       let datos = JSON.parse(data);
       if (datos.respuesta == 1) {
         toastr["success"](datos.mensaje, "Guardar permisos");
-      } else {
+      } else if(datos.respuesta == 2){
+        toastr["success"](datos.mensaje, "Guardar permisos");
+        setTimeout(() => {
+          location.reload();
+        }, 350);
+      } 
+      else {
         toastr["error"](datos.mensaje, "Guardar permisos");
       }
     },
