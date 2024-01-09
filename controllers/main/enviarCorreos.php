@@ -4,6 +4,7 @@ require '../../vendor/phpmailer/phpmailer/src/Exception.php';
 require '../../vendor/phpmailer/phpmailer/src/PHPMailer.php';
 require '../../vendor/phpmailer/phpmailer/src/SMTP.php';
 include_once '../../models/main/datosEnvio.php';
+require_once '../config_correos.php';
 //include_once '../../controllers/main/pdfCredencial.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -24,33 +25,14 @@ class CorreoCargaHoraria
     private function configurarSMTP()
     {
         $this->mail->isSMTP();
-        $this->mail->Host = 'smtp.gmail.com';
+        $this->mail->Host = host_email;
         $this->mail->Port = 465;
         $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $this->mail->SMTPAuth = true;
-        $this->mail->Username = 'upg_utic@unitru.edu.pe';
-        $this->mail->Password = 'ojvg gftu qpbd urtr';
-        $this->mail->setFrom('upg_utic@unitru.edu.pe', 'UTIC POSGRADO');
-        $this->mail->CharSet = 'UTF-8'; 
-    }
-
-    public function enviarCorreoCierre($datos, $rutapdf, $nombreUnidad)
-    {
-        $respuesta= '';
-        try {
-            $this->mail->addAddress($datos['correo'],$datos['nombre']);
-            $this->mail->Subject = 'Cierre de carga horaria del SEMESTRE 2023 DE LA UNIDAD DE: '.$nombreUnidad;
-            $this->mail->Body = $this->generarMensajeCorreoCierre($nombreUnidad);
-            $this->mail->addAttachment($rutapdf, $nombreUnidad);
-            if ($this->mail->send()) {
-                $respuesta= 'Correo enviado con éxito';
-            } else {
-                $respuesta= 'Error al enviar el correo: ' . $this->mail->ErrorInfo;
-            }
-        } catch (Exception $ex) {
-            die("Error: " . $ex);
-        }
-        return $respuesta; 
+        $this->mail->Username = username_email;
+        $this->mail->Password = password_email;
+        $this->mail->setFrom(username_email, name_from);
+        $this->mail->CharSet = chart_set; 
     }
 
     public function enviarCredencial($item,$rutaPdf)
@@ -108,12 +90,6 @@ class CorreoCargaHoraria
         $mensaje .= '<p><a href="http://www.epgnew.unitru.edu.pe">www.epgnew.unitru.edu.pe</a></p>';
         $mensaje .= '<p>Video tutorial para el proceso de registro de notas online: <a href="https://drive.google.com/file/d/1tWDH4GhpmtW3mulvoW3Cib2J0EqZtzjx/view?usp=drive_link">Enlace al video</a></p>';
         $mensaje .='<p>ATTE. Unidad de Tecnologías Informáticas y Comunicaciones de la EPG.</p>';
-        return $mensaje;
-    }
-
-    private function generarMensajeCorreoCierre($unidad)
-    {
-        $mensaje = '';
         return $mensaje;
     }
 
