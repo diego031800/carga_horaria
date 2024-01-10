@@ -36,10 +36,9 @@
             }
         }
 
-        public function save_reporte_individual(){
+        public function save_reporte_individual($item){
             try{
                 $this->con->close_open_connection_mysql();
-                foreach ($datosGuardar as $item) {
                     $sql = "INSERT into carga_horaria_envio_credenciales ( sem_id, sec_id, chec_doc_id,
                         chec_doc_nombre, chec_doc_correo,chec_envio,chec_envio_fecha,chec_envio_error
                         ,fechahora,usuario, dispositivo) values(";
@@ -55,9 +54,10 @@
                     $sql .= "'".$_SESSION['usu_id']."', "; // p_usuario
                     $sql .= "'".$_SESSION['usu_ip']."');"; // p_dispositivo
                     $this->con->simple_query_mysql($sql);
-                }
+                    $mensaje = 'Se completó correctamente la sentencia';
+                    return json_encode(['respuesta'=>1, 'mensaje' => $mensaje, 'item'=> $item]);
             }catch (Exception $ex) {
-                die("Error: " . $this->con->error_mysql(). $ex);
+                return json_encode(['respuesta'=> 0, 'mensaje' => $ex]);
             }
         }
 

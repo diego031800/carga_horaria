@@ -127,11 +127,6 @@ function enviarCredenciales() {
     });
   });
 }
-/*
-function prueba(){
-  let url = 'pdfEnvio.php?semTxt='+sem_txt+'&secTxt='+ sec_txt+'&prgTxt='+ prg_txt;
-  window.open(url, '_blank');
-}*/
 
 async function promesaEnviar() {
   try {
@@ -142,6 +137,94 @@ async function promesaEnviar() {
   }
 }
 
+/* Pruebas */
+async function p_enviar_credencial() {
+  toastr["info"](
+    'Empezó el proceso de envío de correos, tenga paciencia, este proceso puede tardar un tiempo',
+    "Envío de credenciales"
+  );
+  var lista = p_armado_list();
+  var lista_respuesta=[];
+  btnEnviar.disabled = true;
+  $('#btnEnviando').show();
+  $('#btnEnviar').hide();
+  const batchSize = 2;
+  const grupos = [];
+  for (let i = 0; i < lista.length; i += batchSize) {
+    grupos.push(lista.slice(i, i + batchSize));
+  }
+
+  for (const grupo of grupos) {
+    await Promise.all(grupo.map(async (element) => {
+      item_json = JSON.stringify(element);
+      const response = await p_peticion_enviar(item_json);
+      if (response.respuesta == 1) {
+        lista_respuesta.push(response.item);
+      } else {
+        toastr["error"]("Envío de correo", "Hubo un error en el envío");
+      }
+    }));
+  }
+  $('#btnEnviar').show();
+  $('#btnEnviando').hide();
+  btnEnviar.disabled = false;
+  console.log(lista_respuesta);
+}
+
+function p_armado_list() {
+  var filasSeleccionadas = [];
+  var filas = document.querySelectorAll("#table_ch tbody tr");
+  sem_txt = cboSemestre.options[cboSemestre.selectedIndex].text;
+  sem_idCbo = cboSemestre.value;
+  sec_txt = cboUnidad.options[cboUnidad.selectedIndex].text;
+  sec_idCbo = cboUnidad.value;
+  filas.forEach(function (fila, index) {
+    var checkbox = fila.querySelector(".form-check-input");
+    if (checkbox.checked) {
+      // La fila está seleccionada
+      var nombre = fila.cells[2].textContent;
+      var correo = fila.cells[3].textContent;
+      var idx = docentes_array.findIndex((item) => item.docente == nombre);
+      var codigo = docentes_array[idx].doc_codigo;
+      var documento = docentes_array[idx].doc_documento;
+      var sem_codigo = docentes_array[idx].sem_codigo;
+      var doc_id = docentes_array[idx].doc_id;
+      // Agrega los datos al arreglo de filas seleccionadas
+      filasSeleccionadas.push({
+        nombre: nombre,
+        correo: correo,
+        codigo: codigo,
+        documento: documento,
+        doc_id: doc_id,
+        sem: sem_codigo,
+        sem_id: sem_idCbo,
+        sec_id: sec_idCbo
+      });
+    }
+  });
+  return filasSeleccionadas;
+}
+
+function p_peticion_enviar(item){
+  return new Promise(function (resolve, reject) {
+    $.ajax({
+      type: "POST",
+      url: "../../controllers/main/CorreosController.php",
+      data: "docente=" + item,
+      success: function (data) { // Habilitar el botón nuevamente
+        toastr["success"]("Envío exitoso", "Envío de correo");
+        resolve(JSON.parse(data)); // Resolvemos la promesa
+      },
+      error: function (data) {
+        btnEnviar.disabled = false; // Habilitar el botón nuevamente
+        toastr["error"]("Hubo un error en el envío", "Envío de correo");
+        reject("Error al mostrar"); // Rechazamos la promesa en caso de error
+      },
+    });
+  });
+}
+
+/* ================================================================================================================================ */
 function reportEnvioPDF(response){
   let responseJson = JSON.stringify(response);
   $.ajax({
@@ -285,6 +368,13 @@ function buscar() {
   });
 }
 
+function prueba(){
+  toastr["info"](
+      'Para ver y/o agregar los datos del docente suplente, active la opcion que dice: "Agregar docente suplente" ',
+      "Asignar docente"
+    );
+}
+
 /* FUNCION AL CARGAR EL DOCUMENTO */
 function load_document() {
   get_cbo_unidades();
@@ -293,8 +383,8 @@ function load_document() {
   buscar();
   cboUnidad.addEventListener("change", get_cbo_programas);
   btnBuscar.addEventListener("click", buscar);
-  btnEnviar.addEventListener("click", promesaEnviar);
-  btnReporte.addEventListener("click", reportGeneralPdf);
+  btnEnviar.addEventListener("click", p_enviar_credencial);
+  btnReporte.addEventListener("click", prueba);
 }
 
 // EVENTOS
