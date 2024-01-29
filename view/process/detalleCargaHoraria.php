@@ -12,8 +12,10 @@ if (!isset($_SESSION['login'])) {
     $currentUrl = $_SERVER['REQUEST_URI'];
     foreach ($GLOBALS['paginas'] as $item) {
         $url = $borrar . $item['url'];
+        error_log($url);
         if ($currentUrl === $url) {
             $_SESSION['id_pag_activa'] = $item['id'];
+            error_log($_SESSION['id_pag_activa']);
         }
     }
     if (!in_array($_SESSION['id_pag_activa'], $_SESSION['permisos'])) {

@@ -63,6 +63,7 @@ class Login
       if (empty($error)) {
         while ($row = mysqli_fetch_array($datos)) {
           array_push($permisos, $row['chpp_id_pag']);
+          error_log($row['chpp_id_pag']);
         }
       }
       error_log($sql);
