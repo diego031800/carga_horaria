@@ -65,6 +65,7 @@ class Login
           array_push($permisos, $row['chpp_id_pag']);
         }
       }
+      error_log($sql);
       return $permisos;
     } catch (Exception $ex) {
       die("Error: " . $this->con->error_mysql(). $ex);  
