@@ -75,7 +75,7 @@ function abrir_Modal_permisos(id_usuario) {
   flag_cambio_array_permisos = false;
   $("#myModal-permisos").fadeIn();
   txt_id_usu_modal.value = id_usuario;
-  llenar_Tabla();
+  llenar_Tabla_1();
   get_permisos_usuario(id_usuario);
 }
 
@@ -113,7 +113,7 @@ function marcar_permisos_usuario() {
   });
 }
 
-function llenar_Tabla() {
+function llenar_Tabla_1() {
   $("#table_paginas_1").DataTable().destroy();
   $("#table_paginas_1").DataTable({
     data: paginas,
@@ -125,6 +125,8 @@ function llenar_Tabla() {
     ],
     responsive: true,
     select: true,
+    paging: false,
+    scrollY: 400,
     lengthMenu: [8, 16, 20, 25],
     columnDefs: [
       {
@@ -135,12 +137,6 @@ function llenar_Tabla() {
     language: {
       search: "Buscar",
       zeroRecords: "Sin Resultados Coincidentes",
-      paginate: {
-        first: "Primera",
-        last: "Ultima",
-        next: "Siguiente",
-        previous: "Anterior",
-      },
       info: "Mostrando _START_ de _END_ de un total de _TOTAL_ Registros",
     },
     dom: '<"row"<"col-md-6"l><"col-md-6"f>>tp',
