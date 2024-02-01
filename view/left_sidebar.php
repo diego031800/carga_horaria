@@ -3,11 +3,9 @@
     include_once '../../models/config.php';
     include_once '../../models/main/Menu.php';
 
-    $menuItems1 = $GLOBALS['paginas'];
+    $menuItems1 = $GLOBALS['menu'];
     $parents = $GLOBALS['parents'];
-    // Obtener la URL actual
     $currentUrl = $_SERVER['REQUEST_URI'];
-    // Definir los enlaces y sus URLs correspondientes
 
     ?>
 

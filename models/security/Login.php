@@ -42,7 +42,8 @@ class Login
       $_SESSION['login'] = $fila['usu_login'];
       $_SESSION['nombres'] = $fila['nombres'];
       $_SESSION['usu_ip'] = $this->parametros['ip'];
-      $_SESSION['permisos'] = $this->get_Permisos($usu_id);
+      //$_SESSION['permisos'] = $this->get_Permisos($usu_id);
+      $this->get_Permisos($usu_id);
       $_SESSION['id_pag_activa'] = 0;
     }
     if (!empty($usu_id)) {
@@ -63,11 +64,9 @@ class Login
       if (empty($error)) {
         while ($row = mysqli_fetch_array($datos)) {
           array_push($permisos, $row['chpp_id_pag']);
-          error_log($row['chpp_id_pag']);
         }
       }
-      error_log($sql);
-      return $permisos;
+      $_SESSION['permisos'] = $permisos;
     } catch (Exception $ex) {
       die("Error: " . $this->con->error_mysql(). $ex);  
     }

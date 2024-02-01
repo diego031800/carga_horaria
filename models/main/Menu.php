@@ -16,6 +16,30 @@ class Menu
             /*$sql = "select * from carga_horaria_pagina CHP
             INNER JOIN carga_horaria_pagina_permisos CHPP on CHPP.chpp_id_pag = CHP.chp_id
             where CHPP.chpp_id_usu = ".$id_usu.";";*/
+            $sql="SELECT * FROM carga_horaria_pagina where chp_tipo = 1";
+            $datos = $this->con->return_query_mysql($sql);
+            $error = $this->con->error_mysql();
+            $paginas = array();
+            if (empty($error)) {
+              while ($row = mysqli_fetch_array($datos)) {
+                $pag_menu = array(
+                    'id' => $row['chp_id'],
+                    'name' => $row['chp_nombre'],
+                    'url'=> $row['chp_url'],
+                    'parent_id' => $row['chp_parent']
+                );
+                $paginas[] = $pag_menu;
+              }
+              return $paginas;
+            }
+        } catch (Exception $ex) {
+          die("Error: " . $this->con->error_mysql(). $ex);  
+        }
+    }
+
+    public function get_menu($id_usu)
+    {
+        try {
             $sql="SELECT * FROM carga_horaria_pagina where chp_orden = 1";
             $datos = $this->con->return_query_mysql($sql);
             $error = $this->con->error_mysql();

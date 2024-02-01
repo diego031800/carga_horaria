@@ -8,16 +8,24 @@ if (!isset($_SESSION['login'])) {
     $menu = new Menu();
     $GLOBALS['paginas'] = $menu->get_paginas($_SESSION['usu_id']);
     $GLOBALS['parents'] = $menu->get_parents($_SESSION['usu_id']);
+    $GLOBALS['menu'] = $menu->get_menu($_SESSION['usu_id']);
     $borrar = '/carga_horaria';
     $currentUrl = $_SERVER['REQUEST_URI'];
+    error_log($currentUrl);
+    error_log("======================");
     foreach ($GLOBALS['paginas'] as $item) {
-        $url = $item['url'];
+        $url = $borrar.$item['url'];
+        error_log($url);
         if ($currentUrl == $url) {
             $_SESSION['id_pag_activa'] = $item['id'];
+            error_log("======================");
             error_log($_SESSION['id_pag_activa']);
+            error_log($item['id']);
         }
     }
     if (!in_array($_SESSION['id_pag_activa'], $_SESSION['permisos'])) {
+        error_log("======================");
+        error_log($_SESSION['id_pag_activa']);
         header("Location:../mensajes/SinPermiso.php");
     }
     date_default_timezone_set('America/Lima');

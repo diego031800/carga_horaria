@@ -9,11 +9,11 @@ else {
     $menu = new Menu();
     $GLOBALS['paginas'] = $menu->get_paginas($_SESSION['usu_id']);
     $GLOBALS['parents'] = $menu->get_parents($_SESSION['usu_id']);
+    $GLOBALS['menu'] = $menu->get_menu($_SESSION['usu_id']);
     $borrar = '/carga_horaria';
     $currentUrl = $_SERVER['REQUEST_URI'];
-    error_log($currentUrl);
     foreach ($GLOBALS['paginas'] as $item) {
-        $url = $item['url'];
+        $url = $borrar.$item['url'];
         if ($currentUrl == $url) {
             $_SESSION['id_pag_activa'] = $item['id'];
         }
