@@ -14,7 +14,7 @@ else {
     error_log($currentUrl);
     foreach ($GLOBALS['paginas'] as $item) {
         $url = $item['url'];
-        if ($currentUrl === $url) {
+        if ($currentUrl == $url) {
             $_SESSION['id_pag_activa'] = $item['id'];
         }
     }

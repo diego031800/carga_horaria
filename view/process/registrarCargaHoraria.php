@@ -12,7 +12,7 @@ if (!isset($_SESSION['login'])) {
     $currentUrl = $_SERVER['REQUEST_URI'];
     foreach ($GLOBALS['paginas'] as $item) {
         $url = $item['url'];
-        if ($currentUrl === $url) {
+        if ($currentUrl == $url) {
             $_SESSION['id_pag_activa'] = $item['id'];
         }
     }
