@@ -3,8 +3,8 @@
     include_once '../../models/config.php';
     include_once '../../models/main/Menu.php';
 
-    $menuItems1 = $GLOBALS['menu'];
-    $parents = $GLOBALS['parents'];
+    $menuItems1 = $_SESSION['menu'];
+    $parents = $_SESSION['parents'];
     $currentUrl = $_SERVER['REQUEST_URI'];
 
     ?>
