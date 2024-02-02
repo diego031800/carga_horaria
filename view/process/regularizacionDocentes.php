@@ -13,7 +13,7 @@ else {
     $borrar = '/carga_horaria';
     $currentUrl = $_SERVER['REQUEST_URI'];
     foreach ($GLOBALS['paginas'] as $item) {
-        $url = $borrar.$item['url'];
+        $url = $item['url'];
         if ($currentUrl == $url) {
             $_SESSION['id_pag_activa'] = $item['id'];
         }
