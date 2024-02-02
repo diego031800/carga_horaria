@@ -11,12 +11,13 @@ if (!isset($_SESSION['login'])) {
     $GLOBALS['menu'] = $menu->get_menu($_SESSION['usu_id']);
     $borrar = '/carga_horaria';
     $currentUrl = $_SERVER['REQUEST_URI'];
-    foreach ($GLOBALS['paginas'] as $item) {
+    /*foreach ($GLOBALS['paginas'] as $item) {
         $url = $borrar.$item['url'];
         if ($currentUrl == $url) {
             $_SESSION['id_pag_activa'] = $item['id'];
         }
-    }
+    }*/
+    $_SESSION['id_pag_activa'] = 13;
     if (!in_array($_SESSION['id_pag_activa'], $_SESSION['permisos'])) {
         header("Location:../mensajes/SinPermiso.php");
     }
