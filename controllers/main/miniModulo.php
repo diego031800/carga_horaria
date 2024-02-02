@@ -8,20 +8,6 @@ include_once '../../controllers/main/utilidades/pdfCredencial.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-$destinatarios = array(
-    /*(object) array('correo' => 'bgutierrez@unitru.edu.pe', 'nombre' => 'GUTIERREZ PEREZ BLANCA NELLY','codigo' => 'GUPÉ9545', 'documento'=> '18197726'),
-    (object) array('correo' => 'cvenegas@unitru.edu.pe', 'nombre' => 'PIMINCHUMO CECILIO VENEGAS','codigo' => 'VEPI4596', 'documento'=> '17971014'),
-    (object) array('correo' => 'alacruz@unitru.edu.pe', 'nombre' => 'LA CRUZ TORRES ANGEL IGNACIO','codigo' => 'DETO7692', 'documento'=> '17891610'),
-    (object) array('correo' => 'arafaels@unitru.edu.pe', 'nombre' => 'RAFAEL SANCHEZ AUREA ELIZABETH','codigo' => 'RASA4549', 'documento'=> '17930565'),
-    (object) array('correo' => 'ranticona@unitru.edu.pe', 'nombre' => 'ANTICONA SANDOVAL ROSA UBALDINA','codigo' => 'ANSA7169', 'documento'=> '17855357'),
-    (object) array('correo' => 'mbocanegra@unitru.edu.pe', 'nombre' => 'BOCANEGRA RODRIGUEZ DE CASTRO MARIA DEL PILAR','codigo' => 'BORO4259', 'documento'=> '18834971'),
-    (object) array('correo' => 'manzanillo1962@gmail.com', 'nombre' => 'PONCE RUIZ DIONISIO VITALIO','codigo' => 'PORU4057', 'documento'=> '1756436430'),
-    (object) array('correo' => 'edcampechano@unitru.edu.pe', 'nombre' => 'CAMPECHANO ESCALONA EDUARDO JOSE','codigo' => 'CAES8006', 'documento'=> '00157237'),
-    (object) array('correo' => 'eaguilarc@unitru.edu.pe', 'nombre' => 'AGUILAR CARRERA ERIKA DEL CARMEN','codigo' => 'AGCA7939', 'documento'=> '19082578')*/
-    // Agrega más objetos/anotaciones según sea necesario
-);
-// Crea el PDF con los datos del usuario y lo guarda en una variable
-
 $correo="";
 $codigo="";
 $nombre="";

@@ -5,7 +5,6 @@ session_start();
 if (!isset($_SESSION['login'])) {
     header("Location:../../index.php");
 } else {
-    $menu = new Menu();
     date_default_timezone_set('America/Lima');
 ?>
 <!DOCTYPE html>
