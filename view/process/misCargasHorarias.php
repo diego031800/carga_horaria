@@ -9,6 +9,7 @@ if (!isset($_SESSION['login'])) {
     $menu = new Menu();
     $GLOBALS['paginas'] = $menu->get_paginas($_SESSION['usu_id']);
     $GLOBALS['parents'] = $menu->get_parents($_SESSION['usu_id']);
+    $GLOBALS['menu'] = $menu->get_menu($_SESSION['usu_id']);
     date_default_timezone_set('America/Lima');
 ?>
     <!DOCTYPE html>
