@@ -368,13 +368,6 @@ function buscar() {
   });
 }
 
-function prueba(){
-  toastr["info"](
-      'Para ver y/o agregar los datos del docente suplente, active la opcion que dice: "Agregar docente suplente" ',
-      "Asignar docente"
-    );
-}
-
 /* FUNCION AL CARGAR EL DOCUMENTO */
 function load_document() {
   get_cbo_unidades();
@@ -384,7 +377,7 @@ function load_document() {
   cboUnidad.addEventListener("change", get_cbo_programas);
   btnBuscar.addEventListener("click", buscar);
   btnEnviar.addEventListener("click", p_enviar_credencial);
-  btnReporte.addEventListener("click", prueba);
+  btnReporte.addEventListener("click", reportGeneralPdf);
 }
 
 // EVENTOS
