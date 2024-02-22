@@ -77,6 +77,60 @@ date_default_timezone_set('America/Lima');
             }
         }
 
+        private function get_asignaciones_docentes_asesores()
+        {
+            try {
+                $sql = "Select 
+                        AD.doc_id,
+                        AD.doc_documento,
+                        AD.doc_codigo,
+                        AD.doc_email,
+                        AMC.sem_id,
+                        ASE.sem_codigo,
+                        AP.sec_id
+                    from ADMISION.MATRICULA_CURSO AMC 
+                    INNER JOIN ADMISION.DOCENTE AD ON AD.doc_id = AMC.mcu_asesor
+                    INNER JOIN ADMISION.SEMESTRE ASE ON ASE.sem_id = AMC.sem_id
+                    INNER JOIN ADMISION.MATRICULA AM ON AM.mat_id = AMC.mat_id
+                    INNER JOIN ADMISION.ALUMNO_ESTUDIO AES ON AES.aes_id = AM.aes_id
+                    INNER JOIN ADMISION.PROGRAMA AP ON AP.prg_id = AES.prg_id
+                    where AMC.mcu_asesor <> 0 and AMC.mcu_estado = 1 and AD.doc_email is not null and AD.doc_documento is not null and";
+                $sql .="AP.sec_id=".$this->parametros['p_sec_id']."and";   
+                $sql .="AMC.sem_id=".$this->parametros['p_sem_id']."";
+                $sql .= "GROUP BY AD.doc_id, AD.doc_documento, AD.doc_codigo, AMC.sem_id,ASE.sem_codigo,AD.doc_email,AP.sec_id";
+                //$sql .= "'".$this->parametros['p_sem_id']."', "; // p_sem_id
+                //$sql .= "'".$this->parametros['p_sec_id']."'); "; // p_sec_id
+                // return $sql;
+                $datos = $this->con->return_query_sqlsrv($sql);
+                // return json_encode($datos);
+                $cuerpo_ch = '';
+                $data = [];
+                $data_table = array();
+                $index = 0;
+                while ($row = $datos->fetch(PDO::FETCH_ASSOC)) {
+                    $index ++;
+                    $data['nro'] = $index; 
+                    $data['acciones'] = '<div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="1" id="envio_'.$index.'" checked>
+                                            <label class="form-check-label" for="envio_'.$index.'">
+                                                Enviar credenciales
+                                            </label>
+                                        </div>';
+                    $data['docente'] = $row['doc_nombres'];
+                    $data['correo'] = $row['doc_email'];
+                    $data['sem_codigo'] = $row['sem_codigo'];
+                    $data['doc_documento'] = $row['doc_documento'];
+                    $data['doc_codigo'] = $row['doc_codigo'];
+                    $data['doc_email'] = $row['doc_email'];
+                    $data['doc_id'] = $row['doc_id'];
+                    array_push($data_table, $data);
+                }
+                return json_encode($data_table);
+            } catch (Exception $ex) {
+                die("Error: " . $ex);
+            }
+        }
+
 		private function get_cargas_horarias()
 		{
 			try {
