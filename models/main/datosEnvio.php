@@ -36,14 +36,15 @@
             }
         }
 
-        public function save_reporte_individual($item){
+        public function save_reporte_individual($item, $is_asesor){
             try{
                 $this->con->close_open_connection_mysql();
-                    $sql = "INSERT into carga_horaria_envio_credenciales ( sem_id, sec_id, chec_doc_id,
+                    $sql = "INSERT into carga_horaria_envio_credenciales ( sem_id, sec_id,is_asesor, chec_doc_id,
                         chec_doc_nombre, chec_doc_correo,chec_envio,chec_envio_fecha,chec_envio_error
                         ,fechahora,usuario, dispositivo) values(";
                     $sql .= "".$item['sem_id'].",";
                     $sql .= "".$item['sec_id'].",";
+                    $sql .= "".$is_asesor.",";
                     $sql .= "".$item['doc_id'].",";
                     $sql .= "'".$item['nombre']."',";
                     $sql .= "'".$item['correo']."',";
@@ -61,11 +62,12 @@
             }
         }
 
-        public function get_ReporteEnvios($sem, $sec){
+        public function get_ReporteEnvios($sem, $sec,$is_asesor){
             try {
                 $sql = "CALL sp_getReporteEnvios(";
                 $sql .= "".$sem.", ";
-                $sql .= "".$sec."); ";
+                $sql .= "".$sec.", ";
+                $sql .= "".$is_asesor."); ";
                 $datos = $this->con->return_query_mysql($sql);
                 $respuesta = array();
                 $error = $this->con->error_mysql();

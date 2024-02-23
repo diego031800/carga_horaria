@@ -13,9 +13,10 @@ $pro = '';
 $sem_id = '';
 $sec_id = '';
 $pro_id = '';
+$is_asesor = '';
 $report = 0;
 $datosDoc = array();
-
+$titulos= '';
 if (isset($_POST['semTxt']) && isset($_POST['secTxt']) && isset($_POST['reporte'])) {
     $sem = $_POST['semTxt'];
     $sec = $_POST['secTxt'];
@@ -25,12 +26,18 @@ if (isset($_POST['semTxt']) && isset($_POST['secTxt']) && isset($_POST['reporte'
             $datosDoc = json_decode($_POST['docs']);
         }
     }else{
-        if(isset($_POST['sem_id']) && isset($_POST['sec_id'])){
+        if(isset($_POST['sem_id']) && isset($_POST['sec_id']) && isset($_POST['is_asesor'])){
             $sem_id = $_POST['sem_id'];
             $sec_id = $_POST['sec_id'];
+            $is_asesor = $_POST['is_asesor'];
         }
         $datosEnvio = new datosEnvio();
-        $datosDoc = $datosEnvio->get_ReporteEnvios(intval($sem_id), intval($sec_id));
+        $datosDoc = $datosEnvio->get_ReporteEnvios(intval($sem_id), intval($sec_id), intval($is_asesor));
+        if($is_asesor == 0){
+            $titulos = 'Docentes';
+        }else{
+            $titulos = 'Asesores';
+        }
     }
 }
 
@@ -41,7 +48,7 @@ $cabecera = "<header>
                     <td style='width: 30%;'> <img src='../../assets/images/documentos/img_upg_CMYK.png' style='width: 160px; height: auto;'> </td>
                     <td class='text-center' style='width: 40%;'>
                         <div style='text-align: center; font-weight: bold;'>
-                        Envío de credenciales en el semestre: ".$sem."
+                        Envío de credenciales a ".$titulos." en el semestre: ".$sem."
                         </div> 
                     </td>
                     <td style='width: 30%;'></td>
@@ -66,7 +73,7 @@ $html = "<header>
                     <td style='width: 30%;'> <img src='../../assets/images/documentos/img_upg_CMYK.png' style='width: 160px; height: auto;'> </td>
                     <td class='text-center' style='width: 40%;'>
                         <div style='text-align: center; font-weight: bold;'>
-                        Envío de credenciales en el semestre: ".$sem."
+                        Envío de credenciales a ".$titulos." en el semestre: ".$sem."
                         </div> 
                     </td>
                     <td style='width: 30%;'></td>

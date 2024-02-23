@@ -90,6 +90,13 @@ if (!isset($_SESSION['login'])) {
                                             </select>
                                             <small style="color: #666666;"><b>Filtar</b> por Unidad</small>
                                         </div>
+                                        <div class="col-lg-3 col-6">
+                                            <select class="form-select" id="cboTipoDocente">
+                                                <option value="0" selected>Docente</option>
+                                                <option value="1">Asesor</option>
+                                            </select>
+                                            <small style="color: #666666;"><b>Asesor o Docente</b></small>
+                                        </div>
                                         <div class="col-lg-1 col-md-2 col-6 d-flex align-items-center h-100 border border-start-0 border-bottom-0 border-top-0 border-dark-subtle" style="height: 80px!important;">
                                             <button class="btn btn-primary align-middle" type="button" id="btnBuscar">
                                                 <i class="fa fa-search"></i>

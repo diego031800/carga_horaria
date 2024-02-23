@@ -20,6 +20,9 @@ date_default_timezone_set('America/Lima');
                 case 'get_asignaciones_docentes':
                     echo $this->get_asignaciones_docentes();
                     break;
+                case 'get_asignaciones_docentes_asesores':
+                    echo $this->get_asignaciones_docentes_asesores();
+                    break;
                 case 'get_cargas_horarias':
                     echo $this->get_cargas_horarias();
                     break;
@@ -81,23 +84,24 @@ date_default_timezone_set('America/Lima');
         {
             try {
                 $sql = "Select 
-                        AD.doc_id,
-                        AD.doc_documento,
-                        AD.doc_codigo,
-                        AD.doc_email,
-                        AMC.sem_id,
                         ASE.sem_codigo,
-                        AP.sec_id
+                        AD.doc_codigo,
+                        AD.doc_documento,
+                        AD.doc_nombres,
+                        AD.doc_email,
+                        AD.doc_id
                     from ADMISION.MATRICULA_CURSO AMC 
                     INNER JOIN ADMISION.DOCENTE AD ON AD.doc_id = AMC.mcu_asesor
                     INNER JOIN ADMISION.SEMESTRE ASE ON ASE.sem_id = AMC.sem_id
                     INNER JOIN ADMISION.MATRICULA AM ON AM.mat_id = AMC.mat_id
                     INNER JOIN ADMISION.ALUMNO_ESTUDIO AES ON AES.aes_id = AM.aes_id
                     INNER JOIN ADMISION.PROGRAMA AP ON AP.prg_id = AES.prg_id
-                    where AMC.mcu_asesor <> 0 and AMC.mcu_estado = 1 and AD.doc_email is not null and AD.doc_documento is not null and";
-                $sql .="AP.sec_id=".$this->parametros['p_sec_id']."and";   
+                    where AMC.mcu_asesor <> 0 and AMC.mcu_estado = 1 and 
+                    (AD.doc_email is not null and AD.doc_email <> '') and 
+                    (AD.doc_documento is not null and AD.doc_documento <> '00000000') and ";
+                $sql .="AP.sec_id=".$this->parametros['p_sec_id']." and ";   
                 $sql .="AMC.sem_id=".$this->parametros['p_sem_id']."";
-                $sql .= "GROUP BY AD.doc_id, AD.doc_documento, AD.doc_codigo, AMC.sem_id,ASE.sem_codigo,AD.doc_email,AP.sec_id";
+                $sql .= " GROUP BY AD.doc_id, AD.doc_documento, AD.doc_codigo,ASE.sem_codigo,AD.doc_email,AD.doc_nombres";
                 //$sql .= "'".$this->parametros['p_sem_id']."', "; // p_sem_id
                 //$sql .= "'".$this->parametros['p_sec_id']."'); "; // p_sec_id
                 // return $sql;

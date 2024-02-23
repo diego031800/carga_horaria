@@ -1,6 +1,9 @@
+// Filtros
 let cboSemestre = document.getElementById('cboSemestre');
 let cboUnidad = document.getElementById('cboUnidad');
 let cboPrograma = document.getElementById('cboPrograma');
+let cboTipoDocente = document.getElementById('cboTipoDocente');
+
 let btnBuscar = document.getElementById('btnBuscar');
 let btnNuevaCarga = document.getElementById('btnNuevaCarga');
 let btnAtras = document.getElementById('btnAtras');
@@ -146,6 +149,7 @@ async function p_enviar_credencial() {
   var lista = p_armado_list();
   var lista_respuesta=[];
   btnEnviar.disabled = true;
+  is_asesor = cboTipoDocente.value;
   $('#btnEnviando').show();
   $('#btnEnviar').hide();
   const batchSize = 2;
@@ -157,7 +161,7 @@ async function p_enviar_credencial() {
   for (const grupo of grupos) {
     await Promise.all(grupo.map(async (element) => {
       item_json = JSON.stringify(element);
-      const response = await p_peticion_enviar(item_json);
+      const response = await p_peticion_enviar(item_json, is_asesor);
       if (response.respuesta == 1) {
         lista_respuesta.push(response.item);
       } else {
@@ -205,12 +209,15 @@ function p_armado_list() {
   return filasSeleccionadas;
 }
 
-function p_peticion_enviar(item){
+function p_peticion_enviar(item, is_asesor){
   return new Promise(function (resolve, reject) {
     $.ajax({
       type: "POST",
       url: "../../controllers/main/CorreosController.php",
-      data: "docente=" + item,
+      data: {
+        p_is_asesor:is_asesor,
+        docente : item
+      },
       success: function (data) { // Habilitar el botón nuevamente
         toastr["success"]("Envío exitoso", "Envío de correo");
         resolve(JSON.parse(data)); // Resolvemos la promesa
@@ -262,6 +269,7 @@ function reportGeneralPdf(){
   sem_idCbo = cboSemestre.value;
   sec_txt = cboUnidad.options[cboUnidad.selectedIndex].text;
   sec_idCbo = cboUnidad.value;
+  is_asesor = cboTipoDocente.value;
   $.ajax({
     type: "POST",
     url: "pdfEnvio.php", // Reemplaza esto con la URL de tu servidor
@@ -270,7 +278,8 @@ function reportGeneralPdf(){
       secTxt: sec_txt,
       reporte: 1,
       sem_id: sem_idCbo,
-      sec_id: sec_idCbo
+      sec_id: sec_idCbo,
+      is_asesor : is_asesor
     },xhrFields: {
         responseType: 'blob'
     },
@@ -300,7 +309,8 @@ function back() {
 
 /* FUNCION DE BUSCAR */
 function buscar() {
-  let opcion = "get_asignaciones_docentes";
+  let opcion = cboTipoDocente.value == 0? "get_asignaciones_docentes":"get_asignaciones_docentes_asesores";
+  console.log(opcion);
   let p_sem_id = cboSemestre.value ? cboSemestre.value : 0;
   let p_sec_id = cboUnidad.value ? cboUnidad.value : 0;
   $.ajax({
