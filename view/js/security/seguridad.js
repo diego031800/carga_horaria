@@ -1,4 +1,5 @@
 let txt_id_usu_modal = document.getElementById("id_usuario");
+let titulo_modal = document.getElementById("titulo_modal");
 let usuarios = [];
 let paginas = [];
 let permisos = [];
@@ -73,6 +74,8 @@ function load_document() {
 
 function abrir_Modal_permisos(id_usuario) {
   flag_cambio_array_permisos = false;
+  let indx_usu = usuarios.findIndex((item) => id_usuario == item.usu_id);
+  titulo_modal.textContent = "GESTIONAR PERMISOS DE: " + usuarios[indx_usu].nombres;
   $("#myModal-permisos").fadeIn();
   txt_id_usu_modal.value = id_usuario;
   llenar_Tabla_1();

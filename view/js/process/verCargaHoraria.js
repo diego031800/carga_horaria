@@ -4,7 +4,7 @@ let txtSemestre = document.getElementById('txtSemestre');
 let cboUnidad = document.getElementById('cboUnidad');
 let txtUnidad = document.getElementById('txtUnidad');
 let btnDescargarPdf = document.getElementById('btnDescargarPdf');
-let btnDescargarExc = document.getElementById('btnDescargarExc');
+//let btnDescargarExc = document.getElementById('btnDescargarExc');
 let btnBuscar = document.getElementById('btnBuscar');
 let load_table = document.getElementById('load_table');
 
@@ -83,7 +83,7 @@ function search_carga_horaria() {
       tabla = data;
       $('#tabla_carga_horaria').html(tabla);
       btnDescargarPdf.disabled = false;
-      btnDescargarExc.disabled = false;
+      //btnDescargarExc.disabled = false;
     },
     error: function (data) {
       alert("Error al mostrar");
