@@ -172,7 +172,7 @@ async function p_enviar_credencial() {
   $('#btnEnviar').show();
   $('#btnEnviando').hide();
   btnEnviar.disabled = false;
-  console.log(lista_respuesta);
+  reportEnvioPDF(lista_respuesta);
 }
 
 function p_armado_list() {
