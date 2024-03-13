@@ -399,6 +399,7 @@ function datos_docente(p_cgd_id) {
 
 function generar_pdf(){
   let sem_id = cboSemestre.value;
+  let sem_txt = cboSemestre.options[cboSemestre.selectedIndex].text;
   if (sem_id != "") {
     let p_uni_id = cboUnidad.value != ''? cboUnidad.value :0;
     let p_pro_id = cboPrograma.value != ''? cboPrograma.value :0;
@@ -410,7 +411,8 @@ function generar_pdf(){
     let p_doc = cboDocentes.value != ''? cboDocentes.value :0;
     let p_fec = cboFechas.value != ''? cboFechas.value :0;
     let url = 'pdfDetalleReporte.php?'+
-    'sem_id='+sem_id+
+    'sem='+sem_txt+
+    '&sem_id='+sem_id+
     '&p_uni_id='+p_uni_id+
     '&p_pro_id='+p_pro_id+
     '&p_cic_id='+p_cic_id+

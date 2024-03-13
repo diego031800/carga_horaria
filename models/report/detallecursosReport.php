@@ -193,8 +193,8 @@ class DetalleCursosReportes{
             AND CHC.chc_horas ".$this->set_parametro($this->parametros['p_hrs'])."
             GROUP BY CHG.ccg_id
             HAVING 
-            count(CHGD.cgd_id) ".$this->set_parametro($this->parametros['p_doc'])."
-            AND count(CHGF.cgf_id) ".$this->set_parametro($this->parametros['p_fec'])."
+            count(distinct CHGD.cgd_id) ".$this->set_parametro($this->parametros['p_doc'])."
+            AND count(distinct CHGF.cgf_id) ".$this->set_parametro($this->parametros['p_fec'])."
             order by CH.sec_id;
             ";
             $data = array();
