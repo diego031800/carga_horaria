@@ -100,8 +100,9 @@ if (!isset($_SESSION['login'])) {
                                         <i class="fa fa-search"></i>&nbsp;&nbsp; Buscar</button>
                                 </div>
                                 <div class="col-lg-2 col-6">
-                                    <button class="btn btn-info text-light m-4" id="btnDetalles">
-                                        <i class="fa fa-search"></i>&nbsp;&nbsp; Detalles</button>
+                                    <a class="btn btn-info text-light m-4" id="btnDetalles"
+                                        href="/view/report/detalle_reporte_cursos.php">
+                                        <i class="fa fa-search"></i>&nbsp;&nbsp; Detalles</a>
                                 </div>
                             </div>
                         </div>
@@ -110,44 +111,73 @@ if (!isset($_SESSION['login'])) {
                         style="color: #ffffff; background-color:rgba(135, 135, 135, 0.09); border-radius: 18px;">
                         <div class="card-body">
                             <h5 style="color: #666666;">Gráficos</h5>
-                            <div>
-                                <canvas id="myChart" width="400" height="100"></canvas>
+                            <div class="row">
+                                <div class="col-12">
+                                    <canvas id="cursosXunidad" width="400" height="100"></canvas>
+                                </div>
+                                <div class="col-12">
+                                    <hr style="height: 2px; background-color: black; margin-left: 35%; width: 25%;"
+                                        id="separador_1">
+                                </div>
+                                <div class="col-6">
+                                    <canvas id="cursosXgrupo" width="400" height="100"></canvas>
+                                </div>
+                                <div class="col-6" style="margin-top: 50px;">
+                                    <table id="tbl_cursos_grupos_leyenda"
+                                        class="table table-striped table-hover table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Cantidad de grupos</th>
+                                                <th class="text-center">Cantidad de cursos</th>
+                                                <th class="text-center">Porcentaje</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                                <div class="col-12">
+                                    <hr style="height: 2px; background-color: black; margin-left: 35%; width: 25%;"
+                                        id="separador_2">
+                                </div>
+                                <div class="col-6">
+                                    <canvas id="cursosXhoras" width="300" height="200"></canvas>
+                                </div>
+                                <div class="col-6">
+                                    <table id="tbl_cursos_horas_leyenda" class="table table-bordered">
+                                        <thead>
+                                            <tr class="table-info">
+                                                <th class="text-center">HORAS</th>
+                                                <th class="text-center">CANTIDAD</th>
+                                                <th class="text-center">PORCENTAJE</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbl_cuerpo_2"></tbody>
+                                    </table>
+                                </div>
+                                <div class="col-12">
+                                    <hr style="height: 2px; background-color: black; margin-left: 35%; width: 25%;"
+                                        id="separador_3">
+                                </div>
+                                <div class="col-12">
+                                    <label style="color: #666666;" id="title_tbl_cursos_t_nt_unidad"><b>Cantidad de
+                                            cursos terminados y no terminados por cada unidad</b></label><br>
+                                    <table id="tbl_cursos_t_nt_unidad"
+                                        class="table table-bordered dt-responsive table-hover">
+                                        <thead>
+                                            <tr class="table-info">
+                                                <th class="text-center">N°</th>
+                                                <th class="text-center">UNIDAD</th>
+                                                <th class="text-center">CURSOS SIN TERMINAR</th>
+                                                <th class="text-center">CURSOS TERMINADOS</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbl_cuerpo_3"></tbody>
+                                    </table>
+                                    <span style="color: #666666;" id="nota_tbl_cursos_t_nt_unidad">No se tomaron en
+                                        cuenta los cursos sin fechas</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- main content area end -->
-        <!-- MODAL CURSO -->
-        <div class="modal" id="myModal-permisos">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="titulo_modal">GESTIONAR PERMISOS DE:</h5>
-                    </div>
-                    <div class="modal-body">
-                        <input type="number" id="id_usuario" hidden>
-                        <table id="table_paginas_1" class="table table-bordered dt-responsive table-hover">
-                            <thead>
-                                <tr class="table-info">
-                                    <th class="text-center">N°</th>
-                                    <th class="text-center">PÁGINA</th>
-                                    <th class="text-center">PARENT</th>
-                                    <th class="text-center">PERMITIDO</th>
-                                </tr>
-                            </thead>
-                            <tbody id="cuerpo_paginas"></tbody>
-                        </table>
-                        <div id="tbl_spinner_1"></div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-success" id="btnGuardarPermisos" onClick="guardar_permisos();">
-                            <i class="fa fa-save"></i> Guardar
-                        </button>
-                        <button class="btn btn-danger" onClick="$('#myModal-permisos').fadeOut();">
-                            <i class="fa fa-close"></i> Cerrar
-                        </button>
                     </div>
                 </div>
             </div>
