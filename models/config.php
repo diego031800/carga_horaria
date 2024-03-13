@@ -9,7 +9,7 @@
 
     // define('USER_NAME_SQL_SERVER', 'sa');
     // define('PASS_SQL_SERVER', '1478963sws**');
-    // define('HOST_SQL_SERVER', 'localhost');
+    // define('HOST_SQL_SERVER', 'DESKTOP-HOR1A53\SQLEXPRESS');
     // define('DB_NAME_SQL_SERVER', 'is_posgrado');
 
     // CONFIGURACION MY SQL SERVER
