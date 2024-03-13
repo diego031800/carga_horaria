@@ -141,7 +141,7 @@ function get_cant_cursos_horas(sem_id) {
         dataset.forEach((element) => {
           labels.push(element.Horas);
           cantidades.push(parseInt(element.Cantidad));
-          resultado= element.Cantidad*100/total_cursos;
+          resultado= parseInt(element.Cantidad)*100/total_cursos;
           element.Porcentaje = resultado.toFixed(2)+" %";
         });
         start_chart_cursos_horas(cantidades, labels);
