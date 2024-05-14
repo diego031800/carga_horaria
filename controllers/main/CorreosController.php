@@ -3,7 +3,7 @@
 date_default_timezone_set('America/Lima');
 include_once '../../controllers/main/enviarCorreos.php';
 include_once '../../controllers/main/utilidades/pdfCredencial.php';
-include_once '../../models/main/datosEnvio.php';
+include_once '../../models/report/enviocredencialesReport.php';
 session_start();
 $datos = '';
 $p_is_asesor = '';

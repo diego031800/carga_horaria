@@ -1,7 +1,7 @@
 <?php 
 
 require_once '../../vendor/autoload.php';
-include_once '../../models/main/datosEnvio.php';
+include_once '../../models/report/enviocredencialesReport.php';
 
 date_default_timezone_set('America/Lima');
 
@@ -9,35 +9,54 @@ session_start();
 
 $sem = '';
 $sec = '';
-$pro = '';
-$sem_id = '';
-$sec_id = '';
-$pro_id = '';
 $is_asesor = '';
-$report = 0;
+$estado_resultado = 0;
 $datosDoc = array();
 $titulos= '';
-if (isset($_POST['semTxt']) && isset($_POST['secTxt']) && isset($_POST['reporte'])) {
+$subtitulo= '';
+$fecha = '';
+$mes = '';
+$anio = '';
+
+$meses = array(
+    'Enero',
+    'Febrero',
+    'Marzo',
+    'Abril',
+    'Mayo',
+    'Junio',
+    'Julio',
+    'Agosto',
+    'Septiembre',
+    'Octubre',
+    'Noviembre',
+    'Diciembre'  
+  );
+
+if (isset($_POST['semTxt']) && isset($_POST['secTxt']) && isset($_POST['estado_resultado']) && isset($_POST['docs']) && isset($_POST['is_asesor'])) {
     $sem = $_POST['semTxt'];
     $sec = $_POST['secTxt'];
-    $report = intval($_POST['reporte']);
-    if($report == 0){
-        if(isset($_POST['docs'])){
-            $datosDoc = json_decode($_POST['docs']);
-        }
+    $estado_resultado = intval($_POST['estado_resultado']);
+    $datosDoc = json_decode($_POST['docs']);
+    $is_asesor = $_POST['is_asesor'];
+    if($is_asesor == 0){
+        $titulos = 'Docentes';
     }else{
-        if(isset($_POST['sem_id']) && isset($_POST['sec_id']) && isset($_POST['is_asesor'])){
-            $sem_id = $_POST['sem_id'];
-            $sec_id = $_POST['sec_id'];
-            $is_asesor = $_POST['is_asesor'];
+        $titulos = 'Asesores';
+    }
+    if($estado_resultado == 1){
+        $subtitulo = 'Reporte General';
+    }else if ($estado_resultado == 2){
+        if (isset($_POST['fecha'])) {
+            $fecha = $_POST['fecha'];
         }
-        $datosEnvio = new datosEnvio();
-        $datosDoc = $datosEnvio->get_ReporteEnvios(intval($sem_id), intval($sec_id), intval($is_asesor));
-        if($is_asesor == 0){
-            $titulos = 'Docentes';
-        }else{
-            $titulos = 'Asesores';
+        $subtitulo = 'Reporte de la fecha: '.$fecha;
+    } else{ 
+        if (isset($_POST['month']) && isset($_POST['year'])) {
+            $mes = $_POST['month'];
+            $anio = $_POST['year'];
         }
+        $subtitulo = 'Reporte del mes de '.$meses[$mes-1].' del año '.$anio;
     }
 }
 
@@ -55,6 +74,8 @@ $cabecera = "<header>
                     </tr>
                 </tbody>
             </table>
+            <br>
+            <span>".$subtitulo."</span>
         </header>
         <br>
         <body>
@@ -80,6 +101,8 @@ $html = "<header>
                     </tr>
                 </tbody>
             </table>
+            <br>
+            <span>".$subtitulo."</span>
         </header>
         <br>
         <body>
@@ -124,6 +147,8 @@ $html = "<header>
     $registrosPorPagina = 15;
     $registroContado = 1;
     $contador = 1; 
+    $lenghtDatos = count($datosDoc);
+    error_log($lenghtDatos);
     foreach ($datosDoc as $key) {
         $html .= "<tr>";
         //Numero
@@ -133,11 +158,7 @@ $html = "<header>
         //Correo
         $html .= "<td>".$key->correo."</td>";
         //Envio correcto
-        if ($key->envio == 1) {
-            $html .= "<td>SI</td>";
-        }else{
-            $html .= "<td>NO</td>";
-        }
+        $html .= "<td>".$key->envio."</td>";
         //Fecha de accion
         $html .= "<td>".$key->fechahora."</td>";
         //Descripcion de error
@@ -147,7 +168,10 @@ $html = "<header>
             $html .= "<td>".$key->error."</td>";
         }
         $html .= "</tr>";
-        if ($registroContado == $registrosPorPagina) {
+        
+        if($contador == $lenghtDatos){
+            $html .= "</tbody></table>";
+        } else if ($registroContado == $registrosPorPagina) {
             $html .= "</tbody></table><pagebreak />";
             $html .= $cabecera;
             $html .= $inicioTabla;
@@ -155,11 +179,9 @@ $html = "<header>
         }else{
             $registroContado++;
         }
-        
         $contador++;
     }
     
-    $html .= "</tbody></table>";
     $mpdf = new \Mpdf\Mpdf();
     $mpdf->defaultfooterline = 0;
     // Definir contenido para el pie de página

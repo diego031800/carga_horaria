@@ -310,7 +310,6 @@ function back() {
 /* FUNCION DE BUSCAR */
 function buscar() {
   let opcion = cboTipoDocente.value == 0? "get_asignaciones_docentes":"get_asignaciones_docentes_asesores";
-  console.log(opcion);
   let p_sem_id = cboSemestre.value ? cboSemestre.value : 0;
   let p_sec_id = cboUnidad.value ? cboUnidad.value : 0;
   $.ajax({
@@ -383,7 +382,7 @@ function load_document() {
   get_cbo_unidades();
   get_cbo_semestres();
   get_cbo_programas();
-  buscar();
+  //buscar();
   cboUnidad.addEventListener("change", get_cbo_programas);
   btnBuscar.addEventListener("click", buscar);
   btnEnviar.addEventListener("click", p_enviar_credencial);

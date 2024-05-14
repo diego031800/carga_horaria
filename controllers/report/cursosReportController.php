@@ -14,6 +14,10 @@
   {
     $parametros['sem_id'] = $_GET['sem_id'];
   }
+  if (isset($_GET['sec_id'])) 
+  {
+    $parametros['sec_id'] = $_GET['sec_id'];
+  }
 
   $CursosReportes = new CursosReportes();
   echo $CursosReportes->opciones($parametros);

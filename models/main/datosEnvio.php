@@ -3,7 +3,6 @@
     include_once '../../models/conexion.php';
 
     class datosEnvio{
-        //private $parametros = array();
         private $con;
 
         public function __construct()

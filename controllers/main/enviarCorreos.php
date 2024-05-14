@@ -3,7 +3,7 @@ date_default_timezone_set('America/Lima');
 require '../../vendor/phpmailer/phpmailer/src/Exception.php';
 require '../../vendor/phpmailer/phpmailer/src/PHPMailer.php';
 require '../../vendor/phpmailer/phpmailer/src/SMTP.php';
-include_once '../../models/main/datosEnvio.php';
+include_once '../../models/report/enviocredencialesReport.php';
 require_once '../config_correos.php';
 //include_once '../../controllers/main/pdfCredencial.php';
 
