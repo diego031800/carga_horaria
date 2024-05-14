@@ -108,7 +108,6 @@ if (!isset($_SESSION['login'])) {
                                                 <span role="status">&nbsp;&nbsp; Enviando ...</span>
                                             </button>
                                             <button class="btn btn-warning text-light m-4" id="btnEnviar" disabled><i class="fa fa-send-o"></i>&nbsp;&nbsp; Enviar credenciales</button>
-                                            <button class="btn btn-danger text-light m-4" id="btnReporte" disabled><i class="fa fa-file-pdf-o"></i>&nbsp;&nbsp; Reporte de envíos</button>
                                         </div>
                                     </div>
                                 </div>

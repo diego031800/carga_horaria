@@ -8,8 +8,6 @@ let btnBuscar = document.getElementById('btnBuscar');
 let btnNuevaCarga = document.getElementById('btnNuevaCarga');
 let btnAtras = document.getElementById('btnAtras');
 let lblTitulo = document.getElementById('lblTitulo');
-let btnVerPdf = document.getElementById('btnVerPdf');
-let btnReporte = document.getElementById('btnReporte');
 let btnEnviar = document.getElementById('btnEnviar');
 let btnEnviando = document.getElementById('btnEnviando');
 let docentes_array = [];
@@ -172,7 +170,6 @@ async function p_enviar_credencial() {
   $('#btnEnviar').show();
   $('#btnEnviando').hide();
   btnEnviar.disabled = false;
-  reportEnvioPDF(lista_respuesta);
 }
 
 function p_armado_list() {
@@ -232,75 +229,7 @@ function p_peticion_enviar(item, is_asesor){
 }
 
 /* ================================================================================================================================ */
-function reportEnvioPDF(response){
-  let responseJson = JSON.stringify(response);
-  $.ajax({
-    type: "POST",
-    url: "pdfEnvio.php", // Reemplaza esto con la URL de tu servidor
-    data: {
-      semTxt: sem_txt,
-      secTxt: sec_txt,
-      reporte: 0,
-      docs: responseJson
-    },xhrFields: {
-        responseType: 'blob'
-    },
-    success: function (response, status, xhr) {
-      try {
-        //Obtenemos la respuesta para convertirla a blob
-        var blob = new Blob([response], { type: 'application/pdf' });
-        var URL = window.URL || window.webkitURL;
-        //Creamos objeto URL
-        var downloadUrl = URL.createObjectURL(blob);
-        //Abrir en una nueva pestaña
-        window.open(downloadUrl);
-    } catch (ex) {
-        console.log(ex);
-    }
-    },
-    error: function (error) {
-      console.error("Error en la solicitud AJAX:", error);
-    }
-  });
-}
 
-function reportGeneralPdf(){
-  sem_txt = cboSemestre.options[cboSemestre.selectedIndex].text;
-  sem_idCbo = cboSemestre.value;
-  sec_txt = cboUnidad.options[cboUnidad.selectedIndex].text;
-  sec_idCbo = cboUnidad.value;
-  is_asesor = cboTipoDocente.value;
-  $.ajax({
-    type: "POST",
-    url: "pdfEnvio.php", // Reemplaza esto con la URL de tu servidor
-    data: {
-      semTxt: sem_txt,
-      secTxt: sec_txt,
-      reporte: 1,
-      sem_id: sem_idCbo,
-      sec_id: sec_idCbo,
-      is_asesor : is_asesor
-    },xhrFields: {
-        responseType: 'blob'
-    },
-    success: function (response, status, xhr) {
-      try {
-        //Obtenemos la respuesta para convertirla a blob
-        var blob = new Blob([response], { type: 'application/pdf' });
-        var URL = window.URL || window.webkitURL;
-        //Creamos objeto URL
-        var downloadUrl = URL.createObjectURL(blob);
-        //Abrir en una nueva pestaña
-        window.open(downloadUrl);
-    } catch (ex) {
-        console.log(ex);
-    }
-    },
-    error: function (error) {
-      console.error("Error en la solicitud AJAX:", error);
-    }
-  });
-}
 
 /* FUNCION PARA IR ATRAS */
 function back() {
@@ -328,7 +257,6 @@ function buscar() {
       let datos = JSON.parse(data);
       if (datos.length > 0) {
         btnEnviar.disabled = false;
-        btnReporte.disabled = false;
       }
       docentes_array = datos;
       btnBuscar.disabled = false;
@@ -386,7 +314,6 @@ function load_document() {
   cboUnidad.addEventListener("change", get_cbo_programas);
   btnBuscar.addEventListener("click", buscar);
   btnEnviar.addEventListener("click", p_enviar_credencial);
-  btnReporte.addEventListener("click", reportGeneralPdf);
 }
 
 // EVENTOS
