@@ -224,7 +224,34 @@ class CursosReportes{
                 $dato['Mencion'] = $row['MENCIÓN'];
                 $dato['Alumno'] = $row['ALUMNO'];
                 $dato['Curso'] = $row['CURSO'];
-                $dato['Ciclo'] = $row['MENCIÓN'];
+                $dato['Ciclo'] = $row['CICLO'];
+                $dato['CodAses'] = $row['CODIGO ASES.'];
+                $dato['DocAses'] = $row['DOC. ASESOR'];
+                $dato['Asesor'] = $row['ASESOR'];
+                $dato['Nota'] = $row['NOTA'];
+                array_push($data, $dato);   
+                $i++;
+            }
+            return json_encode(['respuesta'=> 1, 'mensaje' => "La consulta se ejecutó con éxito", 'data'=> $data]);
+        } catch (Exception $ex) {
+            return json_encode(['respuesta'=> 0, 'mensaje' => $ex]);
+        }
+    }
+
+    private function get_cursos_general_sigap(){
+        try {
+            $sql = "exec REPORTES.pa_AsesoriasxSemxUnidad ".$this->parametros['sem_id'].",".$this->parametros['sec_id'].";";
+            $datos = $this->con->return_query_sqlsrv($sql);
+            $data = array();
+            $dato = [];
+            $i = 1;
+            while ($row = $datos->fetch(PDO::FETCH_ASSOC)) {
+                $dato['Nro'] = $i;
+                $dato['Programa'] = $row['PROGRAMA'];
+                $dato['Mencion'] = $row['MENCIÓN'];
+                $dato['Alumno'] = $row['ALUMNO'];
+                $dato['Curso'] = $row['CURSO'];
+                $dato['Ciclo'] = $row['CICLO'];
                 $dato['CodAses'] = $row['CODIGO ASES.'];
                 $dato['DocAses'] = $row['DOC. ASESOR'];
                 $dato['Asesor'] = $row['ASESOR'];

@@ -95,13 +95,18 @@ if (!isset($_SESSION['login'])) {
                         <div class="card-body">
                             <h5 style="color: #666666;">Acciones</h5>
                             <div class="row d-flex justify-content-center align-items-center">
-                                <div class="col-lg-2 col-6">
+                                <div class="col-lg-2 col-4">
                                     <button class="btn btn-info text-light m-4" id="btnBuscar">
                                         <i class="fa fa-search"></i>&nbsp;&nbsp; Buscar</button>
                                 </div>
-                                <div class="col-lg-2 col-6">
+                                <div class="col-lg-2 col-4">
                                     <a class="btn btn-info text-light m-4" id="btnDetalles"
                                         href="/view/report/detalle_reporte_cursos.php">
+                                        <i class="fa fa-search"></i>&nbsp;&nbsp; Detalles</a>
+                                </div>
+                                <div class="col-lg-2 col-4">
+                                    <a class="btn btn-info text-light m-4" id="btnDetalles"
+                                        href="/view/report/detalle_reporte_cursos_sigap.php">
                                         <i class="fa fa-search"></i>&nbsp;&nbsp; Detalles</a>
                                 </div>
                             </div>
