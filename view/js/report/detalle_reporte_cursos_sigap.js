@@ -1,6 +1,7 @@
 /* ============ ELEMENTOS y VARIABLES ============ */
 
 let btnBuscar = document.getElementById("btnBuscar");
+let btnImprimir = document.getElementById("btnDescargarPdf");
 let cboSemestre = document.getElementById("cboSemestre");
 let cboUnidad = document.getElementById("cboUnidad");
 let cboPrograma = document.getElementById("cboPrograma");
@@ -11,6 +12,26 @@ let cboGrupo = document.getElementById("cboGrupo");
 let cboHoras = document.getElementById("cboHoras");
 let cboDocentes = document.getElementById("cboDocentes");
 let cboFechas = document.getElementById("cboFechas");
+
+/* VALORES DE BUSQUEDA */
+
+let p_sem_id;
+let p_sem_txt;
+let p_uni_id;
+let p_uni_txt;
+let p_pro_id;
+let p_pro_txt;
+let p_cic;
+let p_cre;
+let p_cur_id;
+let p_gpo_id;
+let p_gpo_txt;
+let p_hrs;
+let p_doc;
+let p_fec;
+
+/* Otros */
+let datos_cursos = [];
 
 let arrayGruposDisponibles = [
   { id: 1, nombre: "Grupo A" },
@@ -27,10 +48,27 @@ function start_filtros() {
     get_cbo_grupos();
     get_cbo_horas(sem_id);
     get_cbo_cantidad_docentes(sem_id);
-    //get_cbo_cantidad_fechas(sem_id);
+    get_cbo_cantidad_fechas(sem_id);
     get_cbo_cursos();
     habilitar(true);
   }
+}
+
+function set_parametros_busqueda_report_pdf(){
+  p_sem_id = cboSemestre.value;
+  p_sem_txt = cboSemestre.options[cboSemestre.selectedIndex].text;
+  p_uni_id = cboUnidad.value != ''? cboUnidad.value :0;
+  p_uni_txt = cboUnidad.value != ''? cboUnidad.options[cboUnidad.selectedIndex].text :0;
+  p_pro_id = cboPrograma.value != ''? cboPrograma.value :0;
+  p_pro_txt = cboPrograma.value != ''? cboPrograma.options[cboPrograma.selectedIndex].text :0;
+  p_cic = cboCiclo.value != ''? cboCiclo.value :0;
+  p_cre = cboCreditos.value != ''? cboCreditos.value :0;
+  p_cur_id = cboCurso.value != ''? cboCurso.value :0;
+  p_gpo_id = cboGrupo.value != ''? cboGrupo.value:0;
+  p_gpo_txt = cboGrupo.value != ''? arrayGruposDisponibles.find((it) => it.id == cboGrupo.value).nombre:0;
+  p_hrs = cboHoras.value != ''? cboHoras.value :0;
+  p_doc = cboDocentes.value != ''? cboDocentes.value :0;
+  p_fec = cboFechas.value != ''? cboFechas.value :0;
 }
 
 function habilitar(valor){
@@ -44,6 +82,8 @@ function habilitar(valor){
   cboDocentes.disabled = !valor;
   cboFechas.disabled = !valor;
 }
+
+
 
 function mostrar(valor) {
   if (valor) {
@@ -89,6 +129,13 @@ function buscar() {
       success: function (data) {
         let datos = JSON.parse(data);
         if (datos.respuesta == 1) {
+          datos_cursos = datos.data;
+          if(datos_cursos.length !=0){
+            set_parametros_busqueda_report_pdf();
+            btnImprimir.disabled = false;
+          }else{
+            btnImprimir.disabled = true;
+          }
           start_table_cursos(datos.data);
           mostrar(true);
         } else {
@@ -334,7 +381,7 @@ function get_cbo_cantidad_fechas(sem_id) {
   let opcion = "get_cbo_cantidad_fechas";
   $.ajax({
     type: "GET",
-    url: "../../controllers/report/detallecursosReportController.php",
+    url: "../../controllers/report/detallecursosReportSigapController.php",
     data: {
       opcion: opcion,
       sem_id: sem_id,
@@ -375,6 +422,7 @@ function datos_docente(p_cgd_id) {
                 '<td class="text-center">'+element.Tipo+'</td>'+
                 '<td class="text-center">'+element.Id +'</td>'+
                 '<td class="text-center">'+element.Nombres+'</td>'+
+                '<td class="text-center">'+element.Horas+'</td>'+
                 '<td class="text-center">'+element.Condicion+'</td>'+
                 '<td class="text-center">'+element.Grado+'</td>'+
                 '<td class="text-center">'+element.Codigo+'</td>'+
@@ -398,34 +446,23 @@ function datos_docente(p_cgd_id) {
 /* GENERAR PDF */
 
 function generar_pdf(){
-  let sem_id = cboSemestre.value;
-  let sem_txt = cboSemestre.options[cboSemestre.selectedIndex].text;
-  if (sem_id != "") {
-    let p_uni_id = cboUnidad.value != ''? cboUnidad.value :0;
-    let p_pro_id = cboPrograma.value != ''? cboPrograma.value :0;
-    let p_cic_id = cboCiclo.value != ''? cboCiclo.value :0;
-    let p_cre_id = cboCreditos.value != ''? cboCreditos.value :0;
-    let p_cur_id = cboCurso.value != ''? cboCurso.value :0;
-    let p_gpo_id = cboGrupo.value != ''? cboGrupo.value :0;
-    let p_hrs = cboHoras.value != ''? cboHoras.value :0;
-    let p_doc = cboDocentes.value != ''? cboDocentes.value :0;
-    let p_fec = cboFechas.value != ''? cboFechas.value :0;
-    let url = 'pdfDetalleReporte.php?'+
-    'sem='+sem_txt+
-    '&sem_id='+sem_id+
+    let url = 'pdfDetalleReporteSigap.php?'+
+    'p_sem_id='+p_sem_id+
+    '&p_sem_txt='+p_sem_txt+
     '&p_uni_id='+p_uni_id+
+    '&p_uni_txt='+p_uni_txt+
     '&p_pro_id='+p_pro_id+
-    '&p_cic_id='+p_cic_id+
-    '&p_cre_id='+p_cre_id+
+    '&p_pro_txt='+p_pro_txt+
+    '&p_cic='+p_cic+
+    '&p_cre='+p_cre+
     '&p_cur_id='+p_cur_id+
     '&p_gpo_id='+p_gpo_id +
+    '&p_gpo='+p_gpo_txt +
     '&p_hrs='+p_hrs +
     '&p_doc='+p_doc +
-    '&p_fec='+p_fec ;
+    '&p_fec='+p_fec
+    console.log(url);
    window.open(url,'_blank');
-  } else{
-    toastr["warning"]("Debe seleccionar un semestre", "Busqueda de datos");
-  }
 }
 
 /* ============================== */

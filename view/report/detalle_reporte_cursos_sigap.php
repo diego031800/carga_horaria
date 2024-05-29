@@ -162,7 +162,7 @@ if (!isset($_SESSION['login'])) {
                                     <button class="btn btn-info text-light m-4" id="btnBuscar"><i class="fa fa-search"></i>&nbsp;&nbsp; Buscar</button>
                                 </div>
                                 <div class="col-lg-2">
-                                    <button class="btn btn-danger" id="btnDescargarPdf" type="button" onClick="generar_pdf()"><i class="fa fa-file-pdf-o"></i>&nbsp; Descargar PDF</button>
+                                    <button class="btn btn-danger" id="btnDescargarPdf" disabled type="button" onClick="generar_pdf()"><i class="fa fa-file-pdf-o"></i>&nbsp; Descargar PDF</button>
                                 </div>
                             </div>
                         </div>
@@ -215,6 +215,7 @@ if (!isset($_SESSION['login'])) {
                                             <th class="text-center">Tipo</th>
                                             <th class="text-center">Id</th>
                                             <th class="text-center">Nombres</th>
+                                            <th class="text-center">Horas</th>
                                             <th class="text-center">Condicion</th>
                                             <th class="text-center">Grado</th>
                                             <th class="text-center">Codigo</th>
