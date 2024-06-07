@@ -107,7 +107,7 @@ if (!isset($_SESSION['login'])) {
                                 <div class="col-lg-2 col-4">
                                     <a class="btn btn-info text-light m-4" id="btnDetalles"
                                         href="/view/report/detalle_reporte_cursos_sigap.php">
-                                        <i class="fa fa-search"></i>&nbsp;&nbsp; Detalles</a>
+                                        <i class="fa fa-search"></i>&nbsp;&nbsp; Detalles SIGAP</a>
                                 </div>
                             </div>
                         </div>
