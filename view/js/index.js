@@ -15,6 +15,7 @@ let txtSec_id = document.getElementById("txtSec_Id");
 //   Curso
 let cboCiclo = document.getElementById("cboCiclo");
 let cboCurso = document.getElementById("cboCurso");
+let cboModalidad = document.getElementById("cboModalidad");
 let txtHoras = document.getElementById("txtHoras");
 let txtFechas = document.getElementById("newTratFechaIni");
 let btnGuardarCurso = document.getElementById("btnGuardarCurso");
@@ -61,6 +62,12 @@ let arrayGruposDisponibles = [
   { id: 1, nombre: "Grupo A" },
   { id: 2, nombre: "Grupo B" },
   { id: 3, nombre: "Grupo C" },
+];
+
+let arrayModalidades = [
+  { id: 1, nombre: "A distancia" },
+  { id: 2, nombre: "Presencial" },
+  { id: 3, nombre: "Híbrido" },
 ];
 // FUNCIONES
 // NAVEGACION
@@ -302,6 +309,16 @@ function get_docentesPromesa() {
   });
 }
 
+
+function actualizarCboModalid() {
+  $("#cboModalidad").empty();
+  arrayModalidades.forEach((element) => {
+    $("#cboModalidad").append(
+      '<option value="' + element.id + '">' + element.nombre + "</option>"
+    );
+  });
+}
+
 // FIN OBTENER COMBOS
 
 // OPERACIONES
@@ -380,6 +397,7 @@ function actualizarCboGruposDisponibles() {
     );
   });
 }
+
 
 function agregarGrupo() {
   let id_curso_modal = txtIdCursoGrupo.value;
@@ -1117,6 +1135,7 @@ function camposUnidad(bol) {
   cboSemestre.disabled = bol;
   cboUnidad.disabled = bol;
   cboPrograma.disabled = bol;
+  cboModalidad.disabled = bol;
   cboCiclo.disabled = bol;
 }
 
@@ -1134,7 +1153,7 @@ function editarCarga() {
   console.log(sem + " _ " + unidad + " _ " + programa + " _ " + ciclo);
   if (sem != "" && unidad != "" && programa != "" && ciclo != "") {
     btnGuardar.disabled = false;
-    camposCursos(false, 2);
+    camposCursos(false);
     camposUnidad(true);
     $("#btnCancelar").show();
     $("#btneditarCargaHoraria").hide();
@@ -1145,7 +1164,7 @@ function editarCarga() {
 /*  */
 function cancelarEditarCarga() {
   listacursos = [];
-  camposCursos(true, 1);
+  camposCursos(true);
   camposUnidad(false);
   llenarTabla();
   $("#btnCancelar").hide();
@@ -1307,6 +1326,7 @@ function cancelar() {
 
 /* FUNCION AL CARGAR EL DOCUMENTO */
 async function load_document() {
+  actualizarCboModalid();
   actualizarCboGruposDisponibles();
   await get_cbo_semestres();
   await get_cbo_unidades();

@@ -76,7 +76,7 @@ if (!isset($_SESSION['login'])) {
                         <div class="card-body">
                             <div class="card" style="color: #ffffff; background-color:rgba(135, 135, 135, 0.09); border-radius: 18px;">
                                 <div class="card-body row mb-2">
-                                    <div class="col-lg-2 col-6 mb-3">
+                                    <div class="col-lg-3 col-6 mb-3">
                                         <label for="" class="form-label">Semestre</label>
                                         <select class="form-select" id="cboSemestre">
                                         </select>
@@ -86,13 +86,19 @@ if (!isset($_SESSION['login'])) {
                                         <select class="form-select" id="cboUnidad">
                                         </select>
                                     </div>
-                                    <div class="col-lg-5 col-6 mb-3">
+                                    <div class="col-lg-6 col-6 mb-3">
                                         <label class="form-label" for="cboPrograma">Programa</label>
                                         <select class="form-select" id="cboPrograma" disabled>
                                             <option value="SD">Antes selecciona una unidad ...</option>
                                         </select>
                                     </div>
-                                    <div class="col-lg-2 col-6 mb-3">
+                                    <div class="col-lg-4 col-4 mb-3">
+                                        <label for="cboModalidad" class="form-label">Modalidad</label><br>
+                                        <select name="cboModalidad" id="cboModalidad" class="form-select">
+                                            <option value="SD">Antes selecciona un Programa ...</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-4 col-4 mb-3">
                                         <label class="form-label" for="cboCiclo">Ciclo</label>
                                         <select name="ciclo" class="form-select" id="cboCiclo">
                                         </select>
