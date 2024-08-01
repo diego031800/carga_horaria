@@ -97,16 +97,19 @@ function get_carga_horaria($sem_id, $sec_id)
 
   foreach ($data as $fila) {
     $prg_id = $fila['prg_id'];
+    $cod_modalidad = $fila['cod_modalidad'];
 
-    if (!isset($programas[$prg_id])) {
-      $programas[$prg_id] = [
+    if (!isset($programas[$prg_id][$cod_modalidad])) {
+      $programas[$prg_id][$cod_modalidad] = [
         'sem_id' => $fila['sem_id'],
         'prg_id' => $fila['prg_id'],
         'mencion' => $fila['mencion'],
+        'modalidad' => $fila['modalidad'],
+        'cod_modalidad' => $fila['cod_modalidad'],
         'ciclos' => array()
       ];
       // return $programas[$prg_id];
-      $carga_horaria[0]['programas'][$prg_id] = $programas[$prg_id];
+      $carga_horaria[0]['programas'][$prg_id][$cod_modalidad] = $programas[$prg_id][$cod_modalidad];
     }
 
     $cgc_id = $fila['cgc_id'];
@@ -116,10 +119,12 @@ function get_carga_horaria($sem_id, $sec_id)
         'prg_id' => $fila['prg_id'],
         'cgc_id' => $fila['cgc_id'],
         'ciclo' => $fila['ciclo'],
+        'cod_modalidad' => $fila['cod_modalidad'],
         'cursos' => array()
       );
-      if ($ciclos[$cgc_id]['prg_id'] == $carga_horaria[0]['programas'][$prg_id]['prg_id']) {
-        $carga_horaria[0]['programas'][$prg_id]['ciclos'][$cgc_id] = $ciclos[$cgc_id];
+      if ($ciclos[$cgc_id]['prg_id'] == $carga_horaria[0]['programas'][$prg_id][$cod_modalidad]['prg_id'] &&
+          $ciclos[$cgc_id]['cod_modalidad'] == $carga_horaria[0]['programas'][$prg_id][$cod_modalidad]['cod_modalidad']) {
+          $carga_horaria[0]['programas'][$prg_id][$cod_modalidad]['ciclos'][$cgc_id] = $ciclos[$cgc_id];
       }
     }
 
@@ -139,8 +144,8 @@ function get_carga_horaria($sem_id, $sec_id)
         'grupos' => array()
       );
 
-      if ($cursos[$chc_id]['cgc_id'] == $carga_horaria[0]['programas'][$prg_id]['ciclos'][$cgc_id]['cgc_id']) {
-        $carga_horaria[0]['programas'][$prg_id]['ciclos'][$cgc_id]['cursos'][$chc_id] = $cursos[$chc_id];
+      if ($cursos[$chc_id]['cgc_id'] == $carga_horaria[0]['programas'][$prg_id][$cod_modalidad]['ciclos'][$cgc_id]['cgc_id']) {
+        $carga_horaria[0]['programas'][$prg_id][$cod_modalidad]['ciclos'][$cgc_id]['cursos'][$chc_id] = $cursos[$chc_id];
       }
     }
 
@@ -155,8 +160,8 @@ function get_carga_horaria($sem_id, $sec_id)
         'fechas' => array()
       );
 
-      if ($grupos[$ccg_id]['chc_id'] == $carga_horaria[0]['programas'][$prg_id]['ciclos'][$cgc_id]['cursos'][$chc_id]['chc_id']) {
-        $carga_horaria[0]['programas'][$prg_id]['ciclos'][$cgc_id]['cursos'][$chc_id]['grupos'][$ccg_id] = $grupos[$ccg_id];
+      if ($grupos[$ccg_id]['chc_id'] == $carga_horaria[0]['programas'][$prg_id][$cod_modalidad]['ciclos'][$cgc_id]['cursos'][$chc_id]['chc_id']) {
+        $carga_horaria[0]['programas'][$prg_id][$cod_modalidad]['ciclos'][$cgc_id]['cursos'][$chc_id]['grupos'][$ccg_id] = $grupos[$ccg_id];
       }
     }
 
@@ -172,8 +177,8 @@ function get_carga_horaria($sem_id, $sec_id)
         'doc_nombres' => $fila['doc_nombres'],
       );
 
-      if ($docentes[$cgd_id]['ccg_id'] == $carga_horaria[0]['programas'][$prg_id]['ciclos'][$cgc_id]['cursos'][$chc_id]['grupos'][$ccg_id]['ccg_id']) {
-        $carga_horaria[0]['programas'][$prg_id]['ciclos'][$cgc_id]['cursos'][$chc_id]['grupos'][$ccg_id]['docentes'][$cgd_id] = $docentes[$cgd_id];
+      if ($docentes[$cgd_id]['ccg_id'] == $carga_horaria[0]['programas'][$prg_id][$cod_modalidad]['ciclos'][$cgc_id]['cursos'][$chc_id]['grupos'][$ccg_id]['ccg_id']) {
+        $carga_horaria[0]['programas'][$prg_id][$cod_modalidad]['ciclos'][$cgc_id]['cursos'][$chc_id]['grupos'][$ccg_id]['docentes'][$cgd_id] = $docentes[$cgd_id];
       }
     }
 
@@ -186,8 +191,8 @@ function get_carga_horaria($sem_id, $sec_id)
         'fecha' => $fila['fecha'],
       );
 
-      if ($fechas[$cgf_id]['ccg_id'] == $carga_horaria[0]['programas'][$prg_id]['ciclos'][$cgc_id]['cursos'][$chc_id]['grupos'][$ccg_id]['ccg_id']) {
-        $carga_horaria[0]['programas'][$prg_id]['ciclos'][$cgc_id]['cursos'][$chc_id]['grupos'][$ccg_id]['fechas'][$cgf_id] = $fechas[$cgf_id];
+      if ($fechas[$cgf_id]['ccg_id'] == $carga_horaria[0]['programas'][$prg_id][$cod_modalidad]['ciclos'][$cgc_id]['cursos'][$chc_id]['grupos'][$ccg_id]['ccg_id']) {
+        $carga_horaria[0]['programas'][$prg_id][$cod_modalidad]['ciclos'][$cgc_id]['cursos'][$chc_id]['grupos'][$ccg_id]['fechas'][$cgf_id] = $fechas[$cgf_id];
       }
     }
   }
@@ -202,53 +207,55 @@ function get_nro_total_filas($carga_horaria, $limite, $id)
     $total_filas = 0;
     if (count($carga_horaria) > 0) {
       /* FUNCION PARA OBTENER EL NUMERO TOTAL DE FILAS POR UNIDAD */
-      foreach ($carga_horaria[0]['programas'] as $programa) {
+      foreach ($carga_horaria[0]['programas'] as $prg_id => $modalidades) {
+        foreach ($modalidades as $modalidad_id => $programa) {
         $nro_filas_x_mencion = 0;
         $ciclos = $programa['ciclos'];
         if (count($ciclos) > 0) {
-          foreach ($ciclos as $ciclo) {
-            $nro_filas_x_ciclo = 0;
-            $cursos = $ciclo['cursos'];
-            if (count($cursos) > 0) {
-              foreach ($cursos as $curso) {
-                $nro_filas_x_curso = 0;
-                $grupos = $curso['grupos'];
-                if (count($grupos) > 0) {
-                  foreach ($grupos as $grupo) {
-                    $nro_filas_x_grupo = 0;
-                    $docentes = $grupo['docentes'];
-                    if (count($docentes)) {
-                      $total_filas += count($docentes);
-                      $nro_filas_x_mencion += count($docentes);
-                      $nro_filas_x_ciclo += count($docentes);
-                      $nro_filas_x_curso += count($docentes);
-                      $nro_filas_x_grupo += count($docentes);
-                    } else {
-                      $total_filas++;
-                      $nro_filas_x_mencion++;
-                      $nro_filas_x_ciclo++;
-                      $nro_filas_x_curso++;
-                      $nro_filas_x_grupo++;
+            foreach ($ciclos as $ciclo) {
+                $nro_filas_x_ciclo = 0;
+                $cursos = $ciclo['cursos'];
+                if (count($cursos) > 0) {
+                    foreach ($cursos as $curso) {
+                        $nro_filas_x_curso = 0;
+                        $grupos = $curso['grupos'];
+                        if (count($grupos) > 0) {
+                            foreach ($grupos as $grupo) {
+                                $nro_filas_x_grupo = 0;
+                                $docentes = $grupo['docentes'];
+                                if (count($docentes)) {
+                                    $total_filas += count($docentes);
+                                    $nro_filas_x_mencion += count($docentes);
+                                    $nro_filas_x_ciclo += count($docentes);
+                                    $nro_filas_x_curso += count($docentes);
+                                    $nro_filas_x_grupo += count($docentes);
+                                } else {
+                                    $total_filas++;
+                                    $nro_filas_x_mencion++;
+                                    $nro_filas_x_ciclo++;
+                                    $nro_filas_x_curso++;
+                                    $nro_filas_x_grupo++;
+                                }
+                                if ($limite == 'grupo' && $grupo['ccg_id'] == $id) {
+                                    return $nro_filas_x_grupo;
+                                }
+                            }
+                        }
+                        if ($limite == 'curso' && $curso['chc_id'] == $id) {
+                            return $nro_filas_x_curso;
+                        }
                     }
-                    if ($limite == 'grupo' && $grupo['ccg_id'] == $id) {
-                      return $nro_filas_x_grupo;
-                    }
-                  }
                 }
-                if ($limite == 'curso' && $curso['chc_id'] == $id) {
-                  return $nro_filas_x_curso;
+                if ($limite == 'ciclo' && $ciclo['cgc_id'] == $id) {
+                    return $nro_filas_x_ciclo;
                 }
-              }
             }
-            if ($limite == 'ciclo' && $ciclo['cgc_id'] == $id) {
-              return $nro_filas_x_ciclo;
-            }
-          }
         }
         if ($limite == 'mencion' && $programa['prg_id'] == $id) {
-          return $nro_filas_x_mencion;
+            return $nro_filas_x_mencion;
         }
-      }
+        }
+    }
     }
     return $total_filas;
   } catch (Exception $ex) {
@@ -291,7 +298,9 @@ if (count($carga_horaria) > 0) {
                     </tr>
                 </tbody>
               </table>";
-  foreach ($carga_horaria[0]['programas'] as $carga) {
+  foreach ($carga_horaria[0]['programas'] as $prg_id => $modalidades) {
+    foreach ($modalidades as $modalidad_id => $carga) {
+      
     /* OBTENIENDO DATOS DEL CICLO ACADÉMICO */
     $ciclos = $carga['ciclos'];
     if (count($ciclos) > 0) {
@@ -299,7 +308,7 @@ if (count($carga_horaria) > 0) {
                     <tbody>
                       <tr>
                         <td class='bg-celeste text-center' style='vertical-align: middle; width: 190px;' colspan='8'>
-                          <b>MENCIÓN: &nbsp;&nbsp;&nbsp; " . $carga['mencion'] . "</b>
+                          <b>MENCIÓN: &nbsp;&nbsp;&nbsp; " . $carga['mencion'] ."(".$carga['modalidad'].")</b>
                         </td>
                       </tr>
                       <tr>
@@ -406,6 +415,7 @@ if (count($carga_horaria) > 0) {
         $html .= $fila_ciclo == count($ciclos) - 1 ? "</tbody></table>" : "";
         $fila_ciclo++;
       }
+    }
     }
   }
   $html .= "</body>";

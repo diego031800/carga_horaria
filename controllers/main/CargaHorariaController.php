@@ -23,6 +23,7 @@
   $parametros['p_chp_id'] = '';
   $parametros['p_prg_id'] = '';
   $parametros['p_prg_mencion'] = '';
+  $parametros['p_ch_modalidad'] = '';
   $parametros['p_cgh_ciclo'] = '';
   $parametros['p_cgh_estado'] = '';
   $parametros['p_cursos'] = '';
@@ -96,6 +97,10 @@
   if (isset($_POST['p_prg_mencion'])) 
   {
     $parametros['p_prg_mencion'] = $_POST['p_prg_mencion'];
+  }
+  if (isset($_POST['p_ch_modalidad'])) 
+  {
+    $parametros['p_ch_modalidad'] = $_POST['p_ch_modalidad'];
   }
   if (isset($_POST['p_cgh_ciclo'])) 
   {

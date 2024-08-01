@@ -269,11 +269,13 @@ class CargaHoraria
             $sql .= "'" . $this->parametros['p_sec_descripcion'] . "', "; // p_sec_descripcion
             $sql .= "'" . $this->parametros['p_prg_id'] . "', "; // p_prg_id
             $sql .= "'" . $this->parametros['p_prg_mencion'] . "', "; // p_prg_mencion
+            $sql .= "'" . $this->parametros['p_ch_modalidad'] . "', "; // p_prg_modalidad
             $sql .= "'" . $this->parametros['p_cgc_id'] . "', "; // p_cgc_ciclo
             $sql .= "'" . $this->parametros['p_cgh_ciclo'] . "', "; // p_cgc_ciclo
             $sql .= "'" . $this->parametros['p_cgh_estado'] . "', "; // p_cgh_estado
             $sql .= "'" . $_SESSION['usu_id'] . "',"; // p_usuario
             $sql .= "'" . $_SESSION['usu_ip'] . "');"; // p_dispositivo
+            error_log($sql);
             // return $sql;
             $datos = $this->con->return_query_mysql($sql);
             $respDetalle = array();
@@ -466,15 +468,16 @@ class CargaHoraria
                                     </td>";
                 /* ITERAR CARGAS HORARIAS */
                 $fila_programa = 0;
-                foreach ($carga_horaria[0]['programas'] as $carga) {
+                foreach ($carga_horaria[0]['programas'] as $prg_id => $modalidades) {
                     /* OBTENER CICLOS */
-                    $ciclos = $carga['ciclos'];
+                    foreach ($modalidades as $modalidad_id => $carga) {
+                        $ciclos = $carga['ciclos'];
                     // return json_encode($ciclos);
                     if (count($ciclos) > 0) {
                         $nro_filas_by_mencion = ($this->get_nro_total_filas($carga_horaria, 'mencion', $carga['prg_id']));
                         $tabla_carga .= $fila_programa == 0 ? "" : "<tr>";
                         $tabla_carga .= "<td class='align-middle text-center' rowspan='" . ($nro_filas_by_mencion == 0 ? '' : $nro_filas_by_mencion) . "'>
-                                                " . $carga['mencion'] . "
+                                                " . $carga['mencion'] . " <b>(".$carga['modalidad'].")</b>
                                             </td>";
                         $fila_ciclo = 0;
                         foreach ($ciclos as $ciclo) {
@@ -563,6 +566,7 @@ class CargaHoraria
                         }
                     }
                     $fila_programa++;
+                    }
                 }
                 $tabla_carga .= "</tbody></table>";
             } else {
@@ -617,16 +621,19 @@ class CargaHoraria
     
                     foreach ($data as $fila) {
                         $prg_id = $fila['prg_id'];
+                        $cod_modalidad = $fila['cod_modalidad'];
     
-                        if (!isset($programas[$prg_id])) {
-                            $programas[$prg_id] = [
+                        if (!isset($programas[$prg_id][$cod_modalidad])) {
+                            $programas[$prg_id][$cod_modalidad] = [
                                 'sem_id' => $fila['sem_id'],
                                 'prg_id' => $fila['prg_id'],
                                 'mencion' => $fila['mencion'],
+                                'modalidad' => $fila['modalidad'],
+                                'cod_modalidad' => $fila['cod_modalidad'],
                                 'ciclos' => array()
                             ];
                             // return $programas[$prg_id];
-                            $carga_horaria[0]['programas'][$prg_id] = $programas[$prg_id];
+                            $carga_horaria[0]['programas'][$prg_id][$cod_modalidad] = $programas[$prg_id][$cod_modalidad];
                         }
     
                         $cgc_id = $fila['cgc_id'];
@@ -636,10 +643,12 @@ class CargaHoraria
                                 'prg_id' => $fila['prg_id'],
                                 'cgc_id' => $fila['cgc_id'],
                                 'ciclo' => $fila['ciclo'],
+                                'cod_modalidad' => $fila['cod_modalidad'],
                                 'cursos' => array()
                             );
-                            if ($ciclos[$cgc_id]['prg_id'] == $carga_horaria[0]['programas'][$prg_id]['prg_id']) {
-                                $carga_horaria[0]['programas'][$prg_id]['ciclos'][$cgc_id] = $ciclos[$cgc_id];
+                            if ($ciclos[$cgc_id]['prg_id'] == $carga_horaria[0]['programas'][$prg_id][$cod_modalidad]['prg_id'] &&
+                                $ciclos[$cgc_id]['cod_modalidad'] == $carga_horaria[0]['programas'][$prg_id][$cod_modalidad]['cod_modalidad']) {
+                                $carga_horaria[0]['programas'][$prg_id][$cod_modalidad]['ciclos'][$cgc_id] = $ciclos[$cgc_id];
                             }
                         }
     
@@ -659,8 +668,8 @@ class CargaHoraria
                                 'grupos' => array()
                             );
     
-                            if ($cursos[$chc_id]['cgc_id'] == $carga_horaria[0]['programas'][$prg_id]['ciclos'][$cgc_id]['cgc_id']) {
-                                $carga_horaria[0]['programas'][$prg_id]['ciclos'][$cgc_id]['cursos'][$chc_id] = $cursos[$chc_id];
+                            if ($cursos[$chc_id]['cgc_id'] == $carga_horaria[0]['programas'][$prg_id][$cod_modalidad]['ciclos'][$cgc_id]['cgc_id']) {
+                                $carga_horaria[0]['programas'][$prg_id][$cod_modalidad]['ciclos'][$cgc_id]['cursos'][$chc_id] = $cursos[$chc_id];
                             }
                         }
     
@@ -675,8 +684,8 @@ class CargaHoraria
                                 'fechas' => array()
                             );
     
-                            if ($grupos[$ccg_id]['chc_id'] == $carga_horaria[0]['programas'][$prg_id]['ciclos'][$cgc_id]['cursos'][$chc_id]['chc_id']) {
-                                $carga_horaria[0]['programas'][$prg_id]['ciclos'][$cgc_id]['cursos'][$chc_id]['grupos'][$ccg_id] = $grupos[$ccg_id];
+                            if ($grupos[$ccg_id]['chc_id'] == $carga_horaria[0]['programas'][$prg_id][$cod_modalidad]['ciclos'][$cgc_id]['cursos'][$chc_id]['chc_id']) {
+                                $carga_horaria[0]['programas'][$prg_id][$cod_modalidad]['ciclos'][$cgc_id]['cursos'][$chc_id]['grupos'][$ccg_id] = $grupos[$ccg_id];
                             }
                         }
     
@@ -692,8 +701,8 @@ class CargaHoraria
                                 'doc_nombres' => $fila['doc_nombres'],
                             );
     
-                            if ($docentes[$cgd_id]['ccg_id'] == $carga_horaria[0]['programas'][$prg_id]['ciclos'][$cgc_id]['cursos'][$chc_id]['grupos'][$ccg_id]['ccg_id']) {
-                                $carga_horaria[0]['programas'][$prg_id]['ciclos'][$cgc_id]['cursos'][$chc_id]['grupos'][$ccg_id]['docentes'][$cgd_id] = $docentes[$cgd_id];
+                            if ($docentes[$cgd_id]['ccg_id'] == $carga_horaria[0]['programas'][$prg_id][$cod_modalidad]['ciclos'][$cgc_id]['cursos'][$chc_id]['grupos'][$ccg_id]['ccg_id']) {
+                                $carga_horaria[0]['programas'][$prg_id][$cod_modalidad]['ciclos'][$cgc_id]['cursos'][$chc_id]['grupos'][$ccg_id]['docentes'][$cgd_id] = $docentes[$cgd_id];
                             }
                         }
     
@@ -706,8 +715,8 @@ class CargaHoraria
                                 'fecha' => $fila['fecha'],
                             );
     
-                            if ($fechas[$cgf_id]['ccg_id'] == $carga_horaria[0]['programas'][$prg_id]['ciclos'][$cgc_id]['cursos'][$chc_id]['grupos'][$ccg_id]['ccg_id']) {
-                                $carga_horaria[0]['programas'][$prg_id]['ciclos'][$cgc_id]['cursos'][$chc_id]['grupos'][$ccg_id]['fechas'][$cgf_id] = $fechas[$cgf_id];
+                            if ($fechas[$cgf_id]['ccg_id'] == $carga_horaria[0]['programas'][$prg_id][$cod_modalidad]['ciclos'][$cgc_id]['cursos'][$chc_id]['grupos'][$ccg_id]['ccg_id']) {
+                                $carga_horaria[0]['programas'][$prg_id][$cod_modalidad]['ciclos'][$cgc_id]['cursos'][$chc_id]['grupos'][$ccg_id]['fechas'][$cgf_id] = $fechas[$cgf_id];
                             }
                         }
                     }    
@@ -754,6 +763,7 @@ class CargaHoraria
                         'unidad' => $data[0]['unidad'],
                         'prg_id' => $data[0]['prg_id'],
                         'mencion' => $data[0]['mencion'],
+                        'cod_modalidad' => $data[0]['cod_modalidad'],
                         'cgh_estado' => $data[0]['cgh_estado'],
                         'cgc_id' => $data[0]['cgc_id'],
                         'ciclo' => $data[0]['ciclo'],
@@ -914,7 +924,8 @@ class CargaHoraria
             $total_filas = 0;
             if (count($carga_horaria) > 0) {
                 /* FUNCION PARA OBTENER EL NUMERO TOTAL DE FILAS POR UNIDAD */
-                foreach ($carga_horaria[0]['programas'] as $programa) {
+                foreach ($carga_horaria[0]['programas'] as $prg_id => $modalidades) {
+                    foreach ($modalidades as $modalidad_id => $programa) {
                     $nro_filas_x_mencion = 0;
                     $ciclos = $programa['ciclos'];
                     if (count($ciclos) > 0) {
@@ -959,6 +970,7 @@ class CargaHoraria
                     }
                     if ($limite == 'mencion' && $programa['prg_id'] == $id) {
                         return $nro_filas_x_mencion;
+                    }
                     }
                 }
             }

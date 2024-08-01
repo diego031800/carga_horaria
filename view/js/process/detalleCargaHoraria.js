@@ -6,6 +6,12 @@ let btnAtras = document.getElementById('btnAtras');
 let lblTitulo = document.getElementById('lblTitulo');
 let btnVerPdf = document.getElementById('btnVerPdf');
 
+let arrayModalidades = [
+  { id: 1, nombre: "A distancia" },
+  { id: 2, nombre: "Presencial" },
+  { id: 3, nombre: "Híbrido" },
+];
+
 // FUNCIONES
 // INICIO OBTENER COMBOS
 function get_cbo_programas() {
@@ -22,6 +28,16 @@ function get_cbo_programas() {
     error: function (data) {
       alert("Error al mostrar");
     },
+  });
+}
+
+function actualizarCboModalidad() {
+  $("#cboModalidad").empty();
+  $("#cboModalidad").append('<option value="">Selecciona una Modalidad ...</option>');
+  arrayModalidades.forEach((element) => {
+    $("#cboModalidad").append(
+      '<option value="' + element.id + '">' + element.nombre + "</option>"
+    );
   });
 }
 
@@ -131,6 +147,7 @@ function buscar() {
   let p_sec_id = cboUnidad.value ? cboUnidad.value : 0;
   let p_prg_id = cboPrograma.value?cboPrograma.value:0;
   let p_ciclo = cboCiclo.value?cboCiclo.value:0;
+  let p_modalidad = cboModalidad.value ? "000" + cboModalidad.value : '';
   $.ajax({
     type: "POST",
     url: "../../controllers/main/MisCargasHorariasController.php",
@@ -138,6 +155,7 @@ function buscar() {
       "&p_sem_id=" + p_sem_id +
       "&p_sec_id=" + p_sec_id +
       "&p_prg_id=" + p_prg_id +
+      "&p_ch_modalidad=" + p_modalidad +
       "&p_ciclo=" + p_ciclo,
     beforeSend: function () {
       btnBuscar.disabled = true;
@@ -161,6 +179,7 @@ function buscar() {
           { data: 'semestre', className: 'dt-center' },
           { data: 'unidad', className: 'dt-center' },
           { data: 'programa', className: 'dt-center' },
+          { data: 'modalidad', className: 'dt-center' },
           { data: 'ciclo', className: 'dt-center' },
           { data: 'creado', className: 'dt-center' },
           { data: 'usuario', className: 'dt-center' },
@@ -199,6 +218,7 @@ function buscar() {
 function load_document() {
   get_cbo_programas();
   change_cbo_ciclo();
+  actualizarCboModalidad();
   buscar();
   // btnBuscar.addEventListener("click", buscar);
   btnNuevaCarga.addEventListener("click", nuevaCarga);

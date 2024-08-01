@@ -95,8 +95,10 @@
                 $sql .= "'".$this->parametros['p_sem_id']."', "; // p_sem_id
                 $sql .= "'".$this->parametros['p_sec_id']."', "; // p_sec_id
                 $sql .= "'".$this->parametros['p_prg_id']."', "; // p_prg_id
+                $sql .= "'".$this->parametros['p_ch_modalidad']."', "; // p_cgh_modalidad
                 $sql .= "'".$this->parametros['p_ciclo']."', "; // p_cgc_ciclo
                 $sql .= "'".$_SESSION['usu_id']."');"; // p_usuario
+                error_log($sql);
                 // return $sql;
                 $datos = $this->con->return_query_mysql($sql);
                 // return json_encode($datos);
@@ -130,6 +132,7 @@
                         $data['semestre'] = $row['semestre'];
                         $data['unidad'] = $row['unidad'];
                         $data['programa'] = $row['programa'];
+                        $data['modalidad'] = $row['modalidad'];
                         $data['ciclo'] = $row['ciclo'];
                         $data['creado'] = $row['creado'];
                         $data['usuario'] = $this->get_nombres_usuario($row['usuario']);

@@ -51,6 +51,7 @@ let cgc_id = 0;
 let chu_id = 0;
 let chp_id = 0;
 let cgh_codigo = "";
+let p_ch_modalidad = "";
 
 var listacursos = [];
 let stdEditarCarga = 0;
@@ -88,6 +89,7 @@ function get_carga_horaria_by_id() {
       "opcion=" + opcion + "&p_cgh_id=" + p_cgh_id + "&p_cgc_id=" + p_cgc_id,
     success: function (data) {
       let respuesta = JSON.parse(data);
+      console.log(respuesta);
       setDatosUnidadSem(respuesta);
     },
     error: function (data) {
@@ -1030,6 +1032,8 @@ async function setDatosUnidadSem(data) {
   await buscar_cursosPromesa();
   cgh_id = data[0].cgh_id;
   cgc_id = data[0].cgc_id;
+  $("#cboModalidad").val(parseInt(data[0].cod_modalidad)).trigger("change");
+  p_ch_modalidad = data[0].cod_modalidad;
   llenarListaCursos(data);
   camposUnidad(true);
   camposCursos(false);
@@ -1150,6 +1154,7 @@ function editarCarga() {
   let unidad = cboUnidad.value;
   let programa = cboPrograma.value;
   let ciclo = cboCiclo.value;
+  p_ch_modalidad = "000" + cboModalidad.value;
   console.log(sem + " _ " + unidad + " _ " + programa + " _ " + ciclo);
   if (sem != "" && unidad != "" && programa != "" && ciclo != "") {
     btnGuardar.disabled = false;
@@ -1225,6 +1230,8 @@ function saveCargaHoraria() {
         p_prg_id +
         "&p_prg_mencion=" +
         p_prg_mencion +
+        "&p_ch_modalidad=" +
+        p_ch_modalidad +
         "&p_cgc_id=" +
         p_cgc_id +
         "&p_cgh_ciclo=" +

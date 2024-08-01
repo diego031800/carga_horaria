@@ -9,6 +9,7 @@
   $parametros['p_sem_id'] = '';
   $parametros['p_sec_id'] = '';
   $parametros['p_prg_id'] = '';
+  $parametros['p_ch_modalidad'] = '';
   $parametros['p_ciclo'] = '';
   $parametros['p_fecha_inicio'] = '';
   $parametros['p_fecha_fin'] = '';
@@ -32,6 +33,10 @@
   if (isset($_POST['p_prg_id'])) 
   {
     $parametros['p_prg_id'] = $_POST['p_prg_id'];
+  }
+  if (isset($_POST['p_ch_modalidad'])) 
+  {
+    $parametros['p_ch_modalidad'] = $_POST['p_ch_modalidad'];
   }
   if (isset($_POST['p_ciclo'])) 
   {
