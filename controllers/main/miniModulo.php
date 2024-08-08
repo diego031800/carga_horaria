@@ -76,9 +76,11 @@ function generarMensajeCorreo()
     $mensaje .= '<p>Este registro de notas online permitirá dar por finalizado el curso asignado a su carga horaria.</p>';
     $mensaje .= '<p>Se adjunta su Credencial y Manual de Docente para el registro de notas online.</p>';
     $mensaje .= '<p>Para soporte o ayuda con el registro o accesos al sistema comuníquese con los siguientes números:</p>';
-    $mensaje .= '<ul><li>Anderson J. Zavaleta Simón / UTIC-EPG: 984 599 249</li><li>Ronald Córdova Paredes / SISTEMAS-EPG: 978 468 194</li></ul>';
+    $mensaje .= '<ul><li>Anderson J. Zavaleta Simón / UTIC-EPG: 984 599 249</li>';
+    $mensaje .= '<li>O puedes unirte al Grupo de Docentes de la EPG; Unete aquí:  : <a href="https://chat.whatsapp.com/EqKTfbg0XG1H1aWjpNLwsC ">Grupo de WhatsApp</a></li></ul>';
     $mensaje .= '<p><a href="http://www.epgnew.unitru.edu.pe">www.epgnew.unitru.edu.pe</a></p>';
     $mensaje .= '<p>Video tutorial para el proceso de registro de notas online: <a href="https://drive.google.com/file/d/150q2t4Wo3k7RH_5L0UE9qaK4WiGjdtvB/view?usp=drive_link">Enlace al video</a></p>';
+    $mensaje .= '<p>Nota: Sigap es únicamente para la gestión académica, en la cual podrá registrar las asistencias y notas online, así como la validación de actas de los cursos.</p>';
     $mensaje .='<p>ATTE. Unidad de Tecnologías Informáticas y Comunicaciones de la EPG.</p>';
     return $mensaje;
 }
