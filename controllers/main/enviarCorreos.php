@@ -81,29 +81,33 @@ class CorreoCargaHoraria
     private function generarMensajeCorreo()
     {
         $mensaje = '<h1>¡Bienvenido al semestre 2024-I!</h1>';
-        $mensaje .= ' <p>Buenos días estimado Docentes de la ESCUELA DE POSGRADO, se le hace el envío de sus credenciales para ingresar al sistema SIGAP correspondiente al semestre
+        $mensaje .= ' <p>Buenos días estimado Docente de la ESCUELA DE POSGRADO, se le hace el envío de sus credenciales para ingresar al sistema SIGAP correspondiente al semestre
         2024-I; en el cual podrán descargar la lista de estudiantes matriculados en el curso que esté dictando, en la infografía podrá ver de manera gráfica los pasos a seguir.</p>';
         $mensaje .= '<p>En el menú de la izquierda, verá una opción que dice “Aula virtual” (como se muestra en el comunicado) en la cual podrá ir al aula virtual, las formas de 
         acceder se explican detalladamente en el comunicado.</p>';
-        $mensaje .= '<p>Para soporte o ayuda comuníquese con los siguientes números:</p>';
-        $mensaje .= '<ul><li>Anderson J. Zavaleta Simón / UTIC-EPG: 984 599 249</li><li>Ronald Córdova Paredes / SISTEMAS-EPG: 978 468 194</li></ul>';
+        $mensaje .= '<p>Para soporte o ayuda comuníquese con el siguiente número:</p>';
+        $mensaje .= '<ul><li>Anderson J. Zavaleta Simón / UTIC-EPG: 984 599 249</li>';
+        $mensaje .= '<li>O puedes unirte al Grupo de Docentes de la EPG; Unete aquí:  : <a href="https://chat.whatsapp.com/EqKTfbg0XG1H1aWjpNLwsC ">Grupo de WhatsApp</a></li></ul>';
         $mensaje .= '<p><a href="http://www.epgnew.unitru.edu.pe">www.epgnew.unitru.edu.pe</a></p>';
         $mensaje .= '<p>Video tutorial para el proceso de registro de notas online: <a href="https://drive.google.com/file/d/18llmBIV26TAclC73gD849o7NXGlSsIot/view?usp=drive_link">Enlace al video</a></p>';
-        $mensaje .='<p>ATTE. Unidad de Tecnologías Informáticas y Comunicaciones de la EPG.</p>';
+        $mensaje .= '<p>Nota: Sigap es únicamente para la gestión académica, en la cual podrá registrar las asistencias y notas online, así como la validación de actas de los cursos.</p>';
+        $mensaje .= '<p>ATTE. Unidad de Tecnologías Informáticas y Comunicaciones de la EPG.</p>';
         return $mensaje;
     }
 
     private function generarMensajeCorreo_Asesores()
     {
         $mensaje = '<h1>¡Bienvenido al semestre 2024-I!</h1>';
-        $mensaje .= '<p>Buenos días estimado Docentes de la ESCUELA DE POSGRADO, se le hace el envío de sus credenciales para ingresar al sistema SIGAP correspondiente al semestre
+        $mensaje .= '<p>Buenos días estimado Docente de la ESCUELA DE POSGRADO, se le hace el envío de sus credenciales para ingresar al sistema SIGAP correspondiente al semestre
         2024-I; en el cual podrán descargar la lista de estudiantes a los que esté asesorando, en la infografía podrá ver de manera gráfica los pasos a seguir.</p>';
         $mensaje .= '<p>Recordar, si ya ha dictado un curso este semestre, las credenciales presentes en este correo, son las mismas que las que se envió al inicio del semestre.</p>';
-        $mensaje .= '<p>Para soporte o ayuda comuníquese con los siguientes números:</p>';
-        $mensaje .= '<ul><li>Anderson J. Zavaleta Simón / UTIC-EPG: 984 599 249</li><li>Ronald Córdova Paredes / SISTEMAS-EPG: 978 468 194</li></ul>';
+        $mensaje .= '<p>Para soporte o ayuda comuníquese con el siguiente número:</p>';
+        $mensaje .= '<ul><li>Anderson J. Zavaleta Simón / UTIC-EPG: 984 599 249</li>';
+        $mensaje .= '<li>O puedes unirte al Grupo de Docentes de la EPG; Unete aquí:  : <a href="https://chat.whatsapp.com/EqKTfbg0XG1H1aWjpNLwsC ">Grupo de WhatsApp</a></li></ul>';
         $mensaje .= '<p><a href="http://www.epgnew.unitru.edu.pe">www.epgnew.unitru.edu.pe</a></p>';
         $mensaje .= '<p>Video tutorial para el proceso de registro de notas online: <a href="https://drive.google.com/file/d/1tWDH4GhpmtW3mulvoW3Cib2J0EqZtzjx/view?usp=drive_link">Enlace al video</a></p>';
-        $mensaje .='<p>ATTE. Unidad de Tecnologías Informáticas y Comunicaciones de la EPG.</p>';
+        $mensaje .= '<p>Nota: Sigap es únicamente para la gestión académica, en la cual podrá registrar notas online, así como la validación de actas de los cursos.</p>';
+        $mensaje .= '<p>ATTE. Unidad de Tecnologías Informáticas y Comunicaciones de la EPG.</p>';
         return $mensaje;
     }
 
