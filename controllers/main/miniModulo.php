@@ -49,13 +49,15 @@ try {
     $mail->setFrom('upg_utic@unitru.edu.pe', 'UTIC POSGRADO');
     $mail->CharSet = 'UTF-8';  
     $mail->Subject = 'ENTREGA DE CREEDENCIALES DEL SIGAP - DOCENTE';
-    $rutaManual = '../../assets/docs/ManualSigap.pdf';
+    $rutaFlayer = '../../assets/docs/Infografia_enlace.pdf';
+    $rutaComunicado = '../../assets/docs/Comunicado_docente.pdf';
     $mail->addAddress($correo,$nombre);
     $mail->isHTML(true);
     $mail->Body = generarMensajeCorreo();
     $pdf = new CredencialDocente();
     $rutaPdf = $pdf->generarCredencial($nombre,$dni,$codigo,$cod_sem);
-    $mail->addAttachment($rutaManual,'Manual de docente para SIGAP');
+    $this->mail->addAttachment($rutaFlayer,'Infografia de enlaces');
+    $this->mail->addAttachment($rutaComunicado,'Comunicado docentes');
     $mail->addAttachment($rutaPdf, $nombre);
     if ($mail->send()) {
         echo "SI";
@@ -75,11 +77,12 @@ function generarMensajeCorreo()
     y sistematizar nuestros procesos constantemente hacemos llegar su credencial de acceso al sistema de registro de notas online, Dirigido por la Unidad de Tecnologías Informáticas y Comunicaciones de la EPG.</p>';
     $mensaje .= '<p>Este registro de notas online permitirá dar por finalizado el curso asignado a su carga horaria.</p>';
     $mensaje .= '<p>Se adjunta su Credencial y Manual de Docente para el registro de notas online.</p>';
-    $mensaje .= '<p>Para soporte o ayuda con el registro o accesos al sistema comuníquese con los siguientes números:</p>';
+    $mensaje .= '<p>Para soporte o ayuda con el registro o accesos al sistema comuníquese con el siguiente número:</p>';
     $mensaje .= '<ul><li>Anderson J. Zavaleta Simón / UTIC-EPG: 984 599 249</li>';
     $mensaje .= '<li>O puedes unirte al Grupo de Docentes de la EPG; Unete aquí:  : <a href="https://chat.whatsapp.com/EqKTfbg0XG1H1aWjpNLwsC ">Grupo de WhatsApp</a></li></ul>';
     $mensaje .= '<p><a href="http://www.epgnew.unitru.edu.pe">www.epgnew.unitru.edu.pe</a></p>';
     $mensaje .= '<p>Video tutorial para el proceso de registro de notas online: <a href="https://drive.google.com/file/d/150q2t4Wo3k7RH_5L0UE9qaK4WiGjdtvB/view?usp=drive_link">Enlace al video</a></p>';
+    $mensaje .= '<p>Estimado Docente de la Escuela de Posgrado ingrese en el siguiente enlace para descargar el Manual del Docente para el uso del sistema de la EPG/UNT: <a href="https://drive.google.com/file/d/1xY3-vfL527XFuIZloVGVMFn8rYBwLFIP/view?usp=sharing">Manual SIGAP</a></p>';
     $mensaje .= '<p>Nota: Sigap es únicamente para la gestión académica, en la cual podrá registrar las asistencias y notas online, así como la validación de actas de los cursos.</p>';
     $mensaje .='<p>ATTE. Unidad de Tecnologías Informáticas y Comunicaciones de la EPG.</p>';
     return $mensaje;
