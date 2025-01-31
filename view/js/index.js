@@ -480,7 +480,6 @@ function guardarDatosGrupo() {
   let indxGrupoCurso = listacursos[indxC].grupos.findIndex(
     (item) => item.id == id_grupo_docente && item.ccg_estado == "0001"
   );
-  console.log(indxGrupoCurso);
   if (fechas == "") {
     toastr["error"]("No deben haber campos vacíos", "Guardar datos grupo");
     return;
