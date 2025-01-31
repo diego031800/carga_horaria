@@ -5,6 +5,7 @@ require '../../vendor/phpmailer/phpmailer/src/Exception.php';
 require '../../vendor/phpmailer/phpmailer/src/PHPMailer.php';
 require '../../vendor/phpmailer/phpmailer/src/SMTP.php';
 include_once '../../controllers/main/utilidades/pdfCredencial.php';
+require_once '../config_correos.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -40,14 +41,14 @@ if (isset($_POST['semestre']))
 try {
     $mail = new PHPMailer;
     $mail->isSMTP();
-    $mail->Host = 'smtp.gmail.com';
+    $mail->Host = host_email;
     $mail->Port = 465;
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
     $mail->SMTPAuth = true;
-    $mail->Username = 'upg_utic@unitru.edu.pe';
-    $mail->Password = 'ojvg gftu qpbd urtr';
-    $mail->setFrom('upg_utic@unitru.edu.pe', 'UTIC POSGRADO');
-    $mail->CharSet = 'UTF-8';  
+    $mail->Username = username_email;
+    $mail->Password = password_email;
+    $mail->setFrom(username_email, name_from);
+    $mail->CharSet = chart_set;  
     $mail->Subject = 'ENTREGA DE CREEDENCIALES DEL SIGAP - DOCENTE';
     $rutaFlayer = '../../assets/docs/Infografia_enlace.pdf';
     $rutaComunicado = '../../assets/docs/Comunicado_docente.pdf';
